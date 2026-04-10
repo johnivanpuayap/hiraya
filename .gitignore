@@ -1,6 +1,3 @@
-# Design docs
-docs/
-
 # Dependencies
 node_modules/
 
@@ -20,3 +17,6 @@ Thumbs.db
 # Build
 dist/
 build/
+
+# Superpowers brainstorm artifacts
+.superpowers/
