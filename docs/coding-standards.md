@@ -200,4 +200,4 @@ console.error("[auth] login failed", { email, error: err.message });
   - `add user registration flow`
   - `fix theta calculation for edge case`
   - `refactor question selection into separate module`
-- **Branch naming** — `feat/topic`, `fix/topic`, `chore/topic`
+- **Branch naming** — `feature/topic`, `hotfix/topic`, `chore/topic`

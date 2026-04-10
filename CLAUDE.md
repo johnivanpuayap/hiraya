@@ -28,5 +28,9 @@ Follow `docs/coding-standards.md` for all code written in this project. Key poin
 
 - **Atomic commits** — one logical change per commit
 - **No co-author tags** — never append "Co-Authored-By" lines to commit messages
-- **Branch naming** — `feat/`, `fix/`, `chore/` prefixes (e.g., `feat/adaptive-engine`)
+- **Branch naming:**
+  - Feature branches: `feature/<name>` (e.g., `feature/adaptive-engine`)
+  - Fix branches: `hotfix/<name>` (e.g., `hotfix/login-redirect`)
+  - Chore branches: `chore/<name>` (e.g., `chore/update-deps`)
 - **Commit messages** — imperative mood, concise (e.g., "add IRT ability estimation logic")
+- **Push after every task** — push changes to remote after every reviewed and confirmed task
