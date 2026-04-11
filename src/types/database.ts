@@ -1,0 +1,52 @@
+export interface Database {
+  public: {
+    Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          role: "student" | "teacher";
+          first_name: string;
+          last_name: string;
+          display_name: string;
+          avatar_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          role: "student" | "teacher";
+          first_name: string;
+          last_name: string;
+          avatar_url?: string | null;
+        };
+        Update: {
+          first_name?: string;
+          last_name?: string;
+          avatar_url?: string | null;
+        };
+      };
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+          display_name: string;
+          exam_weight: number;
+          created_at: string;
+        };
+        Insert: {
+          name: string;
+          display_name: string;
+          exam_weight?: number;
+        };
+        Update: {
+          display_name?: string;
+          exam_weight?: number;
+        };
+      };
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
+  };
+}
