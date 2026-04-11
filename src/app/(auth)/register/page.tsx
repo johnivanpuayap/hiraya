@@ -21,7 +21,7 @@ export default function RegisterPage() {
     lastName: "",
     role: "student",
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
     const result = registerSchema.safeParse(formData);
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
+      const fieldErrors: Record<string, string | undefined> = {};
       result.error.issues.forEach((issue) => {
         const field = issue.path[0] as keyof RegisterInput;
         fieldErrors[field] = issue.message;

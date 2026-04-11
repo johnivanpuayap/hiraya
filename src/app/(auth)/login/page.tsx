@@ -18,7 +18,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,7 @@ export default function LoginPage() {
 
     const result = loginSchema.safeParse(formData);
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
+      const fieldErrors: Record<string, string | undefined> = {};
       result.error.issues.forEach((issue) => {
         const field = String(issue.path[0]);
         fieldErrors[field] = issue.message;
