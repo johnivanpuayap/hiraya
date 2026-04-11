@@ -9,6 +9,9 @@ export async function updateSession(
 ): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Uses raw process.env instead of @/lib/env — middleware runs in Edge runtime
+  // where eager Zod validation adds cold-start latency. Caller (root middleware.ts)
+  // handles route filtering via config.matcher.
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
