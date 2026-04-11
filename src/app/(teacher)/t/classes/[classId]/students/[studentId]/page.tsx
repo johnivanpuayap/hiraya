@@ -92,11 +92,11 @@ export default async function StudentDetailPage({
   return (
     <div>
       <p className="text-sm text-text-secondary">
-        <Link href="/classes" className="hover:text-accent">
+        <Link href="/t/classes" className="hover:text-accent">
           Classes
         </Link>
         {" \u203A "}
-        <Link href={`/classes/${classId}`} className="hover:text-accent">
+        <Link href={`/t/classes/${classId}`} className="hover:text-accent">
           {classData.name}
         </Link>
         {" \u203A Student"}

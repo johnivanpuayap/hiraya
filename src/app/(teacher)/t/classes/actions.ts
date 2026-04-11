@@ -47,7 +47,7 @@ export async function createClass(input: {
   }
 
   console.info("[class] created", { classId: data.id, joinCode });
-  revalidatePath("/classes");
+  revalidatePath("/t/classes");
   return { classId: data.id };
 }
 
@@ -72,7 +72,7 @@ export async function deleteClass(
     return { error: "Failed to delete class." };
   }
 
-  revalidatePath("/classes");
+  revalidatePath("/t/classes");
   return {};
 }
 
@@ -109,6 +109,6 @@ export async function removeStudent(
     return { error: "Failed to remove student." };
   }
 
-  revalidatePath(`/classes/${classId}`);
+  revalidatePath(`/t/classes/${classId}`);
   return {};
 }

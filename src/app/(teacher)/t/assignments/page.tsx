@@ -53,7 +53,7 @@ export default async function TeacherAssignmentsPage() {
             Create and manage practice assignments for your classes.
           </p>
         </div>
-        <Link href="/assignments/new">
+        <Link href="/t/assignments/new">
           <Button>Create Assignment</Button>
         </Link>
       </div>

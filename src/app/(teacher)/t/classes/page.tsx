@@ -50,7 +50,7 @@ export default async function ClassesPage() {
             Manage your classes and view student rosters.
           </p>
         </div>
-        <Link href="/classes/new">
+        <Link href="/t/classes/new">
           <Button>Create Class</Button>
         </Link>
       </div>
@@ -64,7 +64,7 @@ export default async function ClassesPage() {
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           {classes.map((cls) => (
-            <Link key={cls.id} href={`/classes/${cls.id}`}>
+            <Link key={cls.id} href={`/t/classes/${cls.id}`}>
               <Card className="transition-shadow hover:shadow-warm-lg">
                 <h3 className="font-heading text-lg font-bold text-text-primary">
                   {cls.name}

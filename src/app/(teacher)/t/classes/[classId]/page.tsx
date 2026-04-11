@@ -99,7 +99,7 @@ export default async function ClassDetailPage({
           </div>
         </div>
         <Link
-          href="/classes"
+          href="/t/classes"
           className="text-sm text-text-secondary hover:text-accent"
         >
           Back to Classes
@@ -138,7 +138,7 @@ export default async function ClassDetailPage({
                     >
                       <td className="py-3">
                         <Link
-                          href={`/classes/${classId}/students/${member.student_id}`}
+                          href={`/t/classes/${classId}/students/${member.student_id}`}
                           className="font-medium text-text-primary hover:text-accent"
                         >
                           {profile?.display_name ?? "Unknown"}
