@@ -198,7 +198,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -225,7 +225,7 @@ BEGIN
   event := jsonb_set(event, '{claims}', claims);
   RETURN event;
 END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = '';
 
 -- Grant necessary permissions for the hook
 GRANT USAGE ON SCHEMA public TO supabase_auth_admin;
@@ -244,7 +244,7 @@ RETURNS boolean AS $$
     WHERE cm.student_id = target_student_id
     AND c.teacher_id = auth.uid()
   );
-$$ LANGUAGE sql SECURITY DEFINER STABLE;
+$$ LANGUAGE sql SECURITY DEFINER STABLE SET search_path = '';
 
 -- ============================================================
 -- Row Level Security
