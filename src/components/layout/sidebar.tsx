@@ -14,9 +14,9 @@ const studentLinks = [
 
 const teacherLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
-  { href: "/t/classes", label: "Classes", icon: "🏫" },
-  { href: "/t/assignments", label: "Assignments", icon: "📋" },
-  { href: "/t/questions", label: "Question Bank", icon: "📚" },
+  { href: "/classes", label: "Classes", icon: "🏫" },
+  { href: "/assignments", label: "Assignments", icon: "📋" },
+  { href: "/questions", label: "Question Bank", icon: "📚" },
 ];
 
 export function Sidebar({ role }: SidebarProps): React.JSX.Element {

@@ -48,7 +48,7 @@ export async function createAssignment(
   }
 
   console.info("[assignment] created", { assignmentId: data.id });
-  revalidatePath("/t/assignments");
+  revalidatePath("/assignments");
   return { assignmentId: data.id };
 }
 
@@ -73,6 +73,6 @@ export async function deleteAssignment(
     return { error: "Failed to delete assignment." };
   }
 
-  revalidatePath("/t/assignments");
+  revalidatePath("/assignments");
   return {};
 }

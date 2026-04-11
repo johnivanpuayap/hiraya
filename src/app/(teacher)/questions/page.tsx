@@ -70,7 +70,7 @@ export default async function QuestionsPage({
       {/* Category filter */}
       <div className="mt-4 flex flex-wrap gap-2">
         <a
-          href="/t/questions"
+          href="/questions"
           className={`rounded-xl border-2 px-3 py-1.5 text-xs font-medium transition-colors ${
             !category
               ? "border-accent bg-accent/10 text-accent"
@@ -82,7 +82,7 @@ export default async function QuestionsPage({
         {(categories ?? []).map((cat) => (
           <a
             key={cat.id}
-            href={`/t/questions?category=${cat.id}`}
+            href={`/questions?category=${cat.id}`}
             className={`rounded-xl border-2 px-3 py-1.5 text-xs font-medium transition-colors ${
               category === cat.id
                 ? "border-accent bg-accent/10 text-accent"

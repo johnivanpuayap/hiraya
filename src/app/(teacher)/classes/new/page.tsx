@@ -27,7 +27,7 @@ export default function NewClassPage() {
       setError(result.error);
       setLoading(false);
     } else if (result.classId) {
-      router.push(`/t/classes/${result.classId}`);
+      router.push(`/classes/${result.classId}`);
     }
   }
 

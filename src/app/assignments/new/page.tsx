@@ -85,7 +85,7 @@ export default function NewAssignmentPage() {
       setError(result.error);
       setSubmitting(false);
     } else {
-      router.push("/t/assignments");
+      router.push("/assignments");
     }
   }
 
