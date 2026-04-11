@@ -25,6 +25,7 @@ export interface Database {
           last_name?: string;
           avatar_url?: string | null;
         };
+        Relationships: [];
       };
       categories: {
         Row: {
@@ -43,11 +44,12 @@ export interface Database {
           display_name?: string;
           exam_weight?: number;
         };
+        Relationships: [];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-    CompositeTypes: Record<string, never>;
+    Views: Record<never, never>;
+    Functions: Record<never, never>;
+    Enums: Record<never, never>;
+    CompositeTypes: Record<never, never>;
   };
 }
