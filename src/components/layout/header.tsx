@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ displayName, avatarUrl }: HeaderProps): React.JSX.Element {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-surface bg-white px-6">
+    <header className="flex h-16 items-center justify-between border-b border-surface bg-surface px-6">
       <div />
       <div className="flex items-center gap-4">
         <span className="text-sm font-medium text-text-primary">
