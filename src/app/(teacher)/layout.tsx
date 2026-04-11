@@ -26,7 +26,7 @@ export default async function TeacherLayout({ children }: TeacherLayoutProps) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("*")
+    .select("display_name, avatar_url")
     .eq("id", user.id)
     .single();
 

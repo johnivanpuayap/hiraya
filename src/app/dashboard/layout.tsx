@@ -5,11 +5,11 @@ import { getUserRole } from "@/lib/auth";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 
-interface StudentLayoutProps {
+interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function StudentLayout({ children }: StudentLayoutProps) {
+export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -20,8 +20,8 @@ export default async function StudentLayout({ children }: StudentLayoutProps) {
   }
 
   const role = getUserRole(user);
-  if (role !== "student") {
-    redirect("/dashboard");
+  if (!role) {
+    redirect("/login");
   }
 
   const { data: profile } = await supabase
@@ -32,10 +32,10 @@ export default async function StudentLayout({ children }: StudentLayoutProps) {
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role="student" />
+      <Sidebar role={role} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
-          displayName={profile?.display_name ?? "Student"}
+          displayName={profile?.display_name ?? (role === "teacher" ? "Teacher" : "Student")}
           avatarUrl={profile?.avatar_url ?? null}
         />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
