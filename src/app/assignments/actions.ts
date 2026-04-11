@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
+import { getUserRoleWithFallback } from "@/lib/auth";
 
 interface CreateAssignmentInput {
   classId: string;
@@ -25,6 +26,12 @@ export async function createAssignment(
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  // Only teachers can create assignments
+  const role = await getUserRoleWithFallback(user, supabase);
+  if (role !== "teacher") {
+    return { error: "Only teachers can create assignments." };
+  }
 
   const { data, error } = await supabase
     .from("assignments")
