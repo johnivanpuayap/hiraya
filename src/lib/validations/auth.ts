@@ -15,8 +15,8 @@ export const registerSchema = z.object({
     .max(72, "Password must be at most 72 characters"),
   firstName: z.string().min(1, "First name is required").max(100),
   lastName: z.string().min(1, "Last name is required").max(100),
-  role: z.string().refine((val) => ["student", "teacher"].includes(val), {
-    message: "Please select a role",
+  role: z.enum(["student", "teacher"], {
+    error: "Please select a role",
   }),
 });
 
