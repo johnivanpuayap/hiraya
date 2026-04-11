@@ -57,8 +57,7 @@ export default function LoginPage() {
     }
 
     console.info("[auth] user logged in", { email: result.data.email });
-    router.push("/dashboard");
-    router.refresh();
+    router.replace("/dashboard");
   }
 
   return (

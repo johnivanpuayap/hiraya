@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             Hiraya
           </h1>
           <p className="mt-1 text-sm text-text-secondary">
-            Aral hanggang pasa
+            Your friendly adaptive PhilNITS reviewer
           </p>
         </div>
         {children}

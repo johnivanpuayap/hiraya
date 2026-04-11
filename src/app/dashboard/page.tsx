@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { getUserRole } from "@/lib/auth";
+import { getUserRoleWithFallback } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 
 export default async function DashboardPage() {
@@ -14,7 +14,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const role = getUserRole(user);
+  const role = await getUserRoleWithFallback(user, supabase);
   if (!role) {
     redirect("/login");
   }

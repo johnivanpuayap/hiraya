@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { getUserRole } from "@/lib/auth";
+import { getUserRoleWithFallback } from "@/lib/auth";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 
@@ -19,7 +19,7 @@ export default async function TeacherLayout({ children }: TeacherLayoutProps) {
     redirect("/login");
   }
 
-  const role = getUserRole(user);
+  const role = await getUserRoleWithFallback(user, supabase);
   if (role !== "teacher") {
     redirect("/dashboard");
   }
