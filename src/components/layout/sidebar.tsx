@@ -1,10 +1,12 @@
 import { NavLink } from "@/components/layout/nav-link";
+import { Logo } from "@/components/ui/logo";
 
 interface SidebarProps {
   role: "student" | "teacher";
+  hasClasses?: boolean;
 }
 
-const studentLinks = [
+const studentBaseLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/practice", label: "Practice", icon: "📝" },
   { href: "/assignments", label: "Assignments", icon: "📋" },
@@ -19,15 +21,18 @@ const teacherLinks = [
   { href: "/questions", label: "Question Bank", icon: "📚" },
 ];
 
-export function Sidebar({ role }: SidebarProps): React.JSX.Element {
-  const links = role === "student" ? studentLinks : teacherLinks;
+export function Sidebar({ role, hasClasses = true }: SidebarProps): React.JSX.Element {
+  const links =
+    role === "teacher"
+      ? teacherLinks
+      : studentBaseLinks.filter(
+          (link) => link.href !== "/assignments" || hasClasses
+        );
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-surface bg-surface">
-      <div className="flex items-center gap-2 px-6 py-5">
-        <h1 className="font-heading text-2xl font-bold text-primary">
-          Hiraya
-        </h1>
+      <div className="px-6 py-5">
+        <Logo size="md" />
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 py-2">
@@ -41,9 +46,7 @@ export function Sidebar({ role }: SidebarProps): React.JSX.Element {
         ))}
       </nav>
 
-      <div className="border-t border-surface px-6 py-4">
-        <p className="text-xs text-text-secondary">Aral hanggang pasa</p>
-      </div>
+      <div className="border-t border-background px-6 py-4" />
     </aside>
   );
 }

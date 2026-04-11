@@ -24,15 +24,21 @@ export default async function StudentLayout({ children }: StudentLayoutProps) {
     redirect("/dashboard");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, avatar_url")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profile }, { count: classCount }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("class_members")
+      .select("id", { count: "exact", head: true })
+      .eq("student_id", user.id),
+  ]);
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role="student" />
+      <Sidebar role="student" hasClasses={(classCount ?? 0) > 0} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
           displayName={profile?.display_name ?? "Student"}

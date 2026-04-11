@@ -24,15 +24,23 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, avatar_url")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profile }, { count: classCount }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", user.id)
+      .single(),
+    role === "student"
+      ? supabase
+          .from("class_members")
+          .select("id", { count: "exact", head: true })
+          .eq("student_id", user.id)
+      : Promise.resolve({ count: 0 } as { count: number }),
+  ]);
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role={role} />
+      <Sidebar role={role} hasClasses={role === "student" ? (classCount ?? 0) > 0 : true} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
           displayName={profile?.display_name ?? (role === "teacher" ? "Teacher" : "Student")}
