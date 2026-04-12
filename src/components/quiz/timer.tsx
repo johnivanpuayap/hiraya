@@ -29,22 +29,17 @@ export function Timer({ totalSeconds, onTimeUp }: TimerProps) {
   const seconds = remaining % 60;
   const progress = remaining / totalSeconds;
 
-  const urgencyColor =
-    progress > 0.25
-      ? "bg-accent"
-      : progress > 0.1
-        ? "bg-secondary"
-        : "bg-danger";
+  const urgencyColor = progress > 0.2 ? "bg-primary-gradient" : "bg-danger";
 
   return (
     <div className="flex items-center gap-3">
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-[rgba(156,135,110,0.12)]">
         <div
           className={`h-full rounded-full transition-all duration-1000 ${urgencyColor}`}
           style={{ width: `${progress * 100}%` }}
         />
       </div>
-      <span className="min-w-[4rem] text-right font-heading text-sm font-bold text-text-primary">
+      <span className="min-w-[4rem] text-right font-heading text-sm font-medium text-text-secondary">
         {minutes}:{seconds.toString().padStart(2, "0")}
       </span>
     </div>
