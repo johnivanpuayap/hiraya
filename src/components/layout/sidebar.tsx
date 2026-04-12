@@ -30,12 +30,12 @@ export function Sidebar({ role, hasClasses = true }: SidebarProps): React.JSX.El
         );
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-surface bg-surface">
-      <div className="px-6 py-5">
+    <aside className="flex h-screen w-[270px] flex-col glass">
+      <div className="px-6 py-6">
         <Logo size="md" />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 py-2">
+      <nav className="flex flex-1 flex-col gap-1.5 px-4 py-2">
         {links.map((link) => (
           <NavLink
             key={link.href}
@@ -46,7 +46,7 @@ export function Sidebar({ role, hasClasses = true }: SidebarProps): React.JSX.El
         ))}
       </nav>
 
-      <div className="border-t border-background px-6 py-4" />
+      <div className="border-t border-glass px-6 py-4" />
     </aside>
   );
 }
