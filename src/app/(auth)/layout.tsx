@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="mb-8 flex flex-col items-center">
           <Logo size="lg" />
           <p className="mt-2 text-sm text-text-secondary">
-            Your friendly adaptive PhilNITS reviewer
+            Study smart. Rise ready.
           </p>
         </div>
         {children}

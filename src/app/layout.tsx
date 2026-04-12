@@ -15,9 +15,9 @@ interface RootLayoutProps {
 }
 
 export const metadata: Metadata = {
-  title: "Hiraya — Your friendly adaptive PhilNITS reviewer",
+  title: "Hiraya — Study smart. Rise ready.",
   description:
-    "Your friendly adaptive PhilNITS reviewer that tracks your progress and helps you prepare with confidence.",
+    "Your adaptive PhilNITS exam reviewer. Hiraya tracks what you know, finds what you don't, and builds a study path uniquely yours.",
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
