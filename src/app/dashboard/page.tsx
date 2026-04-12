@@ -114,7 +114,7 @@ async function StudentDashboard({ userId }: { userId: string }) {
           label="Sessions Completed"
           value={sessions.length}
         />
-        <div className="flex items-center rounded-xl bg-surface p-6 shadow-warm">
+        <div className="flex items-center glass rounded-2xl p-6 shadow-warm">
           <StreakDisplay
             currentStreak={streak?.current_streak ?? 0}
             longestStreak={streak?.longest_streak ?? 0}
