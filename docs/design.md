@@ -28,24 +28,30 @@
 - Playful on the surface, serious about progress underneath
 - Warm and hopeful — the feeling of a new day and new possibilities
 
-### Color Palette — "Golden Hour"
+### Color Palette — "Golden Study Nook"
 
-| Role            | Color              | Hex       |
-|-----------------|--------------------|-----------|
-| Primary         | Warm golden yellow | `#F5A623` |
-| Secondary       | Soft coral/orange  | `#FF8A65` |
-| Background      | Warm off-white     | `#FFF8F0` |
-| Surface/Cards   | Cream white        | `#FFF3E6` |
-| Accent/CTA      | Deep amber         | `#C67A1A` |
-| Success         | Warm green         | `#4CAF50` |
-| Danger          | Soft red-orange    | `#E85D3A` |
-| Text Primary    | Warm dark brown    | `#3D2C1E` |
-| Text Secondary  | Medium brown       | `#7A6555` |
+| Role            | Color / Value                                              | Hex / CSS                          |
+|-----------------|------------------------------------------------------------|------------------------------------|
+| Primary         | Deep amber                                                 | `#C77B1A`                          |
+| Primary Light   | Warm gold                                                  | `#E6A040`                          |
+| Primary Glow    | Tinted backgrounds, hover states                           | `rgba(199, 123, 26, 0.15)`        |
+| Secondary       | Rich terracotta                                            | `#B85A3B`                          |
+| Background      | Warm gradient (afternoon light)                            | `linear-gradient(160deg, #FBF4E9, #F6EDD8, #F2E5CF)` |
+| Surface/Cards   | Frosted glass                                              | `rgba(255, 250, 240, 0.75)` + `backdrop-filter: blur(12px)` |
+| Surface Solid   | Fallback for no-blur contexts                              | `#FFFAF0`                          |
+| Glass Border    | Warm golden tint                                           | `rgba(199, 123, 26, 0.15)`        |
+| Success         | Muted forest green                                         | `#5A8E4C`                          |
+| Danger          | Refined deep red                                           | `#BF4A2D`                          |
+| Text Primary    | Deep espresso                                              | `#2A1D0E`                          |
+| Text Secondary  | Warm mid-brown                                             | `#6B5640`                          |
+| Text Muted      | Labels, metadata                                           | `#9C876E`                          |
+| Border          | Subtle warm dividers                                       | `rgba(139, 94, 60, 0.1)`          |
 
 ### Typography
 
-- **Headings:** Rounded, friendly sans-serif (Nunito)
+- **Headings:** Bookish, editorial serif (DM Serif Display) — warm cafe personality
 - **Body:** Clean, readable sans-serif (Inter)
+- **Pairing rationale:** Serif headings + sans body creates natural hierarchy without heavy weights or color tricks
 
 ### Illustration Style
 
@@ -56,7 +62,11 @@
 
 ### Layout & Feel
 
-- Playful and illustrated surface with dashboard substance underneath
-- Rounded shapes, warm cards, illustrated accents
+- **Aesthetic:** Golden Study Nook — cozy study cafe atmosphere
+- Frosted glass cards over warm gradient backgrounds
+- Ambient light effects (golden and terracotta radial glows, fixed position)
+- 16px border radius on cards, warm golden-tinted borders and shadows
 - Progress bars, streaks, stats — data-forward where it matters
-- Like Duolingo's warmth meets Khan Academy's depth
+- Subtle, smooth motion only (CSS transitions, no animation libraries)
+- Card hover: lift + shadow deepen. Option hover: slide right. Button hover: lift.
+- Like studying at your favorite coffee shop — warm, inviting, relaxed focus

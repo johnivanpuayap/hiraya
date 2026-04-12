@@ -8,12 +8,12 @@ Built with Next.js (App Router), Tailwind CSS, Supabase (Auth + PostgreSQL), Typ
 ## Design System
 
 **ALWAYS follow the design docs when creating any UI:**
-- Read `docs/design.md` for the visual identity (Golden Hour palette, typography, illustration style)
+- Read `docs/design.md` for the visual identity (Golden Study Nook palette, typography, layout)
 - Read the spec in `docs/superpowers/specs/` for feature specs and component architecture
-- Use the Golden Hour color palette — never use default gray/blue Tailwind colors
-- Typography: Nunito for headings, Inter for body text
-- All cards and containers use rounded-xl (12px border radius) with warm-tinted shadows
-- Keep the "playful surface, serious progress underneath" personality
+- Use the Golden Study Nook color palette — never use default gray/blue Tailwind colors
+- Typography: DM Serif Display for headings, Inter for body text
+- All cards use frosted glass (16px border radius, backdrop-blur, warm golden borders/shadows)
+- Keep the "cozy study cafe" personality — warm, inviting, relaxed focus
 
 ## Coding Standards
 
