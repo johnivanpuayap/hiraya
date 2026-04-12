@@ -16,45 +16,43 @@ export function Logo({ size = "md", showText = true }: LogoProps) {
       <svg
         width={s.mark}
         height={s.mark}
-        viewBox="0 0 40 40"
+        viewBox="0 0 80 80"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Hiraya logo"
       >
-        {/* Glow bloom at the spine origin */}
-        <ellipse
-          cx="20"
-          cy="27"
-          rx="7"
-          ry="4"
-          fill="#F5A623"
-          opacity="0.18"
+        {/* Ambient glow */}
+        <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12" />
+
+        {/* Main 8-pointed star (tala) */}
+        <path
+          d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z"
+          fill="#C77B1A"
+          opacity="0.85"
         />
 
-        {/* Light rays fanning upward from spine */}
-        <line x1="20" y1="26" x2="20" y2="8" stroke="#F5A623" strokeWidth="1.1" strokeLinecap="round" opacity="0.55" />
-        <line x1="20" y1="26" x2="13" y2="9" stroke="#F5A623" strokeWidth="0.9" strokeLinecap="round" opacity="0.4" />
-        <line x1="20" y1="26" x2="9" y2="13" stroke="#FF8A65" strokeWidth="0.7" strokeLinecap="round" opacity="0.28" />
-        <line x1="20" y1="26" x2="27" y2="9" stroke="#F5A623" strokeWidth="0.9" strokeLinecap="round" opacity="0.4" />
-        <line x1="20" y1="26" x2="31" y2="13" stroke="#FF8A65" strokeWidth="0.7" strokeLinecap="round" opacity="0.28" />
+        {/* Inner star highlight */}
+        <path
+          d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z"
+          fill="#E6A040"
+          opacity="0.7"
+        />
 
-        {/* Left page-wing */}
-        <path d="M20 27 L5 32 L7 18 L20 14" fill="#F5A623" opacity="0.92" />
-        <path d="M20 27 L14 29 L15 20 L20 14" fill="#FFC84A" opacity="0.55" />
+        {/* Center circle */}
+        <circle cx="40" cy="32" r="4" fill="#FFFAF0" />
+        <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6" />
 
-        {/* Right page-wing */}
-        <path d="M20 27 L35 32 L33 18 L20 14" fill="#FF8A65" opacity="0.88" />
-        <path d="M20 27 L26 29 L25 20 L20 14" fill="#FFB08A" opacity="0.5" />
-
-        {/* Spine line */}
-        <line x1="20" y1="13" x2="20" y2="28" stroke="#C67A1A" strokeWidth="1.5" strokeLinecap="round" />
-
-        {/* Apex spark */}
-        <path d="M20 7 L21.4 10 L20 9.2 L18.6 10 Z" fill="#F5A623" />
-        <circle cx="20" cy="8.5" r="1.6" fill="#FFC84A" opacity="0.9" />
-
-        {/* Horizon baseline */}
-        <line x1="4" y1="34" x2="36" y2="34" stroke="#C67A1A" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
+        {/* Horizon line */}
+        <line
+          x1="12"
+          y1="64"
+          x2="68"
+          y2="64"
+          stroke="#C77B1A"
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity="0.3"
+        />
       </svg>
 
       {showText && (
