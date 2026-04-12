@@ -137,7 +137,7 @@ export default function RegisterPage() {
               className={`flex-1 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-colors ${
                 formData.role === "student"
                   ? "border-accent bg-accent/10 text-accent"
-                  : "border-surface text-text-secondary hover:border-accent/30"
+                  : "border-glass text-text-secondary hover:border-accent/30"
               }`}
             >
               Student
@@ -148,7 +148,7 @@ export default function RegisterPage() {
               className={`flex-1 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-colors ${
                 formData.role === "teacher"
                   ? "border-accent bg-accent/10 text-accent"
-                  : "border-surface text-text-secondary hover:border-accent/30"
+                  : "border-glass text-text-secondary hover:border-accent/30"
               }`}
             >
               Teacher
