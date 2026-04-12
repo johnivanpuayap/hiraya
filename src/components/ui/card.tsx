@@ -1,5 +1,6 @@
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   padding?: "sm" | "md" | "lg";
+  hover?: boolean;
 }
 
 const paddingStyles: Record<NonNullable<CardProps["padding"]>, string> = {
@@ -10,13 +11,18 @@ const paddingStyles: Record<NonNullable<CardProps["padding"]>, string> = {
 
 export function Card({
   padding = "md",
+  hover = false,
   className = "",
   children,
   ...props
 }: CardProps): React.JSX.Element {
   return (
     <div
-      className={`rounded-xl bg-surface shadow-warm ${paddingStyles[padding]} ${className}`}
+      className={`rounded-2xl glass shadow-warm transition-all duration-300 ease-out ${
+        hover
+          ? "hover:shadow-warm-lg hover:-translate-y-0.5"
+          : ""
+      } ${paddingStyles[padding]} ${className}`}
       {...props}
     >
       {children}

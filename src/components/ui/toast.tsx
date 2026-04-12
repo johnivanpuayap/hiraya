@@ -35,7 +35,7 @@ export function Toast({
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 rounded-xl border-2 px-4 py-3 shadow-warm-lg ${typeStyles[type]}`}
+      className={`fixed bottom-4 right-4 z-50 rounded-xl border glass px-4 py-3 shadow-warm-lg ${typeStyles[type]}`}
       role="alert"
     >
       <p className="text-sm font-medium">{message}</p>

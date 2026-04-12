@@ -7,19 +7,19 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-accent text-white hover:bg-accent/90 focus-visible:ring-accent",
+    "bg-primary-gradient text-white shadow-[0_4px_16px_rgba(199,123,26,0.35)] hover:shadow-[0_6px_24px_rgba(199,123,26,0.45)] hover:-translate-y-0.5",
   secondary:
-    "border-2 border-accent text-accent hover:bg-accent/10 focus-visible:ring-accent",
+    "border-2 border-glass text-accent hover:bg-[rgba(199,123,26,0.15)]",
   danger:
     "bg-danger text-white hover:bg-danger/90 focus-visible:ring-danger",
   ghost:
-    "text-text-secondary hover:bg-surface hover:text-text-primary focus-visible:ring-accent",
+    "text-text-secondary border border-glass hover:bg-[rgba(199,123,26,0.15)] hover:border-transparent",
 };
 
 const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
   sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-6 py-3 text-base",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -30,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center rounded-xl font-heading font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`inline-flex items-center justify-center rounded-xl font-heading font-semibold transition-all duration-250 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
         {...props}
       >
         {children}
