@@ -74,7 +74,7 @@ export default async function QuestionsPage({
           className={`rounded-xl border-2 px-3 py-1.5 text-xs font-medium transition-colors ${
             !category
               ? "border-accent bg-accent/10 text-accent"
-              : "border-surface text-text-secondary hover:border-accent/30"
+              : "border-glass text-text-secondary hover:border-accent/30"
           }`}
         >
           All
@@ -86,7 +86,7 @@ export default async function QuestionsPage({
             className={`rounded-xl border-2 px-3 py-1.5 text-xs font-medium transition-colors ${
               category === cat.id
                 ? "border-accent bg-accent/10 text-accent"
-                : "border-surface text-text-secondary hover:border-accent/30"
+                : "border-glass text-text-secondary hover:border-accent/30"
             }`}
           >
             {cat.display_name}
@@ -107,7 +107,7 @@ export default async function QuestionsPage({
           return (
             <Card key={q.id} padding="sm">
               <div className="flex items-start gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-surface font-heading text-xs font-bold text-text-secondary">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg glass font-heading text-xs font-bold text-text-secondary">
                   {index + 1}
                 </span>
                 <div className="flex-1">
@@ -130,13 +130,13 @@ export default async function QuestionsPage({
                     })}
                   </div>
                   <div className="mt-2 flex gap-2">
-                    <span className="rounded bg-surface px-1.5 py-0.5 text-xs text-text-secondary">
+                    <span className="rounded glass px-1.5 py-0.5 text-xs text-text-secondary">
                       {categoryNameMap.get(q.category_id) ?? "Unknown"}
                     </span>
-                    <span className="rounded bg-surface px-1.5 py-0.5 text-xs text-text-secondary">
+                    <span className="rounded glass px-1.5 py-0.5 text-xs text-text-secondary">
                       {q.exam_source}
                     </span>
-                    <span className="rounded bg-surface px-1.5 py-0.5 text-xs text-text-secondary">
+                    <span className="rounded glass px-1.5 py-0.5 text-xs text-text-secondary">
                       Difficulty: {q.difficulty.toFixed(1)}
                     </span>
                   </div>

@@ -65,13 +65,13 @@ export default async function ClassesPage() {
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           {classes.map((cls) => (
             <Link key={cls.id} href={`/classes/${cls.id}`}>
-              <Card className="transition-shadow hover:shadow-warm-lg">
+              <Card hover>
                 <h3 className="font-heading text-lg font-bold text-text-primary">
                   {cls.name}
                 </h3>
                 <div className="mt-2 flex items-center gap-4 text-sm text-text-secondary">
                   <span>{memberCounts.get(cls.id) ?? 0} students</span>
-                  <span className="rounded-lg bg-surface px-2 py-0.5 font-mono text-xs">
+                  <span className="rounded-lg glass px-2 py-0.5 font-mono text-xs">
                     {cls.join_code}
                   </span>
                 </div>

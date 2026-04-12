@@ -93,7 +93,7 @@ export default async function ClassDetailPage({
           </h2>
           <div className="mt-1 flex items-center gap-3 text-sm text-text-secondary">
             <span>Join Code:</span>
-            <span className="rounded-lg bg-surface px-3 py-1 font-mono text-base font-bold text-accent">
+            <span className="rounded-lg glass px-3 py-1 font-mono text-base font-bold text-accent">
               {classData.join_code}
             </span>
           </div>
@@ -119,7 +119,7 @@ export default async function ClassDetailPage({
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-surface text-text-secondary">
+                <tr className="border-b border-glass text-text-secondary">
                   <th className="pb-2 font-medium">Name</th>
                   <th className="pb-2 font-medium">Sessions</th>
                   <th className="pb-2 font-medium">Avg Score</th>
@@ -134,7 +134,7 @@ export default async function ClassDetailPage({
                   return (
                     <tr
                       key={member.student_id}
-                      className="border-b border-surface/50"
+                      className="border-b border-glass/50"
                     >
                       <td className="py-3">
                         <Link
