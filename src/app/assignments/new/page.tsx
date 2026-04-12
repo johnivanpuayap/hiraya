@@ -90,7 +90,7 @@ export default function NewAssignmentPage() {
   }
 
   if (loading) {
-    return <div className="h-96 animate-pulse rounded-xl bg-surface" />;
+    return <div className="h-96 animate-pulse rounded-2xl glass" />;
   }
 
   return (
@@ -136,7 +136,7 @@ export default function NewAssignmentPage() {
                 className={`flex-1 rounded-xl border-2 px-4 py-2 text-sm font-medium capitalize transition-colors ${
                   mode === m
                     ? "border-accent bg-accent/10 text-accent"
-                    : "border-surface text-text-secondary"
+                    : "border-glass text-text-secondary"
                 }`}
               >
                 {m}
@@ -161,7 +161,7 @@ export default function NewAssignmentPage() {
                 className={`rounded-xl border-2 px-3 py-1 text-xs font-medium transition-colors ${
                   selectedCategories.includes(cat.id)
                     ? "border-accent bg-accent/10 text-accent"
-                    : "border-surface text-text-secondary"
+                    : "border-glass text-text-secondary"
                 }`}
               >
                 {cat.display_name}
@@ -185,7 +185,7 @@ export default function NewAssignmentPage() {
                     className={`flex-1 rounded-xl border-2 px-3 py-2 text-sm font-bold transition-colors ${
                       questionCount === count
                         ? "border-accent bg-accent/10 text-accent"
-                        : "border-surface text-text-secondary"
+                        : "border-glass text-text-secondary"
                     }`}
                   >
                     {count}

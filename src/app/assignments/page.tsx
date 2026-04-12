@@ -105,7 +105,7 @@ async function StudentAssignments({ userId }: { userId: string }) {
               !isComplete;
 
             return (
-              <Card key={assignment.id}>
+              <Card key={assignment.id} hover>
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-heading text-base font-bold text-text-primary">
@@ -196,7 +196,7 @@ async function TeacherAssignments({ userId }: { userId: string }) {
       ) : (
         <div className="mt-6 flex flex-col gap-4">
           {assignments.map((a) => (
-            <Card key={a.id}>
+            <Card key={a.id} hover>
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-heading text-base font-bold text-text-primary">
@@ -212,7 +212,7 @@ async function TeacherAssignments({ userId }: { userId: string }) {
                     </p>
                   )}
                 </div>
-                <span className="rounded-lg bg-surface px-2 py-1 text-xs text-text-secondary">
+                <span className="rounded-lg glass border border-glass px-2 py-1 text-xs text-text-secondary">
                   {formatDate(a.created_at)}
                 </span>
               </div>
