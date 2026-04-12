@@ -8,7 +8,7 @@ export function ReadinessGauge({ readiness }: ReadinessGaugeProps) {
   const offset = circumference - (readiness / 100) * circumference;
 
   const color =
-    readiness >= 70 ? "#4CAF50" : readiness >= 40 ? "#F5A623" : "#E85D3A";
+    readiness >= 70 ? "#5A8E4C" : readiness >= 40 ? "#C77B1A" : "#BF4A2D";
 
   return (
     <div className="flex flex-col items-center">

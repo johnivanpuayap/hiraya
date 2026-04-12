@@ -45,7 +45,7 @@ export function TrendGraph({ sessions }: TrendGraphProps) {
               y1={y}
               x2={width - padding}
               y2={y}
-              stroke="#FFF3E6"
+              stroke="rgba(139, 94, 60, 0.1)"
               strokeWidth="1"
             />
             <text
@@ -62,11 +62,11 @@ export function TrendGraph({ sessions }: TrendGraphProps) {
       })}
 
       {/* Line */}
-      <path d={pathD} fill="none" stroke="#C67A1A" strokeWidth="2" />
+      <path d={pathD} fill="none" stroke="#C77B1A" strokeWidth="2" />
 
       {/* Dots */}
       {points.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r="3" fill="#C67A1A" />
+        <circle key={i} cx={p.x} cy={p.y} r="3" fill="#C77B1A" />
       ))}
     </svg>
   );

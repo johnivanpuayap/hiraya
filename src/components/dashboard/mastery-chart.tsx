@@ -14,9 +14,9 @@ export function MasteryChart({ categories }: MasteryChartProps) {
           <span className="w-40 truncate text-sm text-text-secondary">
             {cat.displayName}
           </span>
-          <div className="h-3 flex-1 overflow-hidden rounded-full bg-surface">
+          <div className="h-3 flex-1 overflow-hidden rounded-full bg-[rgba(156,135,110,0.12)]">
             <div
-              className="h-full rounded-full bg-accent transition-all duration-500"
+              className={`h-full rounded-full transition-all duration-500 ${cat.mastery < 50 ? "bg-secondary" : "bg-primary-gradient"}`}
               style={{ width: `${cat.mastery}%` }}
             />
           </div>

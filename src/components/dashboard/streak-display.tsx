@@ -13,8 +13,8 @@ export function StreakDisplay({
         🔥
       </span>
       <div>
-        <p className="font-heading text-2xl font-bold text-text-primary">
-          {currentStreak} day{currentStreak !== 1 ? "s" : ""}
+        <p className="font-heading text-5xl text-primary">
+          {currentStreak} <span className="text-sm text-text-muted font-medium">day{currentStreak !== 1 ? "s" : ""}</span>
         </p>
         <p className="text-xs text-text-secondary">
           Longest: {longestStreak} day{longestStreak !== 1 ? "s" : ""}

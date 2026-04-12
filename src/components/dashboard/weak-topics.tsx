@@ -24,7 +24,7 @@ export function WeakTopics({ topics }: WeakTopicsProps) {
       {weak.map((topic) => (
         <div
           key={topic.categoryId}
-          className="flex items-center justify-between rounded-xl bg-surface px-4 py-2.5"
+          className="flex items-center justify-between glass rounded-xl px-4 py-2.5 transition-all duration-250 hover:shadow-warm"
         >
           <div>
             <p className="text-sm font-medium text-text-primary">
