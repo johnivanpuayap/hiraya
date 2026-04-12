@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface ResultsPageProps {
@@ -81,24 +80,24 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
 
       {/* Score summary */}
       <div className="mt-6 grid grid-cols-3 gap-4">
-        <Card>
+        <div className="glass rounded-2xl p-4">
           <p className="text-sm text-text-secondary">Score</p>
-          <p className="mt-1 font-heading text-3xl font-bold text-text-primary">
+          <p className="mt-1 font-heading text-5xl text-primary">
             {score}%
           </p>
-        </Card>
-        <Card>
+        </div>
+        <div className="glass rounded-2xl p-4">
           <p className="text-sm text-text-secondary">Correct</p>
           <p className="mt-1 font-heading text-3xl font-bold text-success">
             {correctCount}
           </p>
-        </Card>
-        <Card>
+        </div>
+        <div className="glass rounded-2xl p-4">
           <p className="text-sm text-text-secondary">Total</p>
           <p className="mt-1 font-heading text-3xl font-bold text-text-primary">
             {totalAnswered}
           </p>
-        </Card>
+        </div>
       </div>
 
       {/* Answer review */}
@@ -114,7 +113,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
           const category = categoryMap.get(q.category_id);
 
           return (
-            <Card key={response.question_id} padding="sm">
+            <div key={response.question_id} className="glass rounded-2xl p-3">
               <div className="flex items-start gap-3">
                 <span
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${
@@ -128,7 +127,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
                     {q.question_text}
                   </p>
                   {category && (
-                    <span className="mt-1 inline-block rounded-lg bg-surface px-2 py-0.5 text-xs text-text-secondary">
+                    <span className="mt-1 inline-block rounded-lg bg-[rgba(156,135,110,0.12)] px-2 py-0.5 text-xs text-text-secondary">
                       {category.display_name}
                     </span>
                   )}
@@ -145,7 +144,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
                   </div>
                 </div>
               </div>
-            </Card>
+            </div>
           );
         })}
       </div>

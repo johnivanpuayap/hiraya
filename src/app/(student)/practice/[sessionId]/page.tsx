@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback, use } from "react";
 import { useRouter } from "next/navigation";
 
-import { Card } from "@/components/ui/card";
 import { QuestionCard } from "@/components/quiz/question-card";
 import { Timer } from "@/components/quiz/timer";
 import { ProgressBar } from "@/components/quiz/progress-bar";
@@ -163,11 +162,11 @@ export default function SessionPage({ params }: SessionPageProps) {
 
   if (loadingQuestion && !question) {
     return (
-      <Card>
+      <div className="glass rounded-2xl shadow-warm p-6">
         <div className="flex items-center justify-center py-12">
           <p className="text-text-secondary">Loading question...</p>
         </div>
-      </Card>
+      </div>
     );
   }
 
@@ -184,7 +183,8 @@ export default function SessionPage({ params }: SessionPageProps) {
       <ProgressBar current={questionNumber} total={totalQuestions} />
 
       {/* Question */}
-      <Card padding="lg">
+      <div className="glass rounded-2xl shadow-warm relative p-6">
+        <div className="absolute top-0 right-0 w-20 h-20 bg-[radial-gradient(circle_at_top_right,rgba(199,123,26,0.15)_0%,transparent_60%)] rounded-tr-2xl pointer-events-none" />
         <QuestionCard
           questionText={question.questionText}
           imageUrl={question.imageUrl}
@@ -207,7 +207,7 @@ export default function SessionPage({ params }: SessionPageProps) {
             <AnswerFeedback isCorrect={feedback.isCorrect} />
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Navigation */}
       <QuizNav
