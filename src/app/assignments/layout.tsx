@@ -46,7 +46,7 @@ export default async function AssignmentsLayout({ children }: AssignmentsLayoutP
           displayName={profile?.display_name ?? (role === "teacher" ? "Teacher" : "Student")}
           avatarUrl={profile?.avatar_url ?? null}
         />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="relative z-[1] flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

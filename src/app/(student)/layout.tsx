@@ -44,7 +44,7 @@ export default async function StudentLayout({ children }: StudentLayoutProps) {
           displayName={profile?.display_name ?? "Student"}
           avatarUrl={profile?.avatar_url ?? null}
         />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="relative z-[1] flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

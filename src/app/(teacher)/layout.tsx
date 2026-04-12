@@ -38,7 +38,7 @@ export default async function TeacherLayout({ children }: TeacherLayoutProps) {
           displayName={profile?.display_name ?? "Teacher"}
           avatarUrl={profile?.avatar_url ?? null}
         />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="relative z-[1] flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );
