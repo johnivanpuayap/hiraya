@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 
@@ -11,10 +11,7 @@ interface ResultsPageProps {
 
 export default async function ResultsPage({ params }: ResultsPageProps) {
   const { sessionId } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, supabase } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
@@ -29,27 +26,28 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
     redirect("/practice");
   }
 
-  // Get responses with question details
+  // Get responses, questions, and categories in parallel where possible
   const admin = createAdminClient();
+
+  // First: fetch responses (needed to derive questionIds)
   const { data: responses } = await admin
     .from("responses")
     .select("question_id, selected_answer, is_correct, time_spent_ms")
     .eq("session_id", sessionId)
     .order("answered_at", { ascending: true });
 
-  // Get question details for each response
   const questionIds = (responses ?? []).map((r) => r.question_id);
-  const { data: questions } = await admin
-    .from("questions")
-    .select("id, question_text, option_a, option_b, option_c, option_d, correct_answer, category_id")
-    .in("id", questionIds.length > 0 ? questionIds : ["__none__"]);
 
-  // Get category names
-  const categoryIds = [...new Set((questions ?? []).map((q) => q.category_id))];
-  const { data: categories } = await admin
-    .from("categories")
-    .select("id, display_name")
-    .in("id", categoryIds.length > 0 ? categoryIds : ["__none__"]);
+  // Second: fetch questions and all categories in parallel
+  const [{ data: questions }, { data: categories }] = await Promise.all([
+    admin
+      .from("questions")
+      .select("id, question_text, option_a, option_b, option_c, option_d, correct_answer, category_id")
+      .in("id", questionIds.length > 0 ? questionIds : ["__none__"]),
+    admin
+      .from("categories")
+      .select("id, display_name"),
+  ]);
 
   const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
   const categoryMap = new Map((categories ?? []).map((c) => [c.id, c]));

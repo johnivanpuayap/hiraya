@@ -1,9 +1,8 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserRoleWithFallback } from "@/lib/auth";
 import { computeReadiness, getCategoryMastery } from "@/lib/analytics";
 import { formatDate } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
@@ -60,14 +59,10 @@ export default async function StudentDetailPage({
   params,
 }: StudentDetailPageProps) {
   const { classId, studentId } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role, supabase } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
-  const role = await getUserRoleWithFallback(user, supabase);
   if (role !== "teacher") redirect("/dashboard");
 
   // Verify teacher owns this class

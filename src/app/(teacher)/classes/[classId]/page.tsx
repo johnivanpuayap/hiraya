@@ -1,9 +1,8 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserRoleWithFallback } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { MasteryChart } from "@/components/dashboard/mastery-chart";
@@ -18,14 +17,10 @@ export default async function ClassDetailPage({
   params,
 }: ClassDetailPageProps) {
   const { classId } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role, supabase } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
-  const role = await getUserRoleWithFallback(user, supabase);
   if (role !== "teacher") redirect("/dashboard");
 
   // Get class info
@@ -134,15 +129,35 @@ export default async function ClassDetailPage({
   let scoreSum = 0;
   let studentsWithSessions = 0;
 
-  for (const studentId of studentIds) {
-    const { data: sessions } = await admin
-      .from("sessions")
-      .select("correct_count, question_count, completed_at")
-      .eq("student_id", studentId)
-      .not("completed_at", "is", null)
-      .order("completed_at", { ascending: false });
+  // Batch-fetch all completed sessions for all students in the class
+  const { data: allSessions } =
+    studentIds.length > 0
+      ? await admin
+          .from("sessions")
+          .select("student_id, correct_count, question_count, completed_at")
+          .in("student_id", studentIds)
+          .not("completed_at", "is", null)
+          .order("completed_at", { ascending: false })
+      : { data: [] as Array<{
+          student_id: string;
+          correct_count: number;
+          question_count: number;
+          completed_at: string;
+        }> };
 
-    const completed = sessions ?? [];
+  // Group sessions by student
+  const sessionsByStudent = new Map<
+    string,
+    Array<{ correct_count: number; question_count: number; completed_at: string | null }>
+  >();
+  for (const s of allSessions ?? []) {
+    const list = sessionsByStudent.get(s.student_id) ?? [];
+    list.push(s);
+    sessionsByStudent.set(s.student_id, list);
+  }
+
+  for (const studentId of studentIds) {
+    const completed = sessionsByStudent.get(studentId) ?? [];
     const totalCorrect = completed.reduce((s, x) => s + x.correct_count, 0);
     const totalQuestions = completed.reduce(
       (s, x) => s + x.question_count,
