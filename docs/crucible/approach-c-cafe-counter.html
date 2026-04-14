@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiraya — Approach C: Cafe Counter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #B8612E;
+    --primary-light: #D4813E;
+    --primary-bg: rgba(184, 97, 46, 0.06);
+    --secondary: #8B5E3C;
+    --bg: #FDFAF6;
+    --surface: #FFFFFF;
+    --surface-alt: #FAF5ED;
+    --text: #1E1408;
+    --text-secondary: #5C4A36;
+    --text-muted: #A3917B;
+    --success: #4E7F42;
+    --danger: #B8432A;
+    --border: rgba(30, 20, 8, 0.08);
+    --border-strong: rgba(30, 20, 8, 0.14);
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Sora', sans-serif;
+    color: var(--text);
+  }
+
+  .label {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--text);
+    color: var(--bg);
+    text-align: center;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .label span { opacity: 0.6; font-weight: 400; }
+
+  .layout {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 40px;
+  }
+
+  /* Sidebar — clean & structured */
+  .sidebar {
+    width: 256px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: fixed;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    margin-bottom: 28px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo h2 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo small {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 1px;
+    letter-spacing: 0.2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+  }
+
+  .nav-item.active {
+    background: var(--primary-bg);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .nav-item svg {
+    width: 17px; height: 17px;
+    opacity: 0.6;
+  }
+
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 20px 12px 6px;
+  }
+
+  /* Main */
+  .main {
+    margin-left: 256px;
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 1100px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    font-family: 'Sora', sans-serif;
+  }
+
+  /* Stats Grid — bold numbers */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.15s ease;
+  }
+
+  .stat-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Sora', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    color: var(--success);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .stat-change.down { color: var(--danger); }
+
+  /* Content Grid */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 5fr 3fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .card-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .card-link {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  /* Mastery Bars — clean & bold */
+  .mastery-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 0;
+  }
+
+  .mastery-item + .mastery-item {
+    border-top: 1px solid var(--border);
+  }
+
+  .mastery-name {
+    font-size: 13px;
+    font-weight: 500;
+    width: 150px;
+    flex-shrink: 0;
+  }
+
+  .mastery-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--surface-alt);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .mastery-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--primary);
+  }
+
+  .mastery-bar-fill.low {
+    background: var(--danger);
+  }
+
+  .mastery-pct {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    width: 40px;
+    text-align: right;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  /* Streak — typographic emphasis */
+  .streak-display {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .streak-number {
+    font-family: 'Sora', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    letter-spacing: -4px;
+  }
+
+  .streak-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .activity-cell {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: var(--surface-alt);
+  }
+
+  .activity-cell.l1 { background: rgba(184, 97, 46, 0.15); }
+  .activity-cell.l2 { background: rgba(184, 97, 46, 0.3); }
+  .activity-cell.l3 { background: rgba(184, 97, 46, 0.55); }
+  .activity-cell.l4 { background: var(--primary); }
+
+  .activity-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* Quiz Preview — clean, typography-driven */
+  .quiz-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-top: 16px;
+  }
+
+  .quiz-preview .question-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .quiz-preview .question-text {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: var(--text);
+    max-width: 600px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 14px;
+  }
+
+  .option:hover {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+
+  .option.selected {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+
+  .option-letter {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .option.selected .option-letter {
+    background: var(--primary);
+    color: white;
+  }
+
+  .progress-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .progress-strip-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-alt);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-strip-fill {
+    height: 100%;
+    width: 35%;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .progress-strip-label {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  /* Buttons — clean, no gradients */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.2px;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-light);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--surface-alt);
+    border-color: var(--border-strong);
+  }
+</style>
+</head>
+<body>
+
+<div class="label">APPROACH C: CAFE COUNTER <span>— Clean typography, bold weight contrast, confident color</span></div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">&#9728;</div>
+      <div>
+        <h2>Hiraya</h2>
+        <small>Aral hanggang pasa</small>
+      </div>
+    </div>
+
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Practice
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Assignments
+    </a>
+
+    <div class="nav-section">Classes</div>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      My Classes
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Profile
+    </a>
+  </nav>
+
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1>Good morning, Juan</h1>
+        <p>You're on a roll. Keep it going today.</p>
+      </div>
+      <div class="avatar">J</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Mastery</div>
+        <div class="stat-value">67%</div>
+        <div class="stat-change">+3% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Questions Done</div>
+        <div class="stat-value">482</div>
+        <div class="stat-change">+28 today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Exam Readiness</div>
+        <div class="stat-value">54%</div>
+        <div class="stat-change down">Needs more practice</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Weak Topics</div>
+        <div class="stat-value">3</div>
+        <div class="stat-change">Focus on these</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="card">
+        <div class="card-header">
+          <h3>Category Mastery</h3>
+          <a class="card-link" href="#">View all</a>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Basic Theory</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 82%"></div></div>
+          <span class="mastery-pct">82%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Computer System</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 71%"></div></div>
+          <span class="mastery-pct">71%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Technology Element</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 65%"></div></div>
+          <span class="mastery-pct">65%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Development Tech</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill low" style="width: 43%"></div></div>
+          <span class="mastery-pct">43%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Project Mgmt</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill low" style="width: 38%"></div></div>
+          <span class="mastery-pct">38%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Service Mgmt</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 59%"></div></div>
+          <span class="mastery-pct">59%</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Streak</h3>
+          </div>
+          <div class="streak-display">
+            <div class="streak-number">12</div>
+            <div class="streak-label">Days in a row</div>
+          </div>
+          <div class="section-label">Last 4 weeks</div>
+          <div class="activity-grid">
+            <div class="activity-cell l2"></div><div class="activity-cell l3"></div><div class="activity-cell l1"></div><div class="activity-cell"></div><div class="activity-cell l1"></div><div class="activity-cell l4"></div><div class="activity-cell l2"></div>
+            <div class="activity-cell l3"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div><div class="activity-cell l1"></div><div class="activity-cell l3"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div>
+            <div class="activity-cell l1"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div>
+            <div class="activity-cell l4"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div>
+          </div>
+          <div class="activity-label"><span>4 wks ago</span><span>Today</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Preview -->
+    <div style="margin-top: 28px;">
+      <div class="section-label">Practice Preview</div>
+      <div class="quiz-preview">
+        <div class="progress-strip">
+          <div class="progress-strip-bar"><div class="progress-strip-fill"></div></div>
+          <span class="progress-strip-label">7 / 20</span>
+        </div>
+        <div class="question-num">Question 7 &mdash; Basic Theory</div>
+        <div class="question-text">Which of the following is the correct description of a stack data structure?</div>
+        <div class="option">
+          <span class="option-letter">A</span>
+          <span>First In, First Out (FIFO) ordering</span>
+        </div>
+        <div class="option selected">
+          <span class="option-letter">B</span>
+          <span>Last In, First Out (LIFO) ordering</span>
+        </div>
+        <div class="option">
+          <span class="option-letter">C</span>
+          <span>Random access by index</span>
+        </div>
+        <div class="option">
+          <span class="option-letter">D</span>
+          <span>Priority-based ordering</span>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;">
+          <button class="btn btn-ghost">Skip</button>
+          <button class="btn btn-primary">Submit Answer</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

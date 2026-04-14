@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiraya — Logo Concepts V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(160deg, #FBF4E9, #F6EDD8, #F2E5CF);
+    min-height: 100vh;
+    padding: 40px;
+    color: #2A1D0E;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #6B5640;
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+  .concepts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .concept {
+    background: rgba(255, 250, 240, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(199, 123, 26, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .concept:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(42, 29, 14, 0.12);
+  }
+  .concept-label {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 6px;
+  }
+  .concept-desc {
+    font-size: 13px;
+    color: #6B5640;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: #2A1D0E;
+  }
+  .logo-tagline {
+    font-size: 11px;
+    color: #9C876E;
+    font-style: italic;
+    margin-top: 6px;
+  }
+  .sizes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(199, 123, 26, 0.1);
+  }
+  .size-label {
+    font-size: 10px;
+    color: #9C876E;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 4px;
+  }
+  .dark-preview {
+    background: #2A1D0E;
+    border-radius: 12px;
+    padding: 20px 32px;
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dark-preview .logo-text {
+    color: #FBF4E9;
+  }
+</style>
+</head>
+<body>
+
+<h1>Hiraya Logo Concepts</h1>
+<p class="subtitle">Golden Study Nook aesthetic — pick your favorite</p>
+
+<div class="concepts">
+
+  <!-- Concept 1: Sunrise Window -->
+  <div class="concept">
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Window arch -->
+      <path d="M20 70 L20 30 A20 20 0 0 1 60 30 L60 70" stroke="#C77B1A" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <!-- Window sill -->
+      <line x1="16" y1="70" x2="64" y2="70" stroke="#C77B1A" stroke-width="3" stroke-linecap="round"/>
+      <!-- Center divider -->
+      <line x1="40" y1="28" x2="40" y2="70" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      <!-- Cross bar -->
+      <line x1="20" y1="48" x2="60" y2="48" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      <!-- Sunrise glow inside window -->
+      <circle cx="40" cy="50" r="12" fill="#E6A040" opacity="0.2"/>
+      <circle cx="40" cy="50" r="7" fill="#E6A040" opacity="0.35"/>
+      <circle cx="40" cy="50" r="3" fill="#C77B1A" opacity="0.5"/>
+      <!-- Rays coming through window -->
+      <line x1="40" y1="42" x2="40" y2="32" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <line x1="40" y1="42" x2="32" y2="34" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <line x1="40" y1="42" x2="48" y2="34" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <line x1="40" y1="42" x2="28" y2="40" stroke="#E6A040" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+      <line x1="40" y1="42" x2="52" y2="40" stroke="#E6A040" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+    </svg>
+    <div class="concept-label">1. Sunrise Window</div>
+    <p class="concept-desc">An arched cafe window with warm light streaming through. Study nook energy — light pouring in through glass panes.</p>
+    <div class="logo-row">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 70 L20 30 A20 20 0 0 1 60 30 L60 70" stroke="#C77B1A" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <line x1="16" y1="70" x2="64" y2="70" stroke="#C77B1A" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="28" x2="40" y2="70" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        <line x1="20" y1="48" x2="60" y2="48" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="40" cy="50" r="12" fill="#E6A040" opacity="0.2"/>
+        <circle cx="40" cy="50" r="7" fill="#E6A040" opacity="0.35"/>
+        <circle cx="40" cy="50" r="3" fill="#C77B1A" opacity="0.5"/>
+        <line x1="40" y1="42" x2="40" y2="32" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="40" y1="42" x2="32" y2="34" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+        <line x1="40" y1="42" x2="48" y2="34" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      </svg>
+      <span class="logo-text">Hiraya</span>
+    </div>
+    <div class="logo-tagline">Aral hanggang pasa</div>
+  </div>
+
+  <!-- Concept 2: Glowing Lantern -->
+  <div class="concept">
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ambient glow -->
+      <ellipse cx="40" cy="45" rx="22" ry="18" fill="#E6A040" opacity="0.1"/>
+      <!-- Lantern body -->
+      <rect x="28" y="28" width="24" height="32" rx="4" stroke="#C77B1A" stroke-width="2.5" fill="none"/>
+      <!-- Top cap -->
+      <path d="M30 28 L34 22 L46 22 L50 28" stroke="#C77B1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Handle -->
+      <path d="M36 22 A6 6 0 0 1 44 22" stroke="#C77B1A" stroke-width="2" fill="none"/>
+      <!-- Inner glow -->
+      <rect x="32" y="32" width="16" height="24" rx="2" fill="#E6A040" opacity="0.15"/>
+      <!-- Flame -->
+      <path d="M40 52 Q36 44 40 36 Q44 44 40 52Z" fill="#C77B1A" opacity="0.6"/>
+      <path d="M40 50 Q38 45 40 40 Q42 45 40 50Z" fill="#E6A040" opacity="0.8"/>
+      <circle cx="40" cy="44" r="2" fill="#FFFAF0" opacity="0.7"/>
+      <!-- Light rays -->
+      <line x1="52" y1="38" x2="58" y2="35" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+      <line x1="52" y1="44" x2="60" y2="44" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <line x1="52" y1="50" x2="58" y2="53" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+      <line x1="28" y1="38" x2="22" y2="35" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+      <line x1="28" y1="44" x2="20" y2="44" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <line x1="28" y1="50" x2="22" y2="53" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+      <!-- Bottom feet -->
+      <line x1="30" y1="60" x2="30" y2="64" stroke="#C77B1A" stroke-width="2" stroke-linecap="round"/>
+      <line x1="50" y1="60" x2="50" y2="64" stroke="#C77B1A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="concept-label">2. Study Lantern</div>
+    <p class="concept-desc">A warm lantern casting golden light. Filipino parol-inspired silhouette — guiding light for exam prep.</p>
+    <div class="logo-row">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="45" rx="22" ry="18" fill="#E6A040" opacity="0.1"/>
+        <rect x="28" y="28" width="24" height="32" rx="4" stroke="#C77B1A" stroke-width="2.5" fill="none"/>
+        <path d="M30 28 L34 22 L46 22 L50 28" stroke="#C77B1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M36 22 A6 6 0 0 1 44 22" stroke="#C77B1A" stroke-width="2" fill="none"/>
+        <rect x="32" y="32" width="16" height="24" rx="2" fill="#E6A040" opacity="0.15"/>
+        <path d="M40 52 Q36 44 40 36 Q44 44 40 52Z" fill="#C77B1A" opacity="0.6"/>
+        <path d="M40 50 Q38 45 40 40 Q42 45 40 50Z" fill="#E6A040" opacity="0.8"/>
+        <circle cx="40" cy="44" r="2" fill="#FFFAF0" opacity="0.7"/>
+      </svg>
+      <span class="logo-text">Hiraya</span>
+    </div>
+    <div class="logo-tagline">Aral hanggang pasa</div>
+  </div>
+
+  <!-- Concept 3: Rising Star / Tala -->
+  <div class="concept">
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ambient glow -->
+      <circle cx="40" cy="32" r="20" fill="#E6A040" opacity="0.08"/>
+      <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12"/>
+      <!-- Main star (8-pointed, Filipino sun-inspired) -->
+      <path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/>
+      <!-- Inner star highlight -->
+      <path d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z" fill="#E6A040" opacity="0.7"/>
+      <!-- Center circle -->
+      <circle cx="40" cy="32" r="4" fill="#FFFAF0"/>
+      <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/>
+      <!-- Horizon line -->
+      <line x1="12" y1="64" x2="68" y2="64" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+      <!-- Small trail dots rising -->
+      <circle cx="40" cy="58" r="1.5" fill="#C77B1A" opacity="0.2"/>
+      <circle cx="40" cy="54" r="1.2" fill="#C77B1A" opacity="0.25"/>
+      <!-- Rising curves from horizon -->
+      <path d="M26 64 Q33 56 40 56 Q47 56 54 64" stroke="#E6A040" stroke-width="1.5" fill="none" opacity="0.2"/>
+    </svg>
+    <div class="concept-label">3. Rising Tala</div>
+    <p class="concept-desc">An 8-pointed star (tala) rising above the horizon. Filipino sun motif — aspirations rising, "Hiraya Manawari."</p>
+    <div class="logo-row">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12"/>
+        <path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/>
+        <path d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z" fill="#E6A040" opacity="0.7"/>
+        <circle cx="40" cy="32" r="4" fill="#FFFAF0"/>
+        <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/>
+        <line x1="12" y1="64" x2="68" y2="64" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+      </svg>
+      <span class="logo-text">Hiraya</span>
+    </div>
+    <div class="logo-tagline">Aral hanggang pasa</div>
+  </div>
+
+  <!-- Concept 4: Knowledge Light V2 (evolved) -->
+  <div class="concept">
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Soft glow -->
+      <ellipse cx="40" cy="48" rx="14" ry="8" fill="#E6A040" opacity="0.15"/>
+      <!-- Light rays (refined, fewer, bolder) -->
+      <line x1="40" y1="44" x2="40" y2="16" stroke="#E6A040" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+      <line x1="40" y1="44" x2="28" y2="20" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      <line x1="40" y1="44" x2="52" y2="20" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      <line x1="40" y1="44" x2="20" y2="28" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+      <line x1="40" y1="44" x2="60" y2="28" stroke="#E6A040" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+      <!-- Left page -->
+      <path d="M40 48 L12 56 L16 34 L40 26" fill="#C77B1A" opacity="0.85"/>
+      <path d="M40 48 L28 52 L30 38 L40 26" fill="#E6A040" opacity="0.45"/>
+      <!-- Right page -->
+      <path d="M40 48 L68 56 L64 34 L40 26" fill="#B85A3B" opacity="0.75"/>
+      <path d="M40 48 L52 52 L50 38 L40 26" fill="#E6A040" opacity="0.35"/>
+      <!-- Spine -->
+      <line x1="40" y1="25" x2="40" y2="50" stroke="#2A1D0E" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <!-- Spark at top -->
+      <circle cx="40" cy="16" r="3" fill="#E6A040" opacity="0.6"/>
+      <circle cx="40" cy="16" r="1.5" fill="#FFFAF0" opacity="0.8"/>
+      <!-- Horizon -->
+      <line x1="8" y1="62" x2="72" y2="62" stroke="#C77B1A" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+    </svg>
+    <div class="concept-label">4. Knowledge Light V2</div>
+    <p class="concept-desc">Evolved version of the current logo. Bolder pages, refined rays, updated Golden Study Nook colors. Terracotta right page adds depth.</p>
+    <div class="logo-row">
+      <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="48" rx="14" ry="8" fill="#E6A040" opacity="0.15"/>
+        <line x1="40" y1="44" x2="40" y2="16" stroke="#E6A040" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+        <line x1="40" y1="44" x2="28" y2="20" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <line x1="40" y1="44" x2="52" y2="20" stroke="#E6A040" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <path d="M40 48 L12 56 L16 34 L40 26" fill="#C77B1A" opacity="0.85"/>
+        <path d="M40 48 L28 52 L30 38 L40 26" fill="#E6A040" opacity="0.45"/>
+        <path d="M40 48 L68 56 L64 34 L40 26" fill="#B85A3B" opacity="0.75"/>
+        <path d="M40 48 L52 52 L50 38 L40 26" fill="#E6A040" opacity="0.35"/>
+        <line x1="40" y1="25" x2="40" y2="50" stroke="#2A1D0E" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="40" cy="16" r="3" fill="#E6A040" opacity="0.6"/>
+        <circle cx="40" cy="16" r="1.5" fill="#FFFAF0" opacity="0.8"/>
+      </svg>
+      <span class="logo-text">Hiraya</span>
+    </div>
+    <div class="logo-tagline">Aral hanggang pasa</div>
+  </div>
+
+</div>
+
+</body>
+</html>

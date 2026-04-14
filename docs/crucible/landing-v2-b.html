@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hiraya — Study smart. Rise ready.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #C77B1A;
+      --primary-light: #E6A040;
+      --secondary:     #B85A3B;
+      --bg-start:      #FBF4E9;
+      --bg-mid:        #F6EDD8;
+      --bg-end:        #F2E5CF;
+      --surface:       rgba(255, 250, 240, 0.75);
+      --text-main:     #2A1D0E;
+      --text-secondary:#6B5640;
+      --text-muted:    #9C876E;
+      --success:       #5A8E4C;
+      --glass-border:  rgba(199, 123, 26, 0.15);
+      --glass-border-strong: rgba(199, 123, 26, 0.28);
+      --shadow-warm:   0 4px 32px rgba(199, 123, 26, 0.12);
+      --shadow-deep:   0 12px 56px rgba(42, 29, 14, 0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Paper grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ─── Typography ────────────────────────────────────────────────── */
+    .serif { font-family: 'DM Serif Display', serif; }
+
+    h1, h2, h3 { font-family: 'DM Serif Display', serif; line-height: 1.05; }
+
+    /* ─── Layout ────────────────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    section { position: relative; z-index: 1; }
+
+    /* ─── Nav ───────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      border-bottom: 1px solid transparent;
+      transition: all 250ms ease-out;
+    }
+
+    nav.scrolled {
+      background: rgba(251, 244, 233, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom-color: var(--glass-border);
+      padding: 14px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg { width: 32px; height: 32px; }
+
+    .nav-logo-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 150ms ease-out;
+    }
+
+    .nav-links a:hover { color: var(--primary); }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-ghost {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--primary);
+      background: none;
+      border: 1.5px solid var(--glass-border-strong);
+      border-radius: 100px;
+      padding: 9px 22px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 150ms ease-out;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-ghost:hover {
+      background: rgba(199, 123, 26, 0.06);
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #FFF8EE;
+      background: linear-gradient(135deg, var(--primary) 0%, #A8631A 100%);
+      border: none;
+      border-radius: 100px;
+      padding: 10px 24px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 200ms ease-out;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(199, 123, 26, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(199, 123, 26, 0.45);
+    }
+    .btn-primary:focus-visible,
+    .btn-ghost:focus-visible {
+      outline: 2.5px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 0 80px;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow-line {
+      width: 28px;
+      height: 1.5px;
+      background: var(--primary-light);
+      display: block;
+    }
+
+    .hero-headline {
+      font-size: clamp(64px, 7.5vw, 108px);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--primary);
+    }
+
+    .hero-headline-sub {
+      font-size: clamp(40px, 4.5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      font-family: 'DM Serif Display', serif;
+    }
+
+    .hero-body {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #FFF8EE;
+      background: linear-gradient(135deg, var(--primary) 0%, #A8631A 100%);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 36px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 200ms ease-out;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(199, 123, 26, 0.4);
+    }
+    .btn-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(199, 123, 26, 0.5);
+    }
+
+    .btn-hero-ghost {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--primary);
+      background: none;
+      border: 1.5px solid var(--glass-border-strong);
+      border-radius: 100px;
+      padding: 13px 32px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 200ms ease-out;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-hero-ghost:hover {
+      background: rgba(199, 123, 26, 0.06);
+      border-color: var(--primary);
+    }
+
+    /* Hero visual side */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .hero-star-wrap {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-star-wrap svg {
+      width: 160px;
+      height: 160px;
+      filter: drop-shadow(0 8px 32px rgba(199, 123, 26, 0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+
+    .hero-star-ring {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(199, 123, 26, 0.2);
+      animation: spin 30s linear infinite;
+    }
+
+    .hero-star-ring-2 {
+      position: absolute;
+      inset: -40px;
+      border-radius: 50%;
+      border: 1px solid rgba(199, 123, 26, 0.1);
+      animation: spin 50s linear infinite reverse;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Stats badge */
+    .stats-badge {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px 32px;
+      box-shadow: var(--shadow-warm);
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .stats-badge-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--primary);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .stats-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--glass-border);
+      align-self: center;
+    }
+
+    /* Floating card */
+    .floating-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow-warm);
+      position: absolute;
+      animation: float2 5s ease-in-out infinite;
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .fc-top {
+      top: -20px;
+      right: -32px;
+      animation-delay: 1s;
+    }
+
+    .fc-bottom {
+      bottom: 0px;
+      left: -40px;
+      animation-delay: 2.5s;
+    }
+
+    .fc-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fc-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(199,123,26,0.15), rgba(230,160,64,0.15));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fc-text { font-size: 0.75rem; }
+    .fc-title { font-weight: 600; color: var(--text-main); display: block; }
+    .fc-sub { color: var(--text-muted); }
+
+    /* ─── Divider / Ornament ────────────────────────────────────────── */
+    .section-ornament {
+      text-align: center;
+      padding: 64px 0 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ornament-line {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .ornament-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-border-strong), transparent);
+    }
+
+    .ornament-diamond {
+      width: 6px;
+      height: 6px;
+      background: var(--primary-light);
+      transform: rotate(45deg);
+      opacity: 0.7;
+    }
+
+    /* ─── Pull Quote ────────────────────────────────────────────────── */
+    .pull-quote {
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .pull-quote-text {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(28px, 3.5vw, 52px);
+      line-height: 1.2;
+      color: var(--text-main);
+      max-width: 760px;
+      margin: 0 auto;
+      letter-spacing: -0.02em;
+    }
+
+    .pull-quote-text em { color: var(--primary); font-style: italic; }
+
+    .pull-quote-source {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    /* ─── Section Label ─────────────────────────────────────────────── */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .section-label-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--primary-light);
+    }
+
+    /* ─── Features ──────────────────────────────────────────────────── */
+    .features {
+      padding: 80px 0 120px;
+    }
+
+    .features-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 64px;
+    }
+
+    .features-title {
+      font-size: clamp(36px, 4vw, 56px);
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+    }
+
+    .features-intro {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    /* Editorial grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .feat-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      transition: all 250ms ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      opacity: 0;
+      transition: opacity 250ms ease-out;
+    }
+
+    .feat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-deep);
+      border-color: var(--glass-border-strong);
+    }
+
+    .feat-card:hover::before { opacity: 1; }
+
+    .feat-card--wide { grid-column: span 8; }
+    .feat-card--narrow { grid-column: span 4; }
+    .feat-card--half { grid-column: span 6; }
+    .feat-card--third { grid-column: span 4; }
+
+    .feat-card--accent {
+      background: linear-gradient(135deg, rgba(199,123,26,0.08) 0%, rgba(230,160,64,0.05) 100%);
+    }
+
+    .feat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(199,123,26,0.12), rgba(230,160,64,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feat-icon svg { width: 22px; height: 22px; }
+
+    .feat-card-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .feat-card h3 {
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .feat-card p {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .feat-wide-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .feat-wide-visual {
+      background: linear-gradient(135deg, rgba(199,123,26,0.08), rgba(184,90,59,0.06));
+      border-radius: 12px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── How It Works ──────────────────────────────────────────────── */
+    .hiw {
+      padding: 100px 0 120px;
+      position: relative;
+    }
+
+    .hiw-title {
+      font-size: clamp(36px, 4vw, 54px);
+      letter-spacing: -0.025em;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .hiw-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      position: relative;
+    }
+
+    /* Connector line */
+    .hiw-steps::before {
+      content: '';
+      position: absolute;
+      top: 56px;
+      left: calc(33.333% / 2);
+      right: calc(33.333% / 2);
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary-light) 0%, var(--glass-border-strong) 50%, var(--primary-light) 100%);
+      opacity: 0.5;
+    }
+
+    .hiw-step {
+      position: relative;
+      text-align: center;
+      padding-top: 24px;
+    }
+
+    .hiw-ghost-num {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Serif Display', serif;
+      font-size: 160px;
+      line-height: 1;
+      color: rgba(199, 123, 26, 0.06);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.06em;
+    }
+
+    .hiw-step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid var(--glass-border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--primary);
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 16px rgba(199,123,26,0.12);
+    }
+
+    .hiw-step h3 {
+      font-size: 1.375rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .hiw-step p {
+      font-size: 0.925rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Adaptive Engine ───────────────────────────────────────────── */
+    .engine {
+      padding: 100px 0 120px;
+      position: relative;
+    }
+
+    .engine-inner {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .engine-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .engine-title {
+      font-size: clamp(32px, 3.5vw, 48px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .engine-body {
+      font-size: 0.975rem;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+
+    .engine-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--glass-border-strong);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary-light);
+    }
+
+    /* Engine visual */
+    .engine-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .engine-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow-warm);
+      transition: all 250ms ease-out;
+    }
+
+    .engine-card:hover {
+      transform: translateX(4px);
+      border-color: var(--glass-border-strong);
+    }
+
+    .ec-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .ec-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.125rem;
+      color: var(--text-main);
+    }
+
+    .ec-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .ec-badge--irt { background: rgba(90,142,76,0.12); color: #3d6d32; }
+    .ec-badge--sm2 { background: rgba(199,123,26,0.12); color: var(--primary); }
+    .ec-badge--cat { background: rgba(184,90,59,0.12); color: var(--secondary); }
+
+    .ec-desc {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .ec-bar-wrap {
+      height: 4px;
+      background: rgba(199,123,26,0.1);
+      border-radius: 2px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .ec-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    }
+
+    /* ─── Social Proof / Stats ──────────────────────────────────────── */
+    .proof {
+      padding: 100px 0 120px;
+    }
+
+    .proof-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .proof-title {
+      font-size: clamp(32px, 3.5vw, 48px);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .proof-sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .stats-infographic {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 80px;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .inf-stat {
+      flex: 1;
+      padding: 48px 32px;
+      text-align: center;
+      border-right: 1px solid var(--glass-border);
+      position: relative;
+    }
+
+    .inf-stat:last-child { border-right: none; }
+
+    .inf-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 1;
+      color: var(--primary);
+      display: block;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .inf-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .testi-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 250ms ease-out;
+    }
+
+    .testi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-warm);
+    }
+
+    .testi-quote {
+      font-size: 1.5rem;
+      color: var(--primary-light);
+      font-family: 'DM Serif Display', serif;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+
+    .testi-text {
+      font-size: 0.925rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(199,123,26,0.2), rgba(230,160,64,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    .testi-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: block;
+    }
+
+    .testi-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── Final CTA ─────────────────────────────────────────────────── */
+    .cta-section {
+      padding: 100px 0 120px;
+      position: relative;
+    }
+
+    .cta-inner {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .cta-overline {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .cta-title {
+      font-size: clamp(40px, 5vw, 72px);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .cta-title em {
+      font-style: italic;
+      color: var(--primary);
+    }
+
+    .cta-body {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cta-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Star burst bg decoration */
+    .cta-deco {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(199,123,26,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 48px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .footer-logo svg { width: 28px; height: 28px; }
+
+    .footer-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.125rem;
+      color: var(--primary);
+    }
+
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      font-family: 'DM Serif Display', serif;
+    }
+
+    .footer-right {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .hero-visual { order: -1; }
+
+      .features-header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .feat-card--wide { grid-column: span 12; }
+      .feat-card--narrow { grid-column: span 12; }
+      .feat-card--half { grid-column: span 12; }
+      .feat-card--third { grid-column: span 12; }
+
+      .feat-wide-inner { grid-template-columns: 1fr; }
+
+      .hiw-steps { grid-template-columns: 1fr; gap: 32px; }
+      .hiw-steps::before { display: none; }
+
+      .engine-inner { grid-template-columns: 1fr; gap: 48px; }
+
+      .testimonials { grid-template-columns: 1fr; }
+
+      .stats-infographic { flex-direction: column; }
+      .inf-stat { border-right: none; border-bottom: 1px solid var(--glass-border); }
+      .inf-stat:last-child { border-bottom: none; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 20px; }
+      .nav-inner { padding: 0 20px; }
+      .nav-links { display: none; }
+      .fc-top, .fc-bottom { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Navigation ─────────────────────────────────────────────────── -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Hiraya home">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12"/>
+          <path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/>
+          <path d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z" fill="#E6A040" opacity="0.7"/>
+          <circle cx="40" cy="32" r="4" fill="#FFFAF0"/>
+          <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/>
+        </svg>
+        <span class="nav-logo-name">Hiraya</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#adaptive">Adaptive Engine</a></li>
+        <li><a href="#proof">Community</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#" class="btn-ghost">Sign in</a>
+        <a href="#" class="btn-primary">Start for free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ───────────────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-h1">
+    <div class="container">
+      <div class="hero-inner">
+        <!-- Left: Copy -->
+        <div class="hero-copy">
+          <div class="hero-eyebrow">
+            <span class="hero-eyebrow-line"></span>
+            PhilNITS Exam Reviewer
+          </div>
+          <h1 id="hero-h1" class="hero-headline serif">
+            Study <em>smart.</em>
+          </h1>
+          <div class="hero-headline-sub serif">Rise ready.</div>
+          <p class="hero-body">
+            Hiraya is your adaptive reviewer for the PhilNITS FE exam — powered by Item Response Theory and spaced repetition, so every session brings you measurably closer to passing.
+          </p>
+          <div class="hero-actions">
+            <a href="#" class="btn-hero">
+              Start studying free
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="#FFF8EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#how-it-works" class="btn-hero-ghost">See how it works</a>
+          </div>
+        </div>
+
+        <!-- Right: Visual -->
+        <div class="hero-visual">
+          <div class="hero-star-wrap">
+            <div class="hero-star-ring"></div>
+            <div class="hero-star-ring-2"></div>
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12"/>
+              <path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/>
+              <path d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z" fill="#E6A040" opacity="0.7"/>
+              <circle cx="40" cy="32" r="4" fill="#FFFAF0"/>
+              <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/>
+            </svg>
+
+            <!-- Floating cards -->
+            <div class="floating-card fc-top">
+              <div class="fc-row">
+                <div class="fc-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M8 2v12M2 8h12" stroke="#C77B1A" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="fc-text">
+                  <span class="fc-title">Ability updated</span>
+                  <span class="fc-sub">θ = +0.42 this session</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="floating-card fc-bottom">
+              <div class="fc-row">
+                <div class="fc-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <rect x="2" y="9" width="3" height="5" rx="1" fill="#C77B1A" opacity="0.7"/>
+                    <rect x="6.5" y="6" width="3" height="8" rx="1" fill="#C77B1A" opacity="0.85"/>
+                    <rect x="11" y="3" width="3" height="11" rx="1" fill="#C77B1A"/>
+                  </svg>
+                </div>
+                <div class="fc-text">
+                  <span class="fc-title">7-day streak</span>
+                  <span class="fc-sub">Top 12% this week</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats badge -->
+          <div class="stats-badge">
+            <div class="stats-badge-label">Exam coverage</div>
+            <div class="stats-row">
+              <div class="stat-item">
+                <span class="stat-num">1,480</span>
+                <span class="stat-label">Questions</span>
+              </div>
+              <div class="stats-divider"></div>
+              <div class="stat-item">
+                <span class="stat-num">9</span>
+                <span class="stat-label">Categories</span>
+              </div>
+              <div class="stats-divider"></div>
+              <div class="stat-item">
+                <span class="stat-num">Free</span>
+                <span class="stat-label">To start</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── App Preview ────────────────────────────────────────────────── -->
+  <section style="padding: 0 40px 80px; max-width: 1100px; margin: 0 auto;">
+    <div style="
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-deep), 0 0 80px rgba(199, 123, 26, 0.08);
+    ">
+      <!-- Browser chrome -->
+      <div style="
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 20px;
+        background: rgba(42, 29, 14, 0.04);
+        border-bottom: 1px solid var(--glass-border);
+      ">
+        <div style="width: 12px; height: 12px; border-radius: 50%; background: #E85D5D;"></div>
+        <div style="width: 12px; height: 12px; border-radius: 50%; background: #E6A040;"></div>
+        <div style="width: 12px; height: 12px; border-radius: 50%; background: #5A8E4C;"></div>
+        <div style="
+          flex: 1;
+          margin-left: 12px;
+          background: rgba(42, 29, 14, 0.05);
+          border-radius: 8px;
+          padding: 6px 16px;
+          font-size: 12px;
+          color: var(--text-muted);
+          font-family: 'Inter', sans-serif;
+        ">hiraya.app/dashboard</div>
+      </div>
+
+      <!-- App content -->
+      <div style="display: flex; min-height: 420px;">
+        <!-- Sidebar -->
+        <div style="
+          width: 220px;
+          background: rgba(255, 250, 240, 0.5);
+          border-right: 1px solid var(--glass-border);
+          padding: 24px 16px;
+          flex-shrink: 0;
+        ">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 28px;">
+            <svg width="22" height="22" viewBox="0 0 80 80" fill="none"><path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/><circle cx="40" cy="32" r="4" fill="#FFFAF0"/><circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/></svg>
+            <span style="font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--text-main);">Hiraya</span>
+          </div>
+          <!-- Nav items -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="
+              display: flex; align-items: center; gap: 10px;
+              padding: 10px 12px; border-radius: 10px;
+              background: rgba(199, 123, 26, 0.15);
+              color: var(--primary); font-size: 13px; font-weight: 600;
+              position: relative;
+            ">
+              <div style="position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 0 3px 3px 0; background: var(--primary);"></div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              Dashboard
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text-secondary); font-size: 13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              Practice
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text-secondary); font-size: 13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              Assignments
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text-secondary); font-size: 13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Classes
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div style="flex: 1; padding: 28px 32px; overflow: hidden;">
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+              <h3 style="font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400;">Good morning, Juan</h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">You're on a roll. Keep it going today.</p>
+            </div>
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(199,123,26,0.3);">J</div>
+          </div>
+
+          <!-- Stat cards -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--primary-light));"></div>
+              <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Mastery</div>
+              <div style="font-family: 'DM Serif Display', serif; font-size: 26px; margin-top: 4px; color: var(--text-main);">67%</div>
+              <div style="font-size: 10px; color: var(--success); font-weight: 500; margin-top: 2px;">+3% this week</div>
+            </div>
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+              <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Questions</div>
+              <div style="font-family: 'DM Serif Display', serif; font-size: 26px; margin-top: 4px; color: var(--text-main);">482</div>
+              <div style="font-size: 10px; color: var(--success); font-weight: 500; margin-top: 2px;">+28 today</div>
+            </div>
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+              <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Readiness</div>
+              <div style="font-family: 'DM Serif Display', serif; font-size: 26px; margin-top: 4px; color: var(--text-main);">54%</div>
+              <div style="font-size: 10px; color: var(--secondary); font-weight: 500; margin-top: 2px;">Keep practicing</div>
+            </div>
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px;">
+              <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Streak</div>
+              <div style="font-family: 'DM Serif Display', serif; font-size: 26px; margin-top: 4px; color: var(--primary);">12</div>
+              <div style="font-size: 10px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">days in a row</div>
+            </div>
+          </div>
+
+          <!-- Mastery bars -->
+          <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px;">
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px;">
+              <div style="font-family: 'DM Serif Display', serif; font-size: 15px; margin-bottom: 16px;">Category Mastery</div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; width: 110px; flex-shrink: 0; color: var(--text-secondary);">Basic Theory</span>
+                  <div style="flex: 1; height: 6px; background: rgba(156,135,110,0.12); border-radius: 3px; overflow: hidden;"><div style="width: 82%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 3px;"></div></div>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right;">82%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; width: 110px; flex-shrink: 0; color: var(--text-secondary);">Computer System</span>
+                  <div style="flex: 1; height: 6px; background: rgba(156,135,110,0.12); border-radius: 3px; overflow: hidden;"><div style="width: 71%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 3px;"></div></div>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right;">71%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; width: 110px; flex-shrink: 0; color: var(--text-secondary);">Development Tech</span>
+                  <div style="flex: 1; height: 6px; background: rgba(156,135,110,0.12); border-radius: 3px; overflow: hidden;"><div style="width: 43%; height: 100%; background: var(--secondary); border-radius: 3px;"></div></div>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right;">43%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; width: 110px; flex-shrink: 0; color: var(--text-secondary);">Project Mgmt</span>
+                  <div style="flex: 1; height: 6px; background: rgba(156,135,110,0.12); border-radius: 3px; overflow: hidden;"><div style="width: 38%; height: 100%; background: var(--secondary); border-radius: 3px;"></div></div>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right;">38%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; width: 110px; flex-shrink: 0; color: var(--text-secondary);">Service Mgmt</span>
+                  <div style="flex: 1; height: 6px; background: rgba(156,135,110,0.12); border-radius: 3px; overflow: hidden;"><div style="width: 59%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 3px;"></div></div>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right;">59%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity grid -->
+            <div style="background: rgba(255,250,240,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px; text-align: center;">
+              <div style="font-family: 'DM Serif Display', serif; font-size: 44px; color: var(--primary); line-height: 1;">12</div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500;">day streak</div>
+              <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 16px;">
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.3);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.5);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.15);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(156,135,110,0.08);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.15);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.3);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.5);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.3);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.15);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.5);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: rgba(199,123,26,0.3);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+                <div style="aspect-ratio:1; border-radius: 3px; background: var(--primary);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Pull Quote ─────────────────────────────────────────────────── -->
+  <div class="section-ornament">
+    <div class="ornament-line">
+      <span class="ornament-rule"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-rule"></span>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <div class="container">
+      <p class="pull-quote-text serif">
+        "The reviewer that <em>studies you</em> — and shows you exactly where to improve."
+      </p>
+      <span class="pull-quote-source">Hiraya Adaptive Engine</span>
+    </div>
+  </div>
+
+  <div class="section-ornament" style="padding: 0 0 64px;">
+    <div class="ornament-line">
+      <span class="ornament-rule"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-rule"></span>
+    </div>
+  </div>
+
+  <!-- ─── Features ──────────────────────────────────────────────────── -->
+  <section class="features" id="features" aria-labelledby="features-title">
+    <div class="container">
+      <div class="features-header">
+        <div>
+          <div class="section-label">
+            <span class="section-label-dot"></span>
+            What Hiraya offers
+          </div>
+          <h2 id="features-title" class="features-title serif">
+            Built for one<br/>goal: your pass.
+          </h2>
+        </div>
+        <p class="features-intro">
+          Every feature is engineered around the PhilNITS FE syllabus — not generic quiz tools repurposed for exams. Hiraya learns your weak spots and targets them precisely, so you study less time but with far greater effect.
+        </p>
+      </div>
+
+      <!-- Editorial grid -->
+      <div class="features-grid">
+
+        <!-- Wide card: Adaptive Practice -->
+        <div class="feat-card feat-card--wide feat-card--accent">
+          <span class="feat-card-num">01</span>
+          <div class="feat-wide-inner">
+            <div>
+              <div class="feat-icon">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <path d="M4 11a7 7 0 017-7v7h7a7 7 0 11-14 0z" stroke="#C77B1A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="11" cy="11" r="2.5" stroke="#C77B1A" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <h3>Adaptive Practice</h3>
+              <p>Questions adapt in real time to your current ability level using Item Response Theory (IRT). Not too hard, not too easy — always at the edge of your zone of proximal development.</p>
+            </div>
+            <div class="feat-wide-visual">
+              <!-- Mini bar chart illustration -->
+              <svg width="180" height="120" viewBox="0 0 180 120" fill="none" aria-hidden="true">
+                <rect x="10" y="80" width="20" height="30" rx="4" fill="#E6A040" opacity="0.3"/>
+                <rect x="38" y="60" width="20" height="50" rx="4" fill="#E6A040" opacity="0.45"/>
+                <rect x="66" y="45" width="20" height="65" rx="4" fill="#C77B1A" opacity="0.5"/>
+                <rect x="94" y="30" width="20" height="80" rx="4" fill="#C77B1A" opacity="0.65"/>
+                <rect x="122" y="18" width="20" height="92" rx="4" fill="#C77B1A" opacity="0.8"/>
+                <rect x="150" y="10" width="20" height="100" rx="4" fill="#C77B1A"/>
+                <!-- Trend line -->
+                <path d="M20 75 L48 55 L76 40 L104 25 L132 13 L160 7" stroke="#E6A040" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.7"/>
+                <!-- Label -->
+                <text x="10" y="112" font-family="Inter" font-size="8" fill="#9C876E" opacity="0.8">Ability θ over sessions →</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Narrow card: Spaced Repetition -->
+        <div class="feat-card feat-card--narrow">
+          <span class="feat-card-num">02</span>
+          <div class="feat-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path d="M11 3v3M11 16v3M3 11h3M16 11h3" stroke="#C77B1A" stroke-width="1.7" stroke-linecap="round"/>
+              <circle cx="11" cy="11" r="4" stroke="#C77B1A" stroke-width="1.7"/>
+            </svg>
+          </div>
+          <h3>Spaced Repetition</h3>
+          <p>SM-2 algorithm schedules reviews at the optimal moment — right before you'd forget. Retention compounds over time.</p>
+        </div>
+
+        <!-- Half card: Progress Tracking -->
+        <div class="feat-card feat-card--half">
+          <span class="feat-card-num">03</span>
+          <div class="feat-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <polyline points="3,16 8,10 12,13 18,6" stroke="#C77B1A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="3" y="18" width="16" height="1.5" rx="0.75" fill="#C77B1A" opacity="0.4"/>
+            </svg>
+          </div>
+          <h3>Progress Tracking</h3>
+          <p>Category-by-category ability scores, historical session data, and detailed answer logs so you always know exactly where you stand.</p>
+        </div>
+
+        <!-- Half card: Real Exam Questions -->
+        <div class="feat-card feat-card--half">
+          <span class="feat-card-num">04</span>
+          <div class="feat-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <rect x="4" y="3" width="14" height="17" rx="3" stroke="#C77B1A" stroke-width="1.7"/>
+              <path d="M8 8h6M8 11h6M8 14h4" stroke="#C77B1A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Real Exam Questions</h3>
+          <p>1,480 authentic PhilNITS questions across 9 official exam categories — exactly what you'll face on test day.</p>
+        </div>
+
+        <!-- Third card: Classroom Tools -->
+        <div class="feat-card feat-card--third">
+          <span class="feat-card-num">05</span>
+          <div class="feat-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <rect x="2" y="6" width="18" height="12" rx="3" stroke="#C77B1A" stroke-width="1.7"/>
+              <path d="M7 18l1.5 2h5L15 18" stroke="#C77B1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 11h4M11 9v4" stroke="#C77B1A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Classroom Tools</h3>
+          <p>Create classes, manage students, and assign targeted practice sets. See each student's ability score at a glance.</p>
+        </div>
+
+        <!-- Third card: Streaks -->
+        <div class="feat-card feat-card--third">
+          <span class="feat-card-num">06</span>
+          <div class="feat-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path d="M12 3C12 3 14 6 13 9c3-1 5 1 5 4a6 6 0 01-12 0c0-3 2.5-4.5 4-5.5C11 9 12 10 12 10V3z" stroke="#C77B1A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Daily Streaks</h3>
+          <p>Habit-forming streak tracking with XP rewards keeps motivation high through the long study grind before exam day.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── How It Works ─────────────────────────────────────────────── -->
+  <section class="hiw" id="how-it-works" aria-labelledby="hiw-title">
+    <div class="container">
+      <div class="section-label" style="display:block; text-align:center; margin-bottom:16px;">
+        <span style="display:inline-flex; align-items:center; gap:10px;">
+          <span class="section-label-dot"></span>
+          The Hiraya method
+          <span class="section-label-dot"></span>
+        </span>
+      </div>
+      <h2 id="hiw-title" class="hiw-title serif">
+        Three steps.<br/>One clear path.
+      </h2>
+
+      <div class="hiw-steps">
+        <div class="hiw-step">
+          <div class="hiw-ghost-num">1</div>
+          <div class="hiw-step-num">1</div>
+          <h3>Pick your focus</h3>
+          <p>Select a category — from Technology Strategy to Data Structure & Algorithms — or let Hiraya choose based on your weakest area.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-ghost-num">2</div>
+          <div class="hiw-step-num">2</div>
+          <h3>Practice adaptively</h3>
+          <p>Answer questions that adjust difficulty in real time. The engine reads every response to calibrate your ability score and surface the items you need most.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-ghost-num">3</div>
+          <div class="hiw-step-num">3</div>
+          <h3>Track your growth</h3>
+          <p>Watch your category scores climb session by session. Hiraya surfaces what's improved and what still needs work — with clinical precision.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Section Ornament ─────────────────────────────────────────── -->
+  <div class="section-ornament" style="padding: 0 0 80px;">
+    <div class="ornament-line">
+      <span class="ornament-rule"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-rule"></span>
+    </div>
+  </div>
+
+  <!-- ─── Adaptive Engine ──────────────────────────────────────────── -->
+  <section class="engine" id="adaptive" aria-labelledby="engine-title">
+    <div class="container">
+      <div class="engine-inner">
+        <!-- Left: Copy -->
+        <div>
+          <div class="engine-label section-label">
+            <span class="section-label-dot"></span>
+            Under the hood
+          </div>
+          <h2 id="engine-title" class="engine-title serif">
+            Science-backed.<br/>Not just<br/><em>another quiz.</em>
+          </h2>
+          <p class="engine-body">
+            Hiraya's adaptive engine combines three proven psychometric and cognitive science methods. Together they build a precise model of what you know — and intelligently close the gaps before exam day.
+          </p>
+          <div class="engine-pills">
+            <span class="pill"><span class="pill-dot"></span>Item Response Theory</span>
+            <span class="pill"><span class="pill-dot"></span>SM-2 Spaced Repetition</span>
+            <span class="pill"><span class="pill-dot"></span>Category Targeting</span>
+            <span class="pill"><span class="pill-dot"></span>Ability Estimation (θ)</span>
+          </div>
+        </div>
+
+        <!-- Right: Engine cards -->
+        <div class="engine-visual">
+          <div class="engine-card">
+            <div class="ec-head">
+              <span class="ec-title">Item Response Theory</span>
+              <span class="ec-badge ec-badge--irt">IRT</span>
+            </div>
+            <p class="ec-desc">Each question carries a difficulty parameter. As you answer, Hiraya estimates your latent ability θ using maximum likelihood estimation — and selects the next item at exactly the right challenge level.</p>
+            <div class="ec-bar-wrap">
+              <div class="ec-bar" style="width: 78%;"></div>
+            </div>
+          </div>
+
+          <div class="engine-card">
+            <div class="ec-head">
+              <span class="ec-title">SM-2 Spaced Repetition</span>
+              <span class="ec-badge ec-badge--sm2">SM-2</span>
+            </div>
+            <p class="ec-desc">Items you answered incorrectly are re-queued at scientifically optimized intervals. Forgetting curves are flattened. Long-term retention is maximized without over-drilling what you already know.</p>
+            <div class="ec-bar-wrap">
+              <div class="ec-bar" style="width: 62%;"></div>
+            </div>
+          </div>
+
+          <div class="engine-card">
+            <div class="ec-head">
+              <span class="ec-title">Category Targeting</span>
+              <span class="ec-badge ec-badge--cat">CAT</span>
+            </div>
+            <p class="ec-desc">Your ability score is tracked independently for all 9 PhilNITS categories. Sessions automatically prioritize the categories where improvement will have the greatest impact on your overall readiness.</p>
+            <div class="ec-bar-wrap">
+              <div class="ec-bar" style="width: 91%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Social Proof ─────────────────────────────────────────────── -->
+  <section class="proof" id="proof" aria-labelledby="proof-title">
+    <div class="container">
+      <div class="proof-header">
+        <div class="section-label" style="display:flex; justify-content:center; margin-bottom:12px;">
+          <span class="section-label-dot"></span>
+          Community
+          <span class="section-label-dot" style="margin-left:10px;"></span>
+        </div>
+        <h2 id="proof-title" class="proof-title serif">By the numbers</h2>
+        <p class="proof-sub">Growing alongside every student preparing for their PhilNITS milestone.</p>
+      </div>
+
+      <!-- Infographic stats bar -->
+      <div class="stats-infographic" role="list">
+        <div class="inf-stat" role="listitem">
+          <span class="inf-num">1,480</span>
+          <span class="inf-label">Exam questions</span>
+        </div>
+        <div class="inf-stat" role="listitem">
+          <span class="inf-num">9</span>
+          <span class="inf-label">PhilNITS categories</span>
+        </div>
+        <div class="inf-stat" role="listitem">
+          <span class="inf-num">100%</span>
+          <span class="inf-label">Free to start</span>
+        </div>
+        <div class="inf-stat" role="listitem">
+          <span class="inf-num">∞</span>
+          <span class="inf-label">Adaptive sessions</span>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="testimonials">
+        <div class="testi-card">
+          <div class="testi-quote" aria-hidden="true">"</div>
+          <p class="testi-text">The adaptive questions are no joke. It knew exactly which areas I was shaky on and drilled me there until I actually understood the concept.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" aria-hidden="true">M</div>
+            <div>
+              <span class="testi-name">Miguel A.</span>
+              <span class="testi-role">FE Exam Passer, Batch 2025</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-quote" aria-hidden="true">"</div>
+          <p class="testi-text">I studied with regular reviewers for two attempts and failed both. Two months with Hiraya, I passed. The spaced repetition feature is genuinely different.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" aria-hidden="true">A</div>
+            <div>
+              <span class="testi-name">Andrea R.</span>
+              <span class="testi-role">IT Engineer, 3rd attempt passer</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-quote" aria-hidden="true">"</div>
+          <p class="testi-text">I use it to manage my review classes. Assigning targeted practice by category and seeing each student's ability score made my coaching so much more precise.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" aria-hidden="true">J</div>
+            <div>
+              <span class="testi-name">Prof. Janine C.</span>
+              <span class="testi-role">IT Faculty, Polytechnic University</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Pull Quote 2 ──────────────────────────────────────────────── -->
+  <div class="section-ornament">
+    <div class="ornament-line">
+      <span class="ornament-rule"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-rule"></span>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <div class="container">
+      <p class="pull-quote-text serif">
+        "Aral hanggang pasa — <em>study until you pass.</em>"
+      </p>
+      <span class="pull-quote-source">The Hiraya Promise</span>
+    </div>
+  </div>
+
+  <div class="section-ornament" style="padding: 0 0 40px;">
+    <div class="ornament-line">
+      <span class="ornament-rule"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-rule"></span>
+    </div>
+  </div>
+
+  <!-- ─── Final CTA ─────────────────────────────────────────────────── -->
+  <section class="cta-section" aria-labelledby="cta-title">
+    <div class="cta-deco" aria-hidden="true"></div>
+    <div class="container">
+      <div class="cta-inner">
+        <span class="cta-overline">Ready to rise?</span>
+        <h2 id="cta-title" class="cta-title serif">
+          Your next session<br/>starts <em>now.</em>
+        </h2>
+        <p class="cta-body">
+          Join students who study smarter, retain more, and walk into the PhilNITS exam with real confidence — not just hope.
+        </p>
+        <div class="cta-actions">
+          <a href="#" class="btn-hero">
+            Create free account
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="#FFF8EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#" class="btn-hero-ghost">Sign in</a>
+        </div>
+        <p class="cta-note">No credit card required. Free forever for individual learners.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <a href="#" class="footer-logo" aria-label="Hiraya home">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="40" cy="32" r="12" fill="#E6A040" opacity="0.12"/>
+            <path d="M40 12 L43 26 L56 20 L46 30 L58 32 L46 34 L56 44 L43 38 L40 52 L37 38 L24 44 L34 34 L22 32 L34 30 L24 20 L37 26 Z" fill="#C77B1A" opacity="0.85"/>
+            <path d="M40 22 L42 30 L48 26 L44 32 L50 32 L44 34 L48 38 L42 34 L40 42 L38 34 L32 38 L36 34 L30 32 L36 32 L32 26 L38 30 Z" fill="#E6A040" opacity="0.7"/>
+            <circle cx="40" cy="32" r="4" fill="#FFFAF0"/>
+            <circle cx="40" cy="32" r="2.5" fill="#E6A040" opacity="0.6"/>
+          </svg>
+          <div>
+            <div class="footer-brand">Hiraya</div>
+            <div class="footer-tagline">Study smart. Rise ready.</div>
+          </div>
+        </a>
+        <div class="footer-right">
+          <div>© 2026 Hiraya. All rights reserved.</div>
+          <div style="margin-top:6px; color: var(--text-muted);">Built for Filipino IT professionals.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── Nav scroll behavior ──────────────────────────────────────── -->
+  <script>
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  </script>
+
+</body>
+</html>

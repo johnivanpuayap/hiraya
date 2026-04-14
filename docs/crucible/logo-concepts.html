@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiraya — Logo Concepts v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: #FFFBEB;
+    color: #451A03;
+    padding: 40px 24px;
+  }
+  h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #92400E;
+    margin-bottom: 48px;
+    font-size: 16px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(180,83,9,0.06), 0 6px 16px rgba(180,83,9,0.04);
+    border: 1px solid #FDE68A;
+  }
+  .card.favorite {
+    border: 2px solid #D97706;
+    box-shadow: 0 1px 3px rgba(180,83,9,0.08), 0 8px 24px rgba(180,83,9,0.08);
+  }
+  .card-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #D97706;
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card-style {
+    font-size: 13px;
+    color: #92400E;
+    margin-bottom: 20px;
+  }
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFBEB;
+    border-radius: 12px;
+    padding: 32px 24px;
+    margin-bottom: 16px;
+    min-height: 140px;
+  }
+  .logo-container.dark {
+    background: #451A03;
+  }
+  .sizes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px;
+    background: #FEF3C7;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .description {
+    font-size: 14px;
+    color: #92400E;
+    line-height: 1.6;
+  }
+  .mood-tag {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #D97706;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-right: 6px;
+    margin-top: 8px;
+  }
+  .fav-badge {
+    display: inline-block;
+    background: #D97706;
+    color: #FFFBEB;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<h1>Hiraya — Logo Concepts v2</h1>
+<p class="subtitle">Focused on learning, exam review, and board prep. #5 kept from v1.</p>
+
+<div class="grid">
+
+  <!-- CONCEPT 1: Exam Sheet + Pencil Check -->
+  <div class="card">
+    <div class="card-label">Concept 1 — Icon + Wordmark</div>
+    <div class="card-title">Exam Pass</div>
+    <div class="card-style">Icon + Wordmark · Clean & Academic</div>
+    <div class="logo-container">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Exam paper / clipboard shape -->
+        <rect x="8" y="6" width="36" height="52" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+        <!-- Clipboard clip at top -->
+        <rect x="18" y="2" width="16" height="8" rx="3" fill="#D97706"/>
+        <!-- Answer lines with bubbles -->
+        <circle cx="18" cy="22" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="25" y1="22" x2="38" y2="22" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <circle cx="18" cy="32" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="25" y1="32" x2="38" y2="32" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <circle cx="18" cy="42" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="25" y1="42" x2="38" y2="42" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <!-- Big checkmark over the sheet — "passed" -->
+        <polyline points="14,34 22,44 40,18" stroke="#EA580C" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Small sparkle near check tip -->
+        <circle cx="42" cy="16" r="2" fill="#F59E0B"/>
+        <line x1="42" y1="11" x2="42" y2="13" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="46" y1="16" x2="44.5" y2="16" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Wordmark -->
+        <text x="58" y="40" font-family="Outfit, sans-serif" font-size="30" font-weight="700" fill="#451A03">Hiraya</text>
+      </svg>
+    </div>
+    <div class="sizes">
+      <svg width="40" height="40" viewBox="0 0 52 64" fill="none">
+        <rect x="6" y="6" width="40" height="52" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5"/>
+        <rect x="17" y="2" width="18" height="8" rx="3" fill="#D97706"/>
+        <circle cx="17" cy="24" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="24" y1="24" x2="38" y2="24" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <circle cx="17" cy="34" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="24" y1="34" x2="38" y2="34" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <circle cx="17" cy="44" r="3" fill="#F59E0B" opacity="0.4"/>
+        <line x1="24" y1="44" x2="38" y2="44" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <polyline points="13,36 22,46 42,18" stroke="#EA580C" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 52 64" fill="none">
+        <rect x="6" y="6" width="40" height="52" rx="5" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+        <rect x="17" y="2" width="18" height="8" rx="3" fill="#D97706"/>
+        <polyline points="13,36 22,46 42,18" stroke="#EA580C" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <p class="description">A clipboard exam sheet with answer bubbles and a bold checkmark slashed across it — "you passed." Immediately reads as exam/test/review. The sparkle at the check tip adds the Hiraya optimism. Clean, recognizable at every size.</p>
+    <span class="mood-tag">Academic</span>
+    <span class="mood-tag">Achievement</span>
+    <span class="mood-tag">Clean</span>
+  </div>
+
+  <!-- CONCEPT 2: Lightbulb + Pencil -->
+  <div class="card">
+    <div class="card-label">Concept 2 — Icon + Wordmark</div>
+    <div class="card-title">Bright Review</div>
+    <div class="card-style">Icon + Wordmark · Warm & Clever</div>
+    <div class="logo-container">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Lightbulb shape whose filament is a pencil tip -->
+        <defs>
+          <linearGradient id="bulb-grad" x1="26" y1="4" x2="26" y2="56">
+            <stop offset="0%" stop-color="#F59E0B"/>
+            <stop offset="100%" stop-color="#D97706"/>
+          </linearGradient>
+        </defs>
+        <!-- Bulb outer -->
+        <path d="M26 6 Q42 6 42 24 Q42 34 34 40 L34 48 Q34 52 30 52 L22 52 Q18 52 18 48 L18 40 Q10 34 10 24 Q10 6 26 6Z" fill="url(#bulb-grad)" opacity="0.2"/>
+        <path d="M26 6 Q42 6 42 24 Q42 34 34 40 L34 48 Q34 52 30 52 L22 52 Q18 52 18 48 L18 40 Q10 34 10 24 Q10 6 26 6Z" stroke="#D97706" stroke-width="2.5" fill="none"/>
+        <!-- Bulb base screw lines -->
+        <line x1="19" y1="46" x2="33" y2="46" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="50" x2="32" y2="50" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Filament as a small pencil pointing up -->
+        <line x1="26" y1="40" x2="26" y2="20" stroke="#EA580C" stroke-width="3" stroke-linecap="round"/>
+        <!-- Pencil tip -->
+        <polygon points="26,16 23.5,22 28.5,22" fill="#EA580C"/>
+        <!-- Small light rays around bulb -->
+        <line x1="26" y1="1" x2="26" y2="3" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="6" y1="18" x2="8" y2="19" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <line x1="46" y1="18" x2="44" y2="19" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <line x1="10" y1="8" x2="12" y2="10" stroke="#FDE68A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="42" y1="8" x2="40" y2="10" stroke="#FDE68A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <!-- Wordmark -->
+        <text x="56" y="38" font-family="Outfit, sans-serif" font-size="28" font-weight="700" fill="#451A03">Hiraya</text>
+      </svg>
+    </div>
+    <div class="sizes">
+      <svg width="40" height="40" viewBox="0 0 52 58" fill="none">
+        <defs><linearGradient id="bg2" x1="26" y1="4" x2="26" y2="56"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs>
+        <path d="M26 6 Q42 6 42 24 Q42 34 34 40 L34 48 Q34 52 30 52 L22 52 Q18 52 18 48 L18 40 Q10 34 10 24 Q10 6 26 6Z" fill="url(#bg2)" opacity="0.2"/>
+        <path d="M26 6 Q42 6 42 24 Q42 34 34 40 L34 48 Q34 52 30 52 L22 52 Q18 52 18 48 L18 40 Q10 34 10 24 Q10 6 26 6Z" stroke="#D97706" stroke-width="2.5" fill="none"/>
+        <line x1="26" y1="40" x2="26" y2="20" stroke="#EA580C" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="26,16 23.5,22 28.5,22" fill="#EA580C"/>
+        <line x1="26" y1="1" x2="26" y2="3" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 52 58" fill="none">
+        <path d="M26 6 Q42 6 42 24 Q42 34 34 40 L34 48 Q34 52 30 52 L22 52 Q18 52 18 48 L18 40 Q10 34 10 24 Q10 6 26 6Z" fill="#D97706" opacity="0.2" stroke="#D97706" stroke-width="3" />
+        <line x1="26" y1="40" x2="26" y2="20" stroke="#EA580C" stroke-width="4" stroke-linecap="round"/>
+        <polygon points="26,16 23,22 29,22" fill="#EA580C"/>
+      </svg>
+    </div>
+    <p class="description">A lightbulb whose filament is a pencil — the "aha" moment of studying. Learning clicks on, knowledge lights up. The rays around the bulb echo the Golden Hour warmth. Immediately reads as "study + insight" without being generic.</p>
+    <span class="mood-tag">Clever</span>
+    <span class="mood-tag">Warm</span>
+    <span class="mood-tag">Insightful</span>
+  </div>
+
+  <!-- CONCEPT 3: Progress Steps / Staircase to Star -->
+  <div class="card">
+    <div class="card-label">Concept 3 — Abstract Symbol</div>
+    <div class="card-title">Step Up</div>
+    <div class="card-style">Abstract Symbol · Bold & Motivational</div>
+    <div class="logo-container">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ascending steps/stairs representing study progress -->
+        <!-- Step 1 (lowest) -->
+        <rect x="6" y="48" width="12" height="10" rx="2" fill="#FDE68A"/>
+        <!-- Step 2 -->
+        <rect x="20" y="38" width="12" height="20" rx="2" fill="#F59E0B"/>
+        <!-- Step 3 -->
+        <rect x="34" y="26" width="12" height="32" rx="2" fill="#D97706"/>
+        <!-- Step 4 (highest — exam pass) -->
+        <rect x="48" y="14" width="12" height="44" rx="2" fill="#EA580C"/>
+        <!-- Star/sparkle at the top of the last step -->
+        <polygon points="54,6 55.8,10 60,10.5 57,13.2 57.8,17.5 54,15.2 50.2,17.5 51,13.2 48,10.5 52.2,10" fill="#D97706"/>
+        <!-- Tiny dotted path going up the steps -->
+        <circle cx="12" cy="45" r="1.5" fill="#451A03" opacity="0.3"/>
+        <circle cx="26" cy="35" r="1.5" fill="#451A03" opacity="0.4"/>
+        <circle cx="40" cy="23" r="1.5" fill="#451A03" opacity="0.5"/>
+        <circle cx="54" cy="11" r="1.5" fill="#451A03" opacity="0"/>
+        <!-- Wordmark -->
+        <text x="72" y="40" font-family="Outfit, sans-serif" font-size="30" font-weight="700" fill="#451A03">Hiraya</text>
+      </svg>
+    </div>
+    <div class="sizes">
+      <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+        <rect x="4" y="48" width="14" height="12" rx="2" fill="#FDE68A"/>
+        <rect x="20" y="36" width="14" height="24" rx="2" fill="#F59E0B"/>
+        <rect x="36" y="22" width="14" height="38" rx="2" fill="#D97706"/>
+        <rect x="52" y="10" width="10" height="50" rx="2" fill="#EA580C"/>
+        <polygon points="57,2 59,6.5 64,7 60.5,10 61.5,15 57,12.5 52.5,15 53.5,10 50,7 55,6.5" fill="#D97706"/>
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+        <rect x="4" y="48" width="14" height="12" rx="3" fill="#FDE68A"/>
+        <rect x="20" y="36" width="14" height="24" rx="3" fill="#F59E0B"/>
+        <rect x="36" y="22" width="14" height="38" rx="3" fill="#D97706"/>
+        <rect x="52" y="10" width="10" height="50" rx="3" fill="#EA580C"/>
+      </svg>
+    </div>
+    <p class="description">Ascending steps from light gold to deep orange — each step is a stage of mastery. A star crowns the top: you made it, you passed the board exam. The gradient progression mirrors the study journey. Reads instantly as "progress" and "leveling up."</p>
+    <span class="mood-tag">Motivational</span>
+    <span class="mood-tag">Progress</span>
+    <span class="mood-tag">Bold</span>
+  </div>
+
+  <!-- CONCEPT 4: Open Book + Graduation Cap -->
+  <div class="card">
+    <div class="card-label">Concept 4 — Icon + Wordmark</div>
+    <div class="card-title">Cap & Book</div>
+    <div class="card-style">Icon + Wordmark · Academic & Warm</div>
+    <div class="logo-container">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Open book at the base -->
+        <!-- Left page -->
+        <path d="M26 56 L8 36 Q6 33 9 31 L24 26 Q26 25.5 27 27 L27 52 Q27 56 26 56Z" fill="#F59E0B" opacity="0.8"/>
+        <!-- Right page -->
+        <path d="M32 56 L50 36 Q52 33 49 31 L34 26 Q32 25.5 31 27 L31 52 Q31 56 32 56Z" fill="#D97706" opacity="0.8"/>
+        <!-- Book spine -->
+        <rect x="27" y="24" width="4" height="34" rx="2" fill="#EA580C"/>
+        <!-- Text lines on left page -->
+        <line x1="13" y1="36" x2="24" y2="32" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="14" y1="40" x2="25" y2="36" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        <line x1="15" y1="44" x2="25" y2="40.5" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+        <!-- Text lines on right page -->
+        <line x1="34" y1="32" x2="45" y2="36" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="33" y1="36" x2="44" y2="40" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        <line x1="33" y1="40.5" x2="43" y2="44" stroke="#FFFBEB" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+        <!-- Graduation cap floating above the book -->
+        <!-- Cap base (diamond shape) -->
+        <polygon points="29,14 10,22 29,28 48,22" fill="#D97706"/>
+        <!-- Cap top -->
+        <polygon points="29,10 10,18 29,24 48,18" fill="#EA580C"/>
+        <!-- Tassel string -->
+        <line x1="43" y1="18" x2="48" y2="24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Tassel end -->
+        <circle cx="48" cy="25.5" r="2" fill="#F59E0B"/>
+        <!-- Wordmark -->
+        <text x="62" y="42" font-family="Outfit, sans-serif" font-size="28" font-weight="700" fill="#451A03">Hiraya</text>
+      </svg>
+    </div>
+    <div class="sizes">
+      <svg width="40" height="40" viewBox="0 0 58 64" fill="none">
+        <path d="M26 58 L6 38 Q4 35 7 33 L24 27 Q26 26.5 27 28 L27 54 Q27 58 26 58Z" fill="#F59E0B" opacity="0.8"/>
+        <path d="M32 58 L52 38 Q54 35 51 33 L34 27 Q32 26.5 31 28 L31 54 Q31 58 32 58Z" fill="#D97706" opacity="0.8"/>
+        <rect x="27" y="25" width="4" height="35" rx="2" fill="#EA580C"/>
+        <polygon points="29,14 8,23 29,30 50,23" fill="#D97706"/>
+        <polygon points="29,10 8,19 29,26 50,19" fill="#EA580C"/>
+        <line x1="45" y1="19" x2="50" y2="26" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="50" cy="27.5" r="2.5" fill="#F59E0B"/>
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 58 64" fill="none">
+        <path d="M26 58 L6 38 Q4 35 7 33 L24 27 Q26 26.5 27 28 L27 54 Q27 58 26 58Z" fill="#F59E0B" opacity="0.8"/>
+        <path d="M32 58 L52 38 Q54 35 51 33 L34 27 Q32 26.5 31 28 L31 54 Q31 58 32 58Z" fill="#D97706" opacity="0.8"/>
+        <rect x="27" y="25" width="4" height="35" rx="2" fill="#EA580C"/>
+        <polygon points="29,10 8,19 29,26 50,19" fill="#EA580C"/>
+      </svg>
+    </div>
+    <p class="description">An open study book with text lines on its pages, crowned by a graduation cap — the full story of Hiraya. You study (book), you pass (cap). The tassel adds a celebratory touch. Academic without being stuffy, warm through the golden palette.</p>
+    <span class="mood-tag">Academic</span>
+    <span class="mood-tag">Celebratory</span>
+    <span class="mood-tag">Warm</span>
+  </div>
+
+  <!-- CONCEPT 5: Hiraya Glow (KEPT FROM V1) -->
+  <div class="card favorite">
+    <div class="card-label">Concept 5 — Wordmark <span class="fav-badge">Current Pick</span></div>
+    <div class="card-title">Hiraya Glow</div>
+    <div class="card-style">Wordmark · Minimal & Modern</div>
+    <div class="logo-container">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="text-glow" x1="0" y1="32" x2="240" y2="32">
+            <stop offset="0%" stop-color="#D97706"/>
+            <stop offset="40%" stop-color="#EA580C"/>
+            <stop offset="100%" stop-color="#D97706"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <text x="16" y="44" font-family="Outfit, sans-serif" font-size="42" font-weight="800" fill="url(#text-glow)" letter-spacing="-1">hiraya</text>
+        <circle cx="40.5" cy="12" r="4" fill="#F59E0B" filter="url(#glow)"/>
+        <line x1="40.5" y1="5" x2="40.5" y2="7" stroke="#FDE68A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="35" y1="9.5" x2="37" y2="10.5" stroke="#FDE68A" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="46" y1="9.5" x2="44" y2="10.5" stroke="#FDE68A" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="logo-container dark">
+      <svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="text-glow-dark" x1="0" y1="32" x2="240" y2="32">
+            <stop offset="0%" stop-color="#F59E0B"/>
+            <stop offset="40%" stop-color="#EA580C"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
+          </linearGradient>
+          <filter id="glow-dark">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <text x="16" y="44" font-family="Outfit, sans-serif" font-size="42" font-weight="800" fill="url(#text-glow-dark)" letter-spacing="-1">hiraya</text>
+        <circle cx="40.5" cy="12" r="4.5" fill="#F59E0B" filter="url(#glow-dark)"/>
+        <line x1="40.5" y1="4" x2="40.5" y2="6.5" stroke="#FDE68A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="34.5" y1="9" x2="36.5" y2="10.5" stroke="#FDE68A" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="46.5" y1="9" x2="44.5" y2="10.5" stroke="#FDE68A" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <p class="description">Pure typographic logo — lowercase "hiraya" in Outfit Extra Bold with a gradient wash. The dot of the "i" becomes a tiny glowing sun with rays — the signature detail. Shown on both light and dark backgrounds. Minimal, confident, scales beautifully.</p>
+    <span class="mood-tag">Minimal</span>
+    <span class="mood-tag">Modern</span>
+    <span class="mood-tag">Typographic</span>
+  </div>
+
+</div>
+
+<!-- Summary Table -->
+<div style="max-width: 1200px; margin: 48px auto 0; text-align: center; padding: 24px; background: #FFFFFF; border-radius: 16px; border: 1px solid #FDE68A; box-shadow: 0 1px 3px rgba(180,83,9,0.06), 0 6px 16px rgba(180,83,9,0.04);">
+  <p style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 8px;">Summary</p>
+  <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+    <thead>
+      <tr style="border-bottom: 2px solid #FDE68A;">
+        <th style="text-align: left; padding: 8px; font-family: 'Outfit', sans-serif;">#</th>
+        <th style="text-align: left; padding: 8px; font-family: 'Outfit', sans-serif;">Name</th>
+        <th style="text-align: left; padding: 8px; font-family: 'Outfit', sans-serif;">Style</th>
+        <th style="text-align: left; padding: 8px; font-family: 'Outfit', sans-serif;">Mood</th>
+        <th style="text-align: left; padding: 8px; font-family: 'Outfit', sans-serif;">Theme</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #FEF3C7;">
+        <td style="padding: 8px; color: #D97706; font-weight: 700;">1</td>
+        <td style="padding: 8px;">Exam Pass</td>
+        <td style="padding: 8px;">Icon + Wordmark</td>
+        <td style="padding: 8px;">Clean, Academic</td>
+        <td style="padding: 8px;">Exam sheet + checkmark</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #FEF3C7;">
+        <td style="padding: 8px; color: #D97706; font-weight: 700;">2</td>
+        <td style="padding: 8px;">Bright Review</td>
+        <td style="padding: 8px;">Icon + Wordmark</td>
+        <td style="padding: 8px;">Warm, Clever</td>
+        <td style="padding: 8px;">Lightbulb + pencil filament</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #FEF3C7;">
+        <td style="padding: 8px; color: #D97706; font-weight: 700;">3</td>
+        <td style="padding: 8px;">Step Up</td>
+        <td style="padding: 8px;">Abstract Symbol</td>
+        <td style="padding: 8px;">Bold, Motivational</td>
+        <td style="padding: 8px;">Progress stairs + star</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #FEF3C7;">
+        <td style="padding: 8px; color: #D97706; font-weight: 700;">4</td>
+        <td style="padding: 8px;">Cap & Book</td>
+        <td style="padding: 8px;">Icon + Wordmark</td>
+        <td style="padding: 8px;">Academic, Celebratory</td>
+        <td style="padding: 8px;">Study book + graduation cap</td>
+      </tr>
+      <tr style="background: #FEF3C7;">
+        <td style="padding: 8px; color: #D97706; font-weight: 700;">5 &#9733;</td>
+        <td style="padding: 8px; font-weight: 600;">Hiraya Glow</td>
+        <td style="padding: 8px;">Wordmark</td>
+        <td style="padding: 8px;">Minimal, Modern</td>
+        <td style="padding: 8px;">Typographic + glowing "i"</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiraya — Final Logo v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: #FFFBEB;
+    color: #451A03;
+    padding: 40px 24px;
+  }
+  h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #92400E;
+    margin-bottom: 48px;
+    font-size: 16px;
+  }
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #D97706;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    padding: 40px 48px;
+    min-height: 160px;
+  }
+  .logo-box.light {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    box-shadow: 0 1px 3px rgba(180,83,9,0.06), 0 6px 16px rgba(180,83,9,0.04);
+  }
+  .logo-box.white {
+    background: #FFFFFF;
+    border: 1px solid #FDE68A;
+    box-shadow: 0 1px 3px rgba(180,83,9,0.06), 0 6px 16px rgba(180,83,9,0.04);
+  }
+  .logo-box.dark {
+    background: #451A03;
+    border: 1px solid #92400E;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .sizes-row {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: 32px;
+    padding: 32px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #FDE68A;
+    margin-bottom: 48px;
+  }
+  .size-item { text-align: center; }
+  .size-label {
+    font-size: 11px;
+    color: #92400E;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .variants {
+    max-width: 900px;
+    margin: 0 auto 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .variant-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #FDE68A;
+    text-align: center;
+  }
+  .variant-card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #D97706;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .variant-card .logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 12px;
+    min-height: 80px;
+  }
+  .variant-card .logo-area.light { background: #FFFBEB; }
+  .variant-card .logo-area.dark { background: #451A03; }
+</style>
+</head>
+<body>
+
+<h1>Hiraya — Final Logo v3</h1>
+<p class="subtitle">Step Up stairs (dot-dot-dot-star trail) + hiraya wordmark. Icon height matches text.</p>
+
+<!-- ============================================
+     The text "hiraya" at font-size 46 occupies roughly
+     cap-height ~33px, sitting on baseline y=50, so the
+     tops of letters are around y=17 and bottom at y=52.
+     The stairs icon is sized to span the same y=17..y=52
+     range (35px tall) so they feel visually even.
+     ============================================ -->
+
+<!-- MAIN LOGO: Light -->
+<div class="section-title">Full Logo — Light Background</div>
+<div class="logo-row">
+  <div class="logo-box light">
+    <svg width="300" height="68" viewBox="0 0 300 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stairs: 4 bars spanning y=17 to y=52 (35px total height) -->
+      <!-- Step 1 (shortest) -->
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A"/>
+      <!-- Step 2 -->
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B"/>
+      <!-- Step 3 -->
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <!-- Step 4 (tallest) -->
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <!-- Dot trail climbing the steps -->
+      <circle cx="9" cy="41" r="1.8" fill="#451A03" opacity="0.25"/>
+      <circle cx="21" cy="32" r="1.8" fill="#451A03" opacity="0.35"/>
+      <circle cx="33" cy="23" r="1.8" fill="#451A03" opacity="0.45"/>
+      <!-- Star at top of tallest step (same size/style as dots) -->
+      <polygon points="45,10 46.2,13 49.5,13.3 47,15.3 47.7,18.5 45,16.8 42.3,18.5 43,15.3 40.5,13.3 43.8,13" fill="#EA580C" opacity="0.6"/>
+      <!-- Wordmark: plain hiraya, no glow -->
+      <defs>
+        <linearGradient id="tg1" x1="62" y1="34" x2="280" y2="34">
+          <stop offset="0%" stop-color="#D97706"/>
+          <stop offset="40%" stop-color="#EA580C"/>
+          <stop offset="100%" stop-color="#D97706"/>
+        </linearGradient>
+      </defs>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="url(#tg1)" letter-spacing="-1">hiraya</text>
+    </svg>
+  </div>
+</div>
+
+<!-- MAIN LOGO: Dark -->
+<div class="section-title">Full Logo — Dark Background</div>
+<div class="logo-row">
+  <div class="logo-box dark">
+    <svg width="300" height="68" viewBox="0 0 300 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A" opacity="0.8"/>
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B" opacity="0.9"/>
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <circle cx="9" cy="41" r="1.8" fill="#FFFBEB" opacity="0.2"/>
+      <circle cx="21" cy="32" r="1.8" fill="#FFFBEB" opacity="0.3"/>
+      <circle cx="33" cy="23" r="1.8" fill="#FFFBEB" opacity="0.4"/>
+      <polygon points="45,10 46.2,13 49.5,13.3 47,15.3 47.7,18.5 45,16.8 42.3,18.5 43,15.3 40.5,13.3 43.8,13" fill="#F59E0B" opacity="0.55"/>
+      <defs>
+        <linearGradient id="tg2" x1="62" y1="34" x2="280" y2="34">
+          <stop offset="0%" stop-color="#F59E0B"/>
+          <stop offset="40%" stop-color="#EA580C"/>
+          <stop offset="100%" stop-color="#F59E0B"/>
+        </linearGradient>
+      </defs>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="url(#tg2)" letter-spacing="-1">hiraya</text>
+    </svg>
+  </div>
+</div>
+
+<!-- MAIN LOGO: White -->
+<div class="section-title">Full Logo — White Background</div>
+<div class="logo-row">
+  <div class="logo-box white">
+    <svg width="300" height="68" viewBox="0 0 300 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A"/>
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B"/>
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <circle cx="9" cy="41" r="1.8" fill="#451A03" opacity="0.25"/>
+      <circle cx="21" cy="32" r="1.8" fill="#451A03" opacity="0.35"/>
+      <circle cx="33" cy="23" r="1.8" fill="#451A03" opacity="0.45"/>
+      <polygon points="45,10 46.2,13 49.5,13.3 47,15.3 47.7,18.5 45,16.8 42.3,18.5 43,15.3 40.5,13.3 43.8,13" fill="#EA580C" opacity="0.6"/>
+      <defs>
+        <linearGradient id="tg3" x1="62" y1="34" x2="280" y2="34">
+          <stop offset="0%" stop-color="#D97706"/>
+          <stop offset="40%" stop-color="#EA580C"/>
+          <stop offset="100%" stop-color="#D97706"/>
+        </linearGradient>
+      </defs>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="url(#tg3)" letter-spacing="-1">hiraya</text>
+    </svg>
+  </div>
+</div>
+
+<!-- SIZE VARIANTS -->
+<div class="section-title">Scalability</div>
+<div class="sizes-row">
+  <div class="size-item">
+    <svg width="260" height="60" viewBox="0 0 300 68" fill="none">
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A"/>
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B"/>
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <circle cx="9" cy="41" r="1.8" fill="#451A03" opacity="0.25"/>
+      <circle cx="21" cy="32" r="1.8" fill="#451A03" opacity="0.35"/>
+      <circle cx="33" cy="23" r="1.8" fill="#451A03" opacity="0.45"/>
+      <polygon points="45,10 46.2,13 49.5,13.3 47,15.3 47.7,18.5 45,16.8 42.3,18.5 43,15.3 40.5,13.3 43.8,13" fill="#EA580C" opacity="0.6"/>
+      <defs><linearGradient id="tg4" x1="62" y1="34" x2="280" y2="34"><stop offset="0%" stop-color="#D97706"/><stop offset="40%" stop-color="#EA580C"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="url(#tg4)" letter-spacing="-1">hiraya</text>
+    </svg>
+    <div class="size-label">Large</div>
+  </div>
+  <div class="size-item">
+    <svg width="150" height="34" viewBox="0 0 300 68" fill="none">
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A"/>
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B"/>
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <circle cx="9" cy="41" r="1.8" fill="#451A03" opacity="0.25"/>
+      <circle cx="21" cy="32" r="1.8" fill="#451A03" opacity="0.35"/>
+      <circle cx="33" cy="23" r="1.8" fill="#451A03" opacity="0.45"/>
+      <polygon points="45,10 46.2,13 49.5,13.3 47,15.3 47.7,18.5 45,16.8 42.3,18.5 43,15.3 40.5,13.3 43.8,13" fill="#EA580C" opacity="0.6"/>
+      <defs><linearGradient id="tg5" x1="62" y1="34" x2="280" y2="34"><stop offset="0%" stop-color="#D97706"/><stop offset="40%" stop-color="#EA580C"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="url(#tg5)" letter-spacing="-1">hiraya</text>
+    </svg>
+    <div class="size-label">Medium</div>
+  </div>
+  <div class="size-item">
+    <svg width="85" height="20" viewBox="0 0 300 68" fill="none">
+      <rect x="4" y="44" width="10" height="8" rx="2" fill="#FDE68A"/>
+      <rect x="16" y="35" width="10" height="17" rx="2" fill="#F59E0B"/>
+      <rect x="28" y="26" width="10" height="26" rx="2" fill="#D97706"/>
+      <rect x="40" y="17" width="10" height="35" rx="2" fill="#EA580C"/>
+      <text x="62" y="50" font-family="Outfit, sans-serif" font-size="46" font-weight="800" fill="#D97706" letter-spacing="-1">hiraya</text>
+    </svg>
+    <div class="size-label">Small</div>
+  </div>
+</div>
+
+<!-- ICON-ONLY -->
+<div class="section-title">Icon Only (Favicon / App Icon)</div>
+<div class="variants">
+  <div class="variant-card">
+    <h3>Light</h3>
+    <div class="logo-area light">
+      <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+        <rect x="4" y="50" width="13" height="10" rx="2.5" fill="#FDE68A"/>
+        <rect x="19" y="38" width="13" height="22" rx="2.5" fill="#F59E0B"/>
+        <rect x="34" y="24" width="13" height="36" rx="2.5" fill="#D97706"/>
+        <rect x="49" y="12" width="12" height="48" rx="2.5" fill="#EA580C"/>
+        <circle cx="10.5" cy="46" r="2.5" fill="#451A03" opacity="0.25"/>
+        <circle cx="25.5" cy="34" r="2.5" fill="#451A03" opacity="0.35"/>
+        <circle cx="40.5" cy="20" r="2.5" fill="#451A03" opacity="0.45"/>
+        <polygon points="55,4 56.8,8.5 61.5,9 58,12 59,16.5 55,14 51,16.5 52,12 48.5,9 53.2,8.5" fill="#EA580C" opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+  <div class="variant-card">
+    <h3>Dark</h3>
+    <div class="logo-area dark">
+      <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+        <rect x="4" y="50" width="13" height="10" rx="2.5" fill="#FDE68A" opacity="0.8"/>
+        <rect x="19" y="38" width="13" height="22" rx="2.5" fill="#F59E0B" opacity="0.9"/>
+        <rect x="34" y="24" width="13" height="36" rx="2.5" fill="#D97706"/>
+        <rect x="49" y="12" width="12" height="48" rx="2.5" fill="#EA580C"/>
+        <circle cx="10.5" cy="46" r="2.5" fill="#FFFBEB" opacity="0.2"/>
+        <circle cx="25.5" cy="34" r="2.5" fill="#FFFBEB" opacity="0.3"/>
+        <circle cx="40.5" cy="20" r="2.5" fill="#FFFBEB" opacity="0.4"/>
+        <polygon points="55,4 56.8,8.5 61.5,9 58,12 59,16.5 55,14 51,16.5 52,12 48.5,9 53.2,8.5" fill="#F59E0B" opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+  <div class="variant-card">
+    <h3>Rounded (App Icon)</h3>
+    <div class="logo-area light" style="padding: 12px;">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect width="64" height="64" rx="14" fill="#FFFBEB"/>
+        <rect x="6" y="48" width="11" height="10" rx="2.5" fill="#FDE68A"/>
+        <rect x="19" y="37" width="11" height="21" rx="2.5" fill="#F59E0B"/>
+        <rect x="32" y="24" width="11" height="34" rx="2.5" fill="#D97706"/>
+        <rect x="45" y="12" width="12" height="46" rx="2.5" fill="#EA580C"/>
+        <circle cx="11.5" cy="44" r="2" fill="#451A03" opacity="0.25"/>
+        <circle cx="24.5" cy="33" r="2" fill="#451A03" opacity="0.35"/>
+        <circle cx="37.5" cy="20" r="2" fill="#451A03" opacity="0.45"/>
+        <polygon points="51,5 52.5,8.8 56.5,9.2 53.5,11.8 54.3,15.5 51,13.3 47.7,15.5 48.5,11.8 45.5,9.2 49.5,8.8" fill="#EA580C" opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- WORDMARK ONLY -->
+<div class="section-title">Wordmark Only</div>
+<div class="variants">
+  <div class="variant-card">
+    <h3>Light</h3>
+    <div class="logo-area light">
+      <svg width="180" height="48" viewBox="0 0 240 64" fill="none">
+        <defs>
+          <linearGradient id="tw1" x1="0" y1="32" x2="240" y2="32">
+            <stop offset="0%" stop-color="#D97706"/>
+            <stop offset="40%" stop-color="#EA580C"/>
+            <stop offset="100%" stop-color="#D97706"/>
+          </linearGradient>
+        </defs>
+        <text x="16" y="44" font-family="Outfit, sans-serif" font-size="42" font-weight="800" fill="url(#tw1)" letter-spacing="-1">hiraya</text>
+      </svg>
+    </div>
+  </div>
+  <div class="variant-card">
+    <h3>Dark</h3>
+    <div class="logo-area dark">
+      <svg width="180" height="48" viewBox="0 0 240 64" fill="none">
+        <defs>
+          <linearGradient id="tw2" x1="0" y1="32" x2="240" y2="32">
+            <stop offset="0%" stop-color="#F59E0B"/>
+            <stop offset="40%" stop-color="#EA580C"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
+          </linearGradient>
+        </defs>
+        <text x="16" y="44" font-family="Outfit, sans-serif" font-size="42" font-weight="800" fill="url(#tw2)" letter-spacing="-1">hiraya</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

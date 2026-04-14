@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiraya — Approach A: Warm Latte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #D4890A;
+    --primary-light: #E9A83A;
+    --secondary: #C2603D;
+    --bg: #FAF3EB;
+    --bg-warm: #F5EBD9;
+    --surface: #FFF8EF;
+    --surface-hover: #FFF1E0;
+    --card-shadow: 0 2px 12px rgba(61, 44, 30, 0.08);
+    --card-shadow-hover: 0 6px 24px rgba(61, 44, 30, 0.12);
+    --text: #2E1F10;
+    --text-secondary: #7A6249;
+    --text-muted: #A89279;
+    --success: #5A8F4A;
+    --danger: #C44B2F;
+    --accent: #8B5E3C;
+    --border: rgba(139, 94, 60, 0.12);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    /* Subtle paper grain texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', serif;
+    color: var(--text);
+  }
+
+  .label {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--text);
+    color: var(--bg);
+    text-align: center;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .label span { opacity: 0.6; font-weight: 400; }
+
+  .layout {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 40px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: fixed;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    margin-bottom: 24px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(212, 137, 10, 0.3);
+  }
+
+  .logo h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .logo small {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 1px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    background: var(--bg-warm);
+    color: var(--text);
+  }
+
+  .nav-item.active {
+    background: var(--bg-warm);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .nav-item svg {
+    width: 18px; height: 18px;
+    opacity: 0.7;
+  }
+
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-section {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 16px 14px 6px;
+  }
+
+  /* Main */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 36px 40px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: white;
+  }
+
+  /* Stats Grid */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.25s ease;
+    box-shadow: var(--card-shadow);
+  }
+
+  .stat-card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -1px;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    color: var(--success);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .stat-change.down { color: var(--danger); }
+
+  /* Content Grid */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .card-header h3 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .card-link {
+    font-size: 13px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* Mastery Bars */
+  .mastery-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mastery-item:last-child { border-bottom: none; }
+
+  .mastery-name {
+    font-size: 13px;
+    font-weight: 500;
+    width: 160px;
+    flex-shrink: 0;
+    color: var(--text);
+  }
+
+  .mastery-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-warm);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mastery-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transition: width 0.6s ease;
+  }
+
+  .mastery-bar-fill.low {
+    background: linear-gradient(90deg, var(--secondary), #e0805a);
+  }
+
+  .mastery-pct {
+    font-size: 13px;
+    font-weight: 600;
+    width: 40px;
+    text-align: right;
+    color: var(--text-secondary);
+  }
+
+  /* Streak & Activity */
+  .streak-display {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .streak-number {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .streak-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .activity-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: var(--bg-warm);
+  }
+
+  .activity-cell.l1 { background: rgba(212, 137, 10, 0.2); }
+  .activity-cell.l2 { background: rgba(212, 137, 10, 0.4); }
+  .activity-cell.l3 { background: rgba(212, 137, 10, 0.6); }
+  .activity-cell.l4 { background: var(--primary); }
+
+  .activity-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* Quiz Card Preview */
+  .quiz-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-top: 20px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .quiz-preview .question-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .quiz-preview .question-text {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+
+  .option:hover {
+    border-color: var(--primary);
+    background: rgba(212, 137, 10, 0.04);
+  }
+
+  .option.selected {
+    border-color: var(--primary);
+    background: rgba(212, 137, 10, 0.08);
+  }
+
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .option.selected .option-letter {
+    background: var(--primary);
+    color: white;
+  }
+
+  /* Progress bar */
+  .progress-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .progress-strip-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--bg-warm);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-strip-fill {
+    height: 100%;
+    width: 35%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 3px;
+  }
+
+  .progress-strip-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* Button */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    box-shadow: 0 2px 8px rgba(212, 137, 10, 0.3);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(212, 137, 10, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--bg-warm);
+    border-color: transparent;
+  }
+
+  .section-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="label">APPROACH A: WARM LATTE <span>— Refined depth, bookish warmth, paper textures</span></div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">&#9728;</div>
+      <div>
+        <h2>Hiraya</h2>
+        <small>Aral hanggang pasa</small>
+      </div>
+    </div>
+
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Practice
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Assignments
+    </a>
+
+    <div class="nav-section">Classes</div>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      My Classes
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Profile
+    </a>
+  </nav>
+
+  <main class="main">
+    <!-- Dashboard Header -->
+    <div class="header">
+      <div>
+        <h1>Good morning, Juan</h1>
+        <p>You're on a roll. Keep it going today.</p>
+      </div>
+      <div class="avatar">J</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Mastery</div>
+        <div class="stat-value">67%</div>
+        <div class="stat-change">+3% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Questions Done</div>
+        <div class="stat-value">482</div>
+        <div class="stat-change">+28 today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Exam Readiness</div>
+        <div class="stat-value">54%</div>
+        <div class="stat-change down">Needs more practice</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Weak Topics</div>
+        <div class="stat-value">3</div>
+        <div class="stat-change">Focus on these</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-grid">
+      <div class="card">
+        <div class="card-header">
+          <h3>Category Mastery</h3>
+          <a class="card-link" href="#">View all</a>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Basic Theory</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 82%"></div></div>
+          <span class="mastery-pct">82%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Computer System</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 71%"></div></div>
+          <span class="mastery-pct">71%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Technology Element</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 65%"></div></div>
+          <span class="mastery-pct">65%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Development Tech</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill low" style="width: 43%"></div></div>
+          <span class="mastery-pct">43%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Project Mgmt</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill low" style="width: 38%"></div></div>
+          <span class="mastery-pct">38%</span>
+        </div>
+        <div class="mastery-item">
+          <span class="mastery-name">Service Mgmt</span>
+          <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width: 59%"></div></div>
+          <span class="mastery-pct">59%</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Streak</h3>
+          </div>
+          <div class="streak-display">
+            <div class="streak-number">12</div>
+            <div class="streak-label">days in a row</div>
+          </div>
+          <div class="section-label">Last 4 weeks</div>
+          <div class="activity-grid">
+            <div class="activity-cell l2"></div><div class="activity-cell l3"></div><div class="activity-cell l1"></div><div class="activity-cell"></div><div class="activity-cell l1"></div><div class="activity-cell l4"></div><div class="activity-cell l2"></div>
+            <div class="activity-cell l3"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div><div class="activity-cell l1"></div><div class="activity-cell l3"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div>
+            <div class="activity-cell l1"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div><div class="activity-cell l2"></div><div class="activity-cell l4"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div>
+            <div class="activity-cell l4"></div><div class="activity-cell l3"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div><div class="activity-cell l4"></div>
+          </div>
+          <div class="activity-label"><span>4 wks ago</span><span>Today</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Preview -->
+    <div style="margin-top: 28px;">
+      <div class="section-label">Practice Preview</div>
+      <div class="quiz-preview">
+        <div class="progress-strip">
+          <div class="progress-strip-bar"><div class="progress-strip-fill"></div></div>
+          <span class="progress-strip-label">7 / 20</span>
+        </div>
+        <div class="question-num">Question 7 &mdash; Basic Theory</div>
+        <div class="question-text">Which of the following is the correct description of a stack data structure?</div>
+        <div class="option">
+          <span class="option-letter">A</span>
+          <span>First In, First Out (FIFO) ordering</span>
+        </div>
+        <div class="option selected">
+          <span class="option-letter">B</span>
+          <span>Last In, First Out (LIFO) ordering</span>
+        </div>
+        <div class="option">
+          <span class="option-letter">C</span>
+          <span>Random access by index</span>
+        </div>
+        <div class="option">
+          <span class="option-letter">D</span>
+          <span>Priority-based ordering</span>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;">
+          <button class="btn btn-ghost">Skip</button>
+          <button class="btn btn-primary">Submit Answer</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
