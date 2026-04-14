@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserRoleWithFallback } from "@/lib/auth";
 import { computeReadiness, getCategoryMastery } from "@/lib/analytics";
+import { formatDate } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { MasteryChart } from "@/components/dashboard/mastery-chart";
@@ -231,22 +232,141 @@ async function StudentDashboard({ userId }: { userId: string }) {
   );
 }
 
+function IconBarChart() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+  );
+}
+
+function IconClock() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function IconStudent() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
 async function TeacherDashboard({ userId }: { userId: string }) {
   const admin = createAdminClient();
 
+  /* ── Fetch classes and assignments ── */
   const [classesResult, assignmentsResult] = await Promise.all([
-    admin.from("classes").select("id").eq("teacher_id", userId),
+    admin.from("classes").select("id, name").eq("teacher_id", userId),
     admin.from("assignments").select("id").eq("created_by", userId),
   ]);
 
-  const classIds = (classesResult.data ?? []).map((c) => c.id);
-  const { count: studentCount } = await admin
-    .from("class_members")
-    .select("id", { count: "exact", head: true })
-    .in("class_id", classIds.length > 0 ? classIds : ["__none__"]);
+  const classes = classesResult.data ?? [];
+  const classIds = classes.map((c) => c.id);
+  const safeClassIds = classIds.length > 0 ? classIds : ["__none__"];
+
+  /* ── Fetch members, sessions, and profiles in parallel ── */
+  const [membersResult, studentCountResult, sessionsResult] = await Promise.all([
+    admin
+      .from("class_members")
+      .select("class_id, student_id")
+      .in("class_id", safeClassIds),
+    admin
+      .from("class_members")
+      .select("id", { count: "exact", head: true })
+      .in("class_id", safeClassIds),
+    admin
+      .from("class_members")
+      .select("student_id")
+      .in("class_id", safeClassIds),
+  ]);
+
+  const members = membersResult.data ?? [];
+  const studentCount = studentCountResult.count ?? 0;
+  const allStudentIds = [
+    ...new Set((sessionsResult.data ?? []).map((m) => m.student_id)),
+  ];
+  const safeStudentIds = allStudentIds.length > 0 ? allStudentIds : ["__none__"];
+
+  /* ── Fetch completed sessions for all students in teacher's classes ── */
+  const [completedSessionsResult, profilesResult] = await Promise.all([
+    admin
+      .from("sessions")
+      .select("id, student_id, correct_count, question_count, completed_at")
+      .in("student_id", safeStudentIds)
+      .not("completed_at", "is", null)
+      .order("completed_at", { ascending: false }),
+    admin
+      .from("profiles")
+      .select("id, display_name")
+      .in("id", safeStudentIds),
+  ]);
+
+  const completedSessions = completedSessionsResult.data ?? [];
+  const profiles = profilesResult.data ?? [];
+  const profileMap = new Map(profiles.map((p) => [p.id, p.display_name]));
+
+  /* ── Compute avg class score ── */
+  const totalScore = completedSessions.reduce(
+    (sum, s) =>
+      s.question_count > 0
+        ? sum + (s.correct_count / s.question_count) * 100
+        : sum,
+    0,
+  );
+  const avgClassScore =
+    completedSessions.length > 0
+      ? Math.round(totalScore / completedSessions.length)
+      : 0;
+
+  /* ── Compute per-class stats ── */
+  const classOverview = classes.map((cls) => {
+    const classMembers = members.filter((m) => m.class_id === cls.id);
+    const classMemberIds = classMembers.map((m) => m.student_id);
+    const classSessions = completedSessions.filter((s) =>
+      classMemberIds.includes(s.student_id),
+    );
+    const classTotal = classSessions.reduce(
+      (sum, s) =>
+        s.question_count > 0
+          ? sum + (s.correct_count / s.question_count) * 100
+          : sum,
+      0,
+    );
+    const classAvg =
+      classSessions.length > 0
+        ? Math.round(classTotal / classSessions.length)
+        : 0;
+
+    return {
+      id: cls.id,
+      name: cls.name,
+      studentCount: classMembers.length,
+      avgScore: classAvg,
+    };
+  });
+
+  /* ── Recent activity (last 10 completed sessions) ── */
+  const recentActivity = completedSessions.slice(0, 10).map((s) => ({
+    studentName: profileMap.get(s.student_id) ?? "Unknown Student",
+    score:
+      s.question_count > 0
+        ? Math.round((s.correct_count / s.question_count) * 100)
+        : 0,
+    completedAt: s.completed_at as string,
+  }));
 
   return (
     <div className="mx-auto max-w-6xl">
+      {/* Header */}
       <div className="mb-8">
         <h2 className="font-heading text-2xl font-bold text-text-primary">
           Dashboard
@@ -256,22 +376,147 @@ async function TeacherDashboard({ userId }: { userId: string }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Total Classes"
-          value={classesResult.data?.length ?? 0}
+          value={classes.length}
           icon={<IconClasses />}
         />
         <StatCard
           label="Total Students"
-          value={studentCount ?? 0}
-          icon={<IconClasses />}
+          value={studentCount}
+          icon={<IconStudent />}
         />
         <StatCard
           label="Active Assignments"
           value={assignmentsResult.data?.length ?? 0}
           icon={<IconClipboard />}
         />
+        <StatCard
+          label="Avg Class Score"
+          value={completedSessions.length > 0 ? `${avgClassScore}%` : "\u2014"}
+          icon={<IconBarChart />}
+          subText={
+            completedSessions.length > 0
+              ? `across ${completedSessions.length} sessions`
+              : "no completed sessions yet"
+          }
+        />
+      </div>
+
+      {/* Bottom row: Class Overview + Recent Activity */}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Class Overview */}
+        <Card className="lg:col-span-7">
+          <h3 className="font-heading text-lg font-bold text-text-primary">
+            Class Overview
+          </h3>
+          <p className="mt-1 text-xs text-text-muted">
+            Performance summary per class
+          </p>
+          {classes.length === 0 ? (
+            <p className="mt-6 text-center text-sm text-text-muted">
+              No classes yet. Create one to get started.
+            </p>
+          ) : (
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-glass text-text-muted">
+                    <th className="pb-2 font-medium">Class</th>
+                    <th className="pb-2 text-center font-medium">Students</th>
+                    <th className="pb-2 text-center font-medium">Avg Score</th>
+                    <th className="pb-2 text-right font-medium" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {classOverview.map((cls) => (
+                    <tr
+                      key={cls.id}
+                      className="border-b border-glass/50 last:border-0"
+                    >
+                      <td className="py-3 font-medium text-text-primary">
+                        {cls.name}
+                      </td>
+                      <td className="py-3 text-center text-text-secondary">
+                        {cls.studentCount}
+                      </td>
+                      <td className="py-3 text-center">
+                        <span
+                          className={
+                            cls.avgScore >= 70
+                              ? "font-semibold text-success"
+                              : cls.avgScore >= 50
+                                ? "font-semibold text-primary"
+                                : "font-semibold text-danger"
+                          }
+                        >
+                          {cls.studentCount > 0 ? `${cls.avgScore}%` : "\u2014"}
+                        </span>
+                      </td>
+                      <td className="py-3 text-right">
+                        <a
+                          href={`/classes/${cls.id}`}
+                          className="text-xs font-medium text-accent hover:text-primary transition-colors"
+                        >
+                          View &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
+
+        {/* Recent Activity */}
+        <Card className="lg:col-span-5">
+          <div className="flex items-center gap-2">
+            <IconClock />
+            <h3 className="font-heading text-lg font-bold text-text-primary">
+              Recent Activity
+            </h3>
+          </div>
+          <p className="mt-1 text-xs text-text-muted">
+            Last 10 completed sessions
+          </p>
+          {recentActivity.length === 0 ? (
+            <p className="mt-6 text-center text-sm text-text-muted">
+              No completed sessions yet.
+            </p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {recentActivity.map((activity, i) => (
+                <li
+                  key={i}
+                  className="flex items-center justify-between border-b border-glass/50 pb-2 last:border-0 last:pb-0"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-text-primary">
+                      {activity.studentName}
+                    </p>
+                    <p className="text-xs text-text-muted">
+                      {formatDate(activity.completedAt)}
+                    </p>
+                  </div>
+                  <span
+                    className={`ml-3 shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                      activity.score >= 70
+                        ? "bg-success/10 text-success"
+                        : activity.score >= 50
+                          ? "bg-[rgba(199,123,26,0.1)] text-primary"
+                          : "bg-danger/10 text-danger"
+                    }`}
+                  >
+                    {activity.score}%
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
       </div>
     </div>
   );
