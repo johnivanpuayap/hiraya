@@ -236,7 +236,7 @@ REVOKE EXECUTE ON FUNCTION public.custom_access_token_hook FROM authenticated, a
 -- Helper function: is teacher of student
 -- ============================================================
 
-CREATE OR REPLACE FUNCTION auth.is_teacher_of(target_student_id uuid)
+CREATE OR REPLACE FUNCTION public.is_teacher_of(target_student_id uuid)
 RETURNS boolean AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.class_members cm
@@ -354,7 +354,7 @@ CREATE POLICY "Students can read own sessions"
 
 CREATE POLICY "Teachers can read sessions of their students"
   ON public.sessions FOR SELECT
-  USING (auth.is_teacher_of(student_id));
+  USING (public.is_teacher_of(student_id));
 
 CREATE POLICY "Students can create own sessions"
   ON public.sessions FOR INSERT
@@ -381,7 +381,7 @@ CREATE POLICY "Teachers can read responses of their students"
   USING (
     EXISTS (
       SELECT 1 FROM public.sessions
-      WHERE id = responses.session_id AND auth.is_teacher_of(sessions.student_id)
+      WHERE id = responses.session_id AND public.is_teacher_of(sessions.student_id)
     )
   );
 
@@ -402,7 +402,7 @@ CREATE POLICY "Students can read own ability"
 
 CREATE POLICY "Teachers can read ability of their students"
   ON public.student_ability FOR SELECT
-  USING (auth.is_teacher_of(student_id));
+  USING (public.is_teacher_of(student_id));
 
 -- Note: INSERT/UPDATE on student_ability is done via server actions
 -- using the service role key, bypassing RLS.
@@ -461,7 +461,7 @@ CREATE POLICY "Students can read own streaks"
 
 CREATE POLICY "Teachers can read streaks of their students"
   ON public.streaks FOR SELECT
-  USING (auth.is_teacher_of(student_id));
+  USING (public.is_teacher_of(student_id));
 
 -- Note: INSERT/UPDATE on streaks is done via server actions
 -- using the service role key, bypassing RLS.
