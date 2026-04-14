@@ -69,16 +69,28 @@ async function getOverdueReview(
   const { data: overdue } = await query;
   if (!overdue || overdue.length === 0) return null;
 
-  // Filter out already-answered and wrong-category questions
-  for (const row of overdue) {
-    if (excludeIds.includes(row.question_id)) continue;
+  // Filter out already-answered questions and collect remaining IDs
+  const candidateRows = overdue.filter(
+    (row) => !excludeIds.includes(row.question_id)
+  );
+  if (candidateRows.length === 0) return null;
 
-    const { data: question } = await admin
-      .from("questions")
-      .select("*")
-      .eq("id", row.question_id)
-      .single();
+  const questionIds = candidateRows.map((row) => row.question_id);
 
+  // Batch-fetch all candidate questions in one query
+  const { data: questions } = await admin
+    .from("questions")
+    .select("*")
+    .in("id", questionIds);
+
+  if (!questions || questions.length === 0) return null;
+
+  // Build a lookup map for O(1) access
+  const questionMap = new Map(questions.map((q) => [q.id, q]));
+
+  // Walk in priority order (original overdue sort) and return the first valid match
+  for (const row of candidateRows) {
+    const question = questionMap.get(row.question_id);
     if (!question) continue;
     if (categoryIds && !categoryIds.includes(question.category_id)) continue;
 
@@ -94,22 +106,24 @@ async function getIRTQuestion(
   categoryIds: string[] | null,
   admin: AdminClient
 ): Promise<SelectedQuestion | null> {
-  // Get student abilities across all categories
-  const { data: abilities } = await admin
-    .from("student_ability")
-    .select("category_id, theta, questions_seen")
-    .eq("student_id", studentId);
+  // Fetch student abilities and available categories in parallel
+  let catQuery = admin.from("categories").select("id");
+  if (categoryIds && categoryIds.length > 0) {
+    catQuery = catQuery.in("id", categoryIds);
+  }
+
+  const [{ data: abilities }, { data: categories }] = await Promise.all([
+    admin
+      .from("student_ability")
+      .select("category_id, theta, questions_seen")
+      .eq("student_id", studentId),
+    catQuery,
+  ]);
 
   const abilityMap = new Map(
     (abilities ?? []).map((a) => [a.category_id, a])
   );
 
-  // Get available categories
-  let catQuery = admin.from("categories").select("id");
-  if (categoryIds && categoryIds.length > 0) {
-    catQuery = catQuery.in("id", categoryIds);
-  }
-  const { data: categories } = await catQuery;
   if (!categories || categories.length === 0) return null;
 
   // Sort categories: unseen first, then by theta ascending (weakest first)
@@ -129,18 +143,32 @@ async function getIRTQuestion(
     return thetaA - thetaB;
   });
 
+  // Batch-fetch all candidate questions across all categories in one query
+  const allCategoryIds = sorted.map((cat) => cat.id);
+  const { data: allQuestions } = await admin
+    .from("questions")
+    .select("id, difficulty, discrimination, question_text, image_url, option_a, option_b, option_c, option_d, category_id")
+    .in("category_id", allCategoryIds);
+
+  if (!allQuestions || allQuestions.length === 0) return null;
+
+  // Group questions by category in JS
+  const questionsByCat = new Map<string, typeof allQuestions>();
+  for (const q of allQuestions) {
+    const existing = questionsByCat.get(q.category_id);
+    if (existing) {
+      existing.push(q);
+    } else {
+      questionsByCat.set(q.category_id, [q]);
+    }
+  }
+
   // Try each category until we find a question
   for (const cat of sorted) {
     const ability = abilityMap.get(cat.id);
     const theta = ability?.theta ?? 0;
 
-    // Get candidate questions from this category
-    const qQuery = admin
-      .from("questions")
-      .select("id, difficulty, discrimination, question_text, image_url, option_a, option_b, option_c, option_d, category_id")
-      .eq("category_id", cat.id);
-
-    const { data: questions } = await qQuery;
+    const questions = questionsByCat.get(cat.id);
     if (!questions || questions.length === 0) continue;
 
     // Exclude already-answered questions
@@ -212,24 +240,38 @@ export async function processAnswer(
   isCorrect: boolean,
   admin: AdminClient
 ): Promise<AnswerResult> {
-  // Get question details
-  const { data: question } = await admin
-    .from("questions")
-    .select("category_id, difficulty, discrimination, correct_answer")
-    .eq("id", questionId)
-    .single();
+  // Fetch question, student abilities, and existing review schedule in parallel
+  // (all three are independent reads)
+  const [
+    { data: question },
+    { data: abilities },
+    { data: existingReview },
+  ] = await Promise.all([
+    admin
+      .from("questions")
+      .select("category_id, difficulty, discrimination, correct_answer")
+      .eq("id", questionId)
+      .single(),
+    admin
+      .from("student_ability")
+      .select("*")
+      .eq("student_id", studentId),
+    admin
+      .from("review_schedule")
+      .select("interval_days, ease_factor, repetitions")
+      .eq("student_id", studentId)
+      .eq("question_id", questionId)
+      .single(),
+  ]);
 
   if (!question) {
     throw new Error(`Question ${questionId} not found`);
   }
 
-  // Get or create student ability for this category
-  const { data: ability } = await admin
-    .from("student_ability")
-    .select("*")
-    .eq("student_id", studentId)
-    .eq("category_id", question.category_id)
-    .single();
+  // Find the ability record for this question's category
+  const ability = (abilities ?? []).find(
+    (a) => a.category_id === question.category_id
+  ) ?? null;
 
   const currentTheta = ability?.theta ?? 0;
   const questionsSeen = ability?.questions_seen ?? 0;
@@ -263,14 +305,6 @@ export async function processAnswer(
     newTheta,
     isCorrect,
   });
-
-  // Update spaced repetition schedule
-  const { data: existingReview } = await admin
-    .from("review_schedule")
-    .select("interval_days, ease_factor, repetitions")
-    .eq("student_id", studentId)
-    .eq("question_id", questionId)
-    .single();
 
   const reviewState = existingReview
     ? {
