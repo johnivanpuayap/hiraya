@@ -18,8 +18,19 @@ export function thetaToMastery(theta: number): number {
 }
 
 /**
- * Compute overall exam readiness as a weighted average of per-category mastery.
- * Categories with questionsSeen = 0 contribute 0% (not the default 50%).
+ * Confidence multiplier based on questions seen.
+ * With few questions, IRT theta estimates are unreliable — scale down mastery
+ * so a student answering 1-2 questions doesn't appear 45-50% ready.
+ * Reaches full confidence (~95%) at around 15 questions per category.
+ */
+function confidenceWeight(questionsSeen: number): number {
+  if (questionsSeen === 0) return 0;
+  return 1 - Math.exp(-questionsSeen / 5);
+}
+
+/**
+ * Compute overall exam readiness as a weighted average of per-category mastery,
+ * scaled by confidence (questions seen per category).
  */
 export function computeReadiness(abilities: CategoryAbility[]): number {
   if (abilities.length === 0) return 0;
@@ -29,11 +40,11 @@ export function computeReadiness(abilities: CategoryAbility[]): number {
 
   for (const a of abilities) {
     totalWeight += a.examWeight;
-    if (a.questionsSeen === 0) {
-      // Unseen categories contribute 0%, not the 50% that theta=0 gives
-      continue;
-    }
-    weightedSum += thetaToMastery(a.theta) * a.examWeight;
+    if (a.questionsSeen === 0) continue;
+
+    const mastery = thetaToMastery(a.theta);
+    const confidence = confidenceWeight(a.questionsSeen);
+    weightedSum += mastery * confidence * a.examWeight;
   }
 
   if (totalWeight === 0) return 0;
@@ -51,12 +62,26 @@ export function getCategoryMastery(
   correctCount: number;
 }> {
   return abilities
-    .map((a) => ({
-      categoryId: a.categoryId,
-      displayName: a.displayName,
-      mastery: a.questionsSeen > 0 ? Math.round(thetaToMastery(a.theta)) : 0,
-      questionsSeen: a.questionsSeen,
-      correctCount: a.correctCount,
-    }))
+    .map((a) => {
+      if (a.questionsSeen === 0) {
+        return {
+          categoryId: a.categoryId,
+          displayName: a.displayName,
+          mastery: 0,
+          questionsSeen: 0,
+          correctCount: 0,
+        };
+      }
+
+      const rawMastery = thetaToMastery(a.theta);
+      const confidence = confidenceWeight(a.questionsSeen);
+      return {
+        categoryId: a.categoryId,
+        displayName: a.displayName,
+        mastery: Math.round(rawMastery * confidence),
+        questionsSeen: a.questionsSeen,
+        correctCount: a.correctCount,
+      };
+    })
     .sort((a, b) => a.mastery - b.mastery);
 }

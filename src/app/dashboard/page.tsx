@@ -12,6 +12,57 @@ import { StreakDisplay } from "@/components/dashboard/streak-display";
 import { WeakTopics } from "@/components/dashboard/weak-topics";
 import { TrendGraph } from "@/components/dashboard/trend-graph";
 
+/* ─── SVG Icons (Lucide-style, consistent 20×20 / stroke 2) ─── */
+
+function IconTarget() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  );
+}
+
+function IconCheckCircle() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A8E4C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+function IconLayers() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  );
+}
+
+function IconClasses() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function IconClipboard() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C77B1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+    </svg>
+  );
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -33,7 +84,6 @@ export default async function DashboardPage() {
 async function StudentDashboard({ userId }: { userId: string }) {
   const admin = createAdminClient();
 
-  // First get session IDs for this student (needed by responses count)
   const { data: studentSessions } = await admin
     .from("sessions")
     .select("id")
@@ -41,7 +91,6 @@ async function StudentDashboard({ userId }: { userId: string }) {
 
   const sessionIds = (studentSessions ?? []).map((s) => s.id);
 
-  // Fetch all data in parallel
   const [abilitiesResult, categoriesResult, streakResult, sessionsResult, responsesCount] =
     await Promise.all([
       admin.from("student_ability").select("*").eq("student_id", userId),
@@ -66,7 +115,6 @@ async function StudentDashboard({ userId }: { userId: string }) {
   const sessions = sessionsResult.data ?? [];
   const totalAnswered = responsesCount.count ?? 0;
 
-  // Compute analytics
   const categoryAbilities = categories.map((cat) => {
     const ability = abilities.find((a) => a.category_id === cat.id);
     return {
@@ -95,37 +143,56 @@ async function StudentDashboard({ userId }: { userId: string }) {
   }));
 
   return (
-    <div>
-      <h2 className="font-heading text-2xl font-bold text-text-primary">
-        Dashboard
-      </h2>
-      <p className="mt-1 text-text-secondary">
-        Track your progress and keep improving.
-      </p>
+    <div className="mx-auto max-w-6xl">
+      {/* Header */}
+      <div className="mb-8">
+        <h2 className="font-heading text-2xl font-bold text-text-primary">
+          Dashboard
+        </h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          Track your progress and keep improving.
+        </p>
+      </div>
 
-      {/* Stats row */}
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        <StatCard label="Questions Answered" value={totalAnswered} />
-        <StatCard
-          label="Accuracy"
-          value={totalAnswered > 0 ? `${accuracy}%` : "\u2014"}
-        />
-        <StatCard
-          label="Sessions Completed"
-          value={sessions.length}
-        />
-        <div className="flex items-center glass rounded-2xl p-6 shadow-warm">
-          <StreakDisplay
-            currentStreak={streak?.current_streak ?? 0}
-            longestStreak={streak?.longest_streak ?? 0}
+      {/* Top row: Readiness hero + Stats */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Readiness Gauge — hero card */}
+        <Card className="lg:col-span-4" padding="lg">
+          <div className="flex h-full items-center justify-center">
+            <ReadinessGauge readiness={readiness} />
+          </div>
+        </Card>
+
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-4 lg:col-span-8">
+          <StatCard
+            label="Questions Answered"
+            value={totalAnswered}
+            icon={<IconTarget />}
           />
+          <StatCard
+            label="Accuracy"
+            value={totalAnswered > 0 ? `${accuracy}%` : "\u2014"}
+            icon={<IconCheckCircle />}
+          />
+          <StatCard
+            label="Sessions Completed"
+            value={sessions.length}
+            icon={<IconLayers />}
+          />
+          <div className="glass rounded-2xl p-5 shadow-warm">
+            <StreakDisplay
+              currentStreak={streak?.current_streak ?? 0}
+              longestStreak={streak?.longest_streak ?? 0}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Left: Mastery + Trend */}
-        <div className="flex flex-col gap-6 lg:col-span-2">
+      {/* Bottom row: Mastery + Trend | Weak Topics */}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Left column */}
+        <div className="flex flex-col gap-6 lg:col-span-8">
           <Card>
             <h3 className="font-heading text-lg font-bold text-text-primary">
               Category Mastery
@@ -145,19 +212,16 @@ async function StudentDashboard({ userId }: { userId: string }) {
           </Card>
         </div>
 
-        {/* Right: Readiness + Weak Topics */}
-        <div className="flex flex-col gap-6">
-          <Card>
-            <div className="flex justify-center py-2">
-              <ReadinessGauge readiness={readiness} />
-            </div>
-          </Card>
-
-          <Card>
+        {/* Right column */}
+        <div className="lg:col-span-4">
+          <Card className="h-full">
             <h3 className="font-heading text-lg font-bold text-text-primary">
-              Weak Topics
+              Focus Areas
             </h3>
-            <div className="mt-3">
+            <p className="mt-1 text-xs text-text-muted">
+              Topics below 70% mastery
+            </p>
+            <div className="mt-4">
               <WeakTopics topics={mastery} />
             </div>
           </Card>
@@ -182,20 +246,31 @@ async function TeacherDashboard({ userId }: { userId: string }) {
     .in("class_id", classIds.length > 0 ? classIds : ["__none__"]);
 
   return (
-    <div>
-      <h2 className="font-heading text-2xl font-bold text-text-primary">
-        Dashboard
-      </h2>
-      <p className="mt-1 text-text-secondary">
-        Manage your classes and track student progress.
-      </p>
+    <div className="mx-auto max-w-6xl">
+      <div className="mb-8">
+        <h2 className="font-heading text-2xl font-bold text-text-primary">
+          Dashboard
+        </h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          Manage your classes and track student progress.
+        </p>
+      </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <StatCard label="Total Classes" value={classesResult.data?.length ?? 0} />
-        <StatCard label="Total Students" value={studentCount ?? 0} />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <StatCard
+          label="Total Classes"
+          value={classesResult.data?.length ?? 0}
+          icon={<IconClasses />}
+        />
+        <StatCard
+          label="Total Students"
+          value={studentCount ?? 0}
+          icon={<IconClasses />}
+        />
         <StatCard
           label="Active Assignments"
           value={assignmentsResult.data?.length ?? 0}
+          icon={<IconClipboard />}
         />
       </div>
     </div>
