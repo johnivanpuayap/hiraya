@@ -1,41 +1,41 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
-import { getUserRoleWithFallback } from "@/lib/auth";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 export default async function ClassesPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
-
-  const role = await getUserRoleWithFallback(user, supabase);
   if (role !== "teacher") redirect("/dashboard");
 
-  const { data: classes } = await supabase
+  const admin = createAdminClient();
+
+  const { data: classes } = await admin
     .from("classes")
     .select("*")
     .eq("teacher_id", user.id)
     .order("created_at", { ascending: false });
 
-  // Get member counts
-  const admin = createAdminClient();
+  // Get member counts in parallel
   const classIds = (classes ?? []).map((c) => c.id);
   const memberCounts = new Map<string, number>();
 
   if (classIds.length > 0) {
-    for (const classId of classIds) {
-      const { count } = await admin
-        .from("class_members")
-        .select("id", { count: "exact", head: true })
-        .eq("class_id", classId);
-      memberCounts.set(classId, count ?? 0);
+    const results = await Promise.all(
+      classIds.map((classId) =>
+        admin
+          .from("class_members")
+          .select("id", { count: "exact", head: true })
+          .eq("class_id", classId)
+          .then(({ count }) => [classId, count ?? 0] as const)
+      )
+    );
+    for (const [id, count] of results) {
+      memberCounts.set(id, count);
     }
   }
 
