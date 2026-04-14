@@ -1,18 +1,13 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
-import { getUserRoleWithFallback } from "@/lib/auth";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { PracticeSetup } from "./practice-setup";
 
 export default async function PracticePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role, supabase } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
-  const role = await getUserRoleWithFallback(user, supabase);
   if (role !== "student") redirect("/dashboard");
 
   // Fetch categories for the selection form

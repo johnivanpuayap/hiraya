@@ -1,14 +1,11 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { JoinClassForm } from "./join-class-form";
 
 export default async function JoinClassPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 

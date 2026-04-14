@@ -1,16 +1,13 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Card } from "@/components/ui/card";
 import { ProfileForm } from "./profile-form";
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
@@ -64,7 +61,7 @@ export default async function ProfilePage() {
               const score = session.question_count > 0
                 ? Math.round((session.correct_count / session.question_count) * 100)
                 : 0;
-              const date = new Date(session.completed_at);
+              const date = new Date(session.completed_at as string);
               const formattedDate = date.toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",

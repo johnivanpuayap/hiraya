@@ -1,13 +1,15 @@
 import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
 
-import { createClient } from "@/lib/supabase/server";
-import { LandingPage } from "@/components/landing/landing-page";
+import { getAuthenticatedUser } from "@/lib/auth";
+
+const LandingPage = dynamic(
+  () => import("@/components/landing/landing-page").then((m) => ({ default: m.LandingPage })),
+  { ssr: true }
+);
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await getAuthenticatedUser();
 
   if (user) {
     redirect("/dashboard");

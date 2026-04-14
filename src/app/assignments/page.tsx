@@ -1,22 +1,18 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+import { getAuthenticatedUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserRoleWithFallback } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
 export default async function AssignmentsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
 
-  const role = await getUserRoleWithFallback(user, supabase);
   if (!role) redirect("/login");
 
   if (role === "teacher") {
