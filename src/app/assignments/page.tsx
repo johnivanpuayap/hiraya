@@ -79,13 +79,17 @@ async function StudentAssignments({ userId }: { userId: string }) {
       {!assignments || assignments.length === 0 ? (
         <Card className="mt-6">
           <p className="text-center text-text-secondary">
-            No assignments yet. Join a class to receive assignments.
+            {classIds.length > 0
+              ? "No assignments yet. Your teacher hasn\u2019t created any assignments."
+              : "No assignments yet. Join a class to receive assignments."}
           </p>
-          <div className="mt-4 flex justify-center">
-            <Link href="/classes/join">
-              <Button variant="secondary">Join a Class</Button>
-            </Link>
-          </div>
+          {classIds.length === 0 && (
+            <div className="mt-4 flex justify-center">
+              <Link href="/classes/join">
+                <Button variant="secondary">Join a Class</Button>
+              </Link>
+            </div>
+          )}
         </Card>
       ) : (
         <div className="mt-6 flex flex-col gap-4">
