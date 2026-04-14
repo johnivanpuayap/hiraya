@@ -71,14 +71,14 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <Input
-          label="Email"
+          label="Email / Username"
           name="email"
-          type="email"
-          placeholder="you@example.com"
+          type="text"
+          placeholder="Enter your email or username"
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
-          autoComplete="email"
+          autoComplete="username"
         />
         <Input
           label="Password"
