@@ -154,23 +154,23 @@ export async function submitAnswer(
 
   const admin = createAdminClient();
 
-  // Get session to check mode and ownership
-  const { data: session } = await supabase
-    .from("sessions")
-    .select("student_id, mode")
-    .eq("id", input.sessionId)
-    .single();
+  // Fetch session and question in parallel (independent queries)
+  const [{ data: session }, { data: question }] = await Promise.all([
+    supabase
+      .from("sessions")
+      .select("student_id, mode")
+      .eq("id", input.sessionId)
+      .single(),
+    admin
+      .from("questions")
+      .select("correct_answer")
+      .eq("id", input.questionId)
+      .single(),
+  ]);
 
   if (!session || session.student_id !== user.id) {
     throw new Error("Session not found");
   }
-
-  // Get question to check correctness
-  const { data: question } = await admin
-    .from("questions")
-    .select("correct_answer")
-    .eq("id", input.questionId)
-    .single();
 
   if (!question) {
     throw new Error("Question not found");
@@ -259,14 +259,16 @@ export async function completeSession(
       .select("question_id, is_correct")
       .eq("session_id", sessionId);
 
-    for (const response of responses ?? []) {
-      await processAnswer(
-        user.id,
-        response.question_id,
-        response.is_correct,
-        admin
-      );
-    }
+    await Promise.all(
+      (responses ?? []).map((response) =>
+        processAnswer(
+          user.id,
+          response.question_id,
+          response.is_correct,
+          admin
+        )
+      )
+    );
   }
 
   // Mark session complete
