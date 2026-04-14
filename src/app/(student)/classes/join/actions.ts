@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getUserRoleWithFallback } from "@/lib/auth";
 
 export async function joinClass(
   joinCode: string
@@ -14,6 +15,11 @@ export async function joinClass(
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const role = await getUserRoleWithFallback(user, supabase);
+  if (role !== "student") {
+    return { error: "Only students can join classes." };
+  }
 
   const admin = createAdminClient();
 

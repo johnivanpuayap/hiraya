@@ -1,37 +1,26 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useState } from "react";
-import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { JoinClassForm } from "./join-class-form";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { joinClass } from "./actions";
+export default async function JoinClassPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-export default function JoinClassPage() {
-  const [joinCode, setJoinCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  if (!user) redirect("/login");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!joinCode.trim()) return;
+  // If student already has classes, redirect to dashboard
+  const admin = createAdminClient();
+  const { count } = await admin
+    .from("class_members")
+    .select("id", { count: "exact", head: true })
+    .eq("student_id", user.id);
 
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    const result = await joinClass(joinCode);
-
-    if (result.error) {
-      setError(result.error);
-    } else if (result.className) {
-      setSuccess(`Successfully joined "${result.className}"!`);
-      setJoinCode("");
-    }
-
-    setLoading(false);
+  if ((count ?? 0) > 0) {
+    redirect("/dashboard");
   }
 
   return (
@@ -44,39 +33,7 @@ export default function JoinClassPage() {
       </p>
 
       <div className="mt-6 max-w-md">
-        <Card>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <Input
-              label="Join Code"
-              name="joinCode"
-              placeholder="e.g. ABC123"
-              value={joinCode}
-              onChange={(e) => {
-                setJoinCode(e.target.value.toUpperCase());
-                setError(null);
-              }}
-              error={error ?? undefined}
-              autoComplete="off"
-            />
-
-            {success && (
-              <p className="text-sm font-medium text-success">{success}</p>
-            )}
-
-            <Button type="submit" disabled={loading || !joinCode.trim()}>
-              {loading ? "Joining..." : "Join Class"}
-            </Button>
-          </form>
-
-          <div className="mt-4 text-center">
-            <Link
-              href="/dashboard"
-              className="text-sm text-text-secondary hover:text-accent"
-            >
-              Back to Dashboard
-            </Link>
-          </div>
-        </Card>
+        <JoinClassForm />
       </div>
     </div>
   );
