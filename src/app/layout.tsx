@@ -3,11 +3,12 @@ import { Inter, DM_Serif_Display } from "next/font/google";
 
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const dmSerifDisplay = DM_Serif_Display({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-dm-serif-display",
+  display: "swap",
 });
 
 interface RootLayoutProps {
