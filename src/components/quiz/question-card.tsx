@@ -13,6 +13,12 @@ interface QuestionCardProps {
 
 const OPTION_LABELS = { a: "A", b: "B", c: "C", d: "D" } as const;
 
+const IMAGE_URL_PATTERN = /^https?:\/\/.+\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i;
+
+function isImageUrl(text: string): boolean {
+  return IMAGE_URL_PATTERN.test(text.trim());
+}
+
 export function QuestionCard({
   questionText,
   imageUrl,
@@ -47,7 +53,7 @@ export function QuestionCard({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="font-heading text-xl leading-relaxed text-text-primary">
+        <p className="font-body text-xl leading-relaxed text-text-primary">
           {questionText}
         </p>
         {imageUrl && (
@@ -71,7 +77,15 @@ export function QuestionCard({
             <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-heading text-xs font-bold ${option.key === selectedAnswer && !showFeedback ? "bg-primary-gradient text-white shadow-[0_2px_8px_rgba(199,123,26,0.3)]" : "bg-[rgba(156,135,110,0.1)] text-text-secondary"}`}>
               {OPTION_LABELS[option.key]}
             </span>
-            <span>{option.text}</span>
+            {isImageUrl(option.text) ? (
+              <img
+                src={option.text}
+                alt={`Option ${OPTION_LABELS[option.key]}`}
+                className="max-h-40 rounded-lg"
+              />
+            ) : (
+              <span>{option.text}</span>
+            )}
           </button>
         ))}
       </div>
