@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserRoleWithFallback } from "@/lib/auth";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { computeReadiness, getCategoryMastery } from "@/lib/analytics";
 import { formatDate } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
@@ -65,14 +64,9 @@ function IconClipboard() {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role } = await getAuthenticatedUser();
 
   if (!user) redirect("/login");
-
-  const role = await getUserRoleWithFallback(user, supabase);
   if (!role) redirect("/login");
 
   if (role === "teacher") {

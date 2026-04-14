@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
-import { getUserRoleWithFallback } from "@/lib/auth";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { logout } from "@/app/(auth)/actions";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -11,19 +10,10 @@ interface TeacherLayoutProps {
 }
 
 export default async function TeacherLayout({ children }: TeacherLayoutProps) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role, supabase } = await getAuthenticatedUser();
 
-  if (!user) {
-    redirect("/login");
-  }
-
-  const role = await getUserRoleWithFallback(user, supabase);
-  if (role !== "teacher") {
-    redirect("/dashboard");
-  }
+  if (!user) redirect("/login");
+  if (role !== "teacher") redirect("/dashboard");
 
   const { data: profile } = await supabase
     .from("profiles")

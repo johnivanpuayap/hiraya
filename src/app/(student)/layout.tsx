@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getUserRoleWithFallback } from "@/lib/auth";
+import { getAuthenticatedUser } from "@/lib/auth";
 import { logout } from "@/app/(auth)/actions";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -12,19 +11,10 @@ interface StudentLayoutProps {
 }
 
 export default async function StudentLayout({ children }: StudentLayoutProps) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, role, supabase } = await getAuthenticatedUser();
 
-  if (!user) {
-    redirect("/login");
-  }
-
-  const role = await getUserRoleWithFallback(user, supabase);
-  if (role !== "student") {
-    redirect("/dashboard");
-  }
+  if (!user) redirect("/login");
+  if (role !== "student") redirect("/dashboard");
 
   const admin = createAdminClient();
   const [{ data: profile }, { count: classCount }] = await Promise.all([

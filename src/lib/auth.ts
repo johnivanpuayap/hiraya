@@ -1,5 +1,9 @@
+import { cache } from "react";
+
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+import { createClient } from "@/lib/supabase/server";
 
 import type { Database } from "@/types/database";
 
@@ -34,3 +38,19 @@ export async function getUserRoleWithFallback(
 
   return undefined;
 }
+
+/**
+ * Cached auth check — deduplicates getUser() + role lookup within a single
+ * React Server Component request. Layout and page share the same result.
+ */
+export const getAuthenticatedUser = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { user: null, role: undefined, supabase };
+
+  const role = await getUserRoleWithFallback(user, supabase);
+  return { user, role, supabase };
+});
