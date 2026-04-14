@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import { getUserRoleWithFallback } from "@/lib/auth";
+import { logout } from "@/app/(auth)/actions";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 
@@ -45,6 +46,7 @@ export default async function AssignmentsLayout({ children }: AssignmentsLayoutP
         <Header
           displayName={profile?.display_name ?? (role === "teacher" ? "Teacher" : "Student")}
           avatarUrl={profile?.avatar_url ?? null}
+          logoutAction={logout}
         />
         <main className="relative z-[1] flex-1 overflow-y-auto p-6">{children}</main>
       </div>

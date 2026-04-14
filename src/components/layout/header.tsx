@@ -1,14 +1,25 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-import { logout } from "@/app/(auth)/actions";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   displayName: string;
   avatarUrl: string | null;
+  logoutAction: () => Promise<void>;
 }
 
-export function Header({ displayName, avatarUrl }: HeaderProps): React.JSX.Element {
+/** Match /practice/<uuid> paths — active quiz session */
+const QUIZ_SESSION_PATTERN = /^\/practice\/[0-9a-f-]{36}/;
+
+export function Header({ displayName, avatarUrl, logoutAction }: HeaderProps): React.JSX.Element {
+  const pathname = usePathname();
+  const inQuiz = QUIZ_SESSION_PATTERN.test(pathname);
+
+  if (inQuiz) return <></>;
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-glass bg-surface/50 backdrop-blur-sm px-6">
       <div />
@@ -29,7 +40,7 @@ export function Header({ displayName, avatarUrl }: HeaderProps): React.JSX.Eleme
             displayName.charAt(0).toUpperCase()
           )}
         </div>
-        <form action={logout}>
+        <form action={logoutAction}>
           <Button variant="ghost" size="sm" type="submit">
             Log out
           </Button>
