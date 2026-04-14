@@ -6,6 +6,28 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getUserRoleWithFallback } from "@/lib/auth";
 
+export async function getAssignmentFormData(): Promise<{
+  classes: Array<{ id: string; name: string }>;
+  categories: Array<{ id: string; display_name: string }>;
+}> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const [classesRes, catsRes] = await Promise.all([
+    supabase.from("classes").select("id, name").eq("teacher_id", user.id).order("name"),
+    supabase.from("categories").select("id, display_name").order("display_name"),
+  ]);
+
+  return {
+    classes: classesRes.data ?? [],
+    categories: catsRes.data ?? [],
+  };
+}
+
 interface CreateAssignmentInput {
   classId: string;
   title: string;

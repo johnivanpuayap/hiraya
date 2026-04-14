@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { createClient } from "@/lib/supabase/client";
-import { createAssignment } from "../actions";
+import { createAssignment, getAssignmentFormData } from "../actions";
 
 const QUESTION_COUNTS = [10, 20, 30, 50] as const;
 
@@ -41,17 +40,10 @@ export default function NewAssignmentPage() {
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient();
-      const [classesRes, catsRes] = await Promise.all([
-        supabase.from("classes").select("id, name").order("name"),
-        supabase
-          .from("categories")
-          .select("id, display_name")
-          .order("display_name"),
-      ]);
-      setClasses(classesRes.data ?? []);
-      setCategories(catsRes.data ?? []);
-      if (classesRes.data?.[0]) setClassId(classesRes.data[0].id);
+      const data = await getAssignmentFormData();
+      setClasses(data.classes);
+      setCategories(data.categories);
+      if (data.classes[0]) setClassId(data.classes[0].id);
       setLoading(false);
     }
     load();
