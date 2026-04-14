@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -37,23 +37,49 @@ const STORAGE_KEY = "hiraya-sidebar-collapsed";
 /** Match /practice/<uuid> paths — active quiz session */
 const QUIZ_SESSION_PATTERN = /^\/practice\/[0-9a-f-]{36}/;
 
+/**
+ * Read collapsed state synchronously from localStorage so we never flash
+ * the wrong width on navigation. useSyncExternalStore guarantees the
+ * server-rendered HTML and first client paint use the same value.
+ */
+function subscribeToStorage(callback: () => void) {
+  const handler = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY) callback();
+  };
+  window.addEventListener("storage", handler);
+  return () => window.removeEventListener("storage", handler);
+}
+
+function getCollapsedSnapshot(): boolean {
+  try {
+    return localStorage.getItem(STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function getServerSnapshot(): boolean {
+  return false;
+}
+
 export function Sidebar({ role, hasClasses = true }: SidebarProps): React.JSX.Element {
   const pathname = usePathname();
   const inQuiz = QUIZ_SESSION_PATTERN.test(pathname);
-  const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === "true") setCollapsed(true);
+  const collapsed = useSyncExternalStore(
+    subscribeToStorage,
+    getCollapsedSnapshot,
+    getServerSnapshot,
+  );
+
+  const toggleCollapsed = useCallback(() => {
+    const next = !getCollapsedSnapshot();
+    localStorage.setItem(STORAGE_KEY, String(next));
+    // Force re-render by dispatching a storage event on the same window
+    window.dispatchEvent(
+      new StorageEvent("storage", { key: STORAGE_KEY, newValue: String(next) }),
+    );
   }, []);
-
-  function toggleCollapsed() {
-    setCollapsed((prev) => {
-      const next = !prev;
-      localStorage.setItem(STORAGE_KEY, String(next));
-      return next;
-    });
-  }
 
   const isCollapsed = collapsed || inQuiz;
 
@@ -71,14 +97,14 @@ export function Sidebar({ role, hasClasses = true }: SidebarProps): React.JSX.El
       }`}
     >
       {/* Logo + toggle */}
-      <div className={`flex items-center py-6 ${isCollapsed ? "justify-center px-0" : "gap-2 px-6"}`}>
+      <div className={`flex items-center py-6 ${isCollapsed ? "flex-col gap-2 px-0" : "gap-2 px-6"}`}>
         <Logo size={isCollapsed ? "sm" : "md"} showText={!isCollapsed} />
         {!inQuiz && (
           <button
             type="button"
             onClick={toggleCollapsed}
             className={`flex h-7 w-7 items-center justify-center rounded-lg text-text-secondary hover:bg-[rgba(156,135,110,0.1)] hover:text-text-primary transition-colors ${
-              isCollapsed ? "absolute top-6 right-2" : "ml-auto shrink-0"
+              isCollapsed ? "" : "ml-auto shrink-0"
             }`}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
