@@ -8,6 +8,8 @@ import { createClient } from "@/lib/supabase/client";
 import { loginSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Divider } from "@/components/ui/divider";
+import { GoogleIcon } from "@/components/ui/google-icon";
 import { Input } from "@/components/ui/input";
 
 import type { LoginInput } from "@/lib/validations/auth";
@@ -60,6 +62,19 @@ export default function LoginPage() {
     router.replace("/dashboard");
   }
 
+  async function handleGoogleSignIn(): Promise<void> {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) {
+      setSubmitError(error.message);
+    }
+  }
+
   return (
     <Card>
       <h2 className="font-heading text-2xl font-bold text-text-primary">
@@ -107,6 +122,17 @@ export default function LoginPage() {
         <Button type="submit" disabled={loading} className="mt-2">
           {loading ? "Logging in..." : "Log in"}
         </Button>
+
+        <Divider />
+
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-glass bg-white px-5 py-2.5 text-sm font-medium text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <GoogleIcon />
+          Sign in with Google
+        </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-text-secondary">
