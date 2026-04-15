@@ -20,8 +20,18 @@ BEGIN
   VALUES (
     NEW.id,
     user_role,
-    COALESCE(NEW.raw_user_meta_data->>'first_name', COALESCE(NEW.raw_user_meta_data->>'full_name', '')),
-    COALESCE(NEW.raw_user_meta_data->>'last_name', '')
+    COALESCE(
+      NULLIF(NEW.raw_user_meta_data->>'first_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'given_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'full_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'name', ''),
+      ''
+    ),
+    COALESCE(
+      NULLIF(NEW.raw_user_meta_data->>'last_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'family_name', ''),
+      ''
+    )
   );
   RETURN NEW;
 END;

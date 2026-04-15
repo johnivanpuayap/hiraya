@@ -19,10 +19,28 @@ export async function assignRole(role: "student" | "teacher"): Promise<never> {
     redirect("/login");
   }
 
-  // Update the profile role
+  // Build profile update — also populate names from OAuth metadata if missing
+  const meta = user.user_metadata;
+  const profileUpdate: Record<string, string> = { role };
+
+  const { data: currentProfile } = await supabase
+    .from("profiles")
+    .select("first_name, last_name")
+    .eq("id", user.id)
+    .single();
+
+  if (!currentProfile?.first_name) {
+    profileUpdate.first_name =
+      meta?.given_name ?? meta?.first_name ?? meta?.full_name ?? meta?.name ?? "";
+  }
+  if (!currentProfile?.last_name) {
+    profileUpdate.last_name =
+      meta?.family_name ?? meta?.last_name ?? "";
+  }
+
   const { error: profileError } = await supabase
     .from("profiles")
-    .update({ role })
+    .update(profileUpdate)
     .eq("id", user.id);
 
   if (profileError) {
