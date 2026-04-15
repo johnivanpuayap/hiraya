@@ -91,6 +91,15 @@ export default function LoginPage() {
           autoComplete="current-password"
         />
 
+        <div className="text-right">
+          <Link
+            href="/forgot-password"
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
+
         {submitError && (
           <p className="text-sm text-danger">{submitError}</p>
         )}
