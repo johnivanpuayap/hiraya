@@ -76,3 +76,18 @@
   box-shadow: 0 0 0 3px rgba(199, 123, 26, 0.15);
   outline: none;
 }
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
