@@ -39,10 +39,14 @@ export async function updateSession(
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+
   const isPublicRoute =
     pathname === "/" ||
     pathname.startsWith("/login") ||
-    pathname.startsWith("/register");
+    pathname.startsWith("/register") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/auth/callback");
 
   // Not logged in and not on a public page → redirect to login
   if (!user && !isPublicRoute) {
@@ -56,11 +60,30 @@ export async function updateSession(
     pathname.startsWith("/login") ||
     pathname.startsWith("/register");
 
-  // Logged in and on public/auth page → redirect to dashboard
+  // Logged in and on auth page (login/register) → redirect to dashboard
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
+  }
+
+  // Logged in but no role (OAuth user who hasn't selected) → redirect to /select-role
+  if (user && !isPublicRoute) {
+    const role = user.app_metadata?.role;
+    const isSelectRolePage = pathname.startsWith("/select-role");
+
+    if (!role && !isSelectRolePage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/select-role";
+      return NextResponse.redirect(url);
+    }
+
+    // Has role but trying to access /select-role → redirect to dashboard
+    if (role && isSelectRolePage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
