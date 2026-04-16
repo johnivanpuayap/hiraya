@@ -126,12 +126,7 @@ export default function SessionPage({ params }: SessionPageProps) {
 
     const result = await fetchNextQuestion(sessionId);
     if (!result) {
-      // No more questions
-      if (mode === "exam") {
-        await storeCompleteSession(sessionId);
-      } else {
-        await storeCompleteSession(sessionId);
-      }
+      await storeCompleteSession(sessionId);
       router.replace(`/practice/${sessionId}/results`);
       return;
     }

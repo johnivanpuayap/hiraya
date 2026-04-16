@@ -21,8 +21,13 @@ export async function performOptimisticUpdate({
   optimisticFn();
   addToast({ type: "success", message: successMessage });
 
-  // Call server in background
-  const result = await serverFn();
+  let result: { error?: string };
+
+  try {
+    result = await serverFn();
+  } catch {
+    result = { error: "An unexpected error occurred" };
+  }
 
   if (result.error) {
     // Rollback and show error toast with retry

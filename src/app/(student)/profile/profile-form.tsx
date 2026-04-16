@@ -9,7 +9,9 @@ import { createClient } from "@/lib/supabase/client";
 import { useProfileStore } from "@/stores/profile-store";
 
 export function ProfileForm() {
-  const { profile, hydrate, updateProfile } = useProfileStore();
+  const profile = useProfileStore((s) => s.profile);
+  const hydrate = useProfileStore((s) => s.hydrate);
+  const updateProfile = useProfileStore((s) => s.updateProfile);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
