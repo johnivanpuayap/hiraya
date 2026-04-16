@@ -6,7 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { AssignmentStoreHydrator } from "@/components/hydrators/assignment-store-hydrator";
+import { TeacherAssignmentList } from "./teacher-assignment-list";
 
 export default async function AssignmentsPage() {
   const { user, role } = await getAuthenticatedUser();
@@ -158,7 +159,7 @@ async function TeacherAssignments({ userId }: { userId: string }) {
   const classIds = [
     ...new Set((assignments ?? []).map((a) => a.class_id)),
   ];
-  const classNameMap = new Map<string, string>();
+  const classNameMap: Record<string, string> = {};
 
   if (classIds.length > 0) {
     const { data: classes } = await supabase
@@ -167,12 +168,16 @@ async function TeacherAssignments({ userId }: { userId: string }) {
       .in("id", classIds);
 
     for (const cls of classes ?? []) {
-      classNameMap.set(cls.id, cls.name);
+      classNameMap[cls.id] = cls.name;
     }
   }
 
   return (
     <div>
+      <AssignmentStoreHydrator
+        assignments={assignments ?? []}
+        classNameMap={classNameMap}
+      />
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-heading text-2xl font-bold text-text-primary">
@@ -187,39 +192,7 @@ async function TeacherAssignments({ userId }: { userId: string }) {
         </Link>
       </div>
 
-      {!assignments || assignments.length === 0 ? (
-        <Card className="mt-6">
-          <p className="text-center text-text-secondary">
-            No assignments yet. Create one for your class.
-          </p>
-        </Card>
-      ) : (
-        <div className="mt-6 flex flex-col gap-4">
-          {assignments.map((a) => (
-            <Card key={a.id} hover>
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-heading text-base font-bold text-text-primary">
-                    {a.title}
-                  </h3>
-                  <p className="mt-0.5 text-xs text-text-secondary">
-                    {classNameMap.get(a.class_id) ?? "Unknown"} &middot;{" "}
-                    {a.question_count} questions &middot; {a.mode}
-                  </p>
-                  {a.deadline && (
-                    <p className="mt-0.5 text-xs text-text-secondary">
-                      Due: {formatDate(a.deadline)}
-                    </p>
-                  )}
-                </div>
-                <span className="rounded-lg glass border border-glass px-2 py-1 text-xs text-text-secondary">
-                  {formatDate(a.created_at)}
-                </span>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+      <TeacherAssignmentList />
     </div>
   );
 }
