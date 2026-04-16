@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 import { generateJoinCode } from "@/lib/utils";
@@ -47,7 +46,6 @@ export async function createClass(input: {
   }
 
   console.info("[class] created", { classId: data.id, joinCode });
-  revalidatePath("/classes");
   return { classId: data.id };
 }
 
@@ -72,7 +70,6 @@ export async function deleteClass(
     return { error: "Failed to delete class." };
   }
 
-  revalidatePath("/classes");
   return {};
 }
 
@@ -109,6 +106,5 @@ export async function removeStudent(
     return { error: "Failed to remove student." };
   }
 
-  revalidatePath(`/classes/${classId}`);
   return {};
 }

@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 import { getUserRoleWithFallback } from "@/lib/auth";
@@ -77,7 +76,6 @@ export async function createAssignment(
   }
 
   console.info("[assignment] created", { assignmentId: data.id });
-  revalidatePath("/assignments");
   return { assignmentId: data.id };
 }
 
@@ -102,6 +100,5 @@ export async function deleteAssignment(
     return { error: "Failed to delete assignment." };
   }
 
-  revalidatePath("/assignments");
   return {};
 }
