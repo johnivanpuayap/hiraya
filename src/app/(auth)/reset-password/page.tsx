@@ -5,20 +5,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/client";
-import { loginSchema } from "@/lib/validations/auth";
+import { resetPasswordSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Divider } from "@/components/ui/divider";
-import { GoogleIcon } from "@/components/ui/google-icon";
 import { Input } from "@/components/ui/input";
 
-import type { LoginInput } from "@/lib/validations/auth";
+import type { ResetPasswordInput } from "@/lib/validations/auth";
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState<LoginInput>({
-    email: "",
+  const [formData, setFormData] = useState<ResetPasswordInput>({
     password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -34,7 +32,7 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
-    const result = loginSchema.safeParse(formData);
+    const result = resetPasswordSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Record<string, string | undefined> = {};
       result.error.issues.forEach((issue) => {
@@ -47,8 +45,7 @@ export default function LoginPage() {
 
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email: result.data.email,
+    const { error } = await supabase.auth.updateUser({
       password: result.data.password,
     });
 
@@ -58,87 +55,54 @@ export default function LoginPage() {
       return;
     }
 
-    console.info("[auth] user logged in", { email: result.data.email });
+    console.info("[auth] password reset successful");
     router.replace("/dashboard");
-  }
-
-  async function handleGoogleSignIn(): Promise<void> {
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
-      setSubmitError(error.message);
-    }
   }
 
   return (
     <Card>
       <h2 className="font-heading text-2xl font-bold text-text-primary">
-        Log in
+        Set new password
       </h2>
       <p className="mt-1 text-sm text-text-secondary">
-        Welcome back! Enter your credentials to continue.
+        Choose a strong password for your account.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <Input
-          label="Email / Username"
-          name="email"
-          type="text"
-          placeholder="Enter your email or username"
-          value={formData.email}
-          onChange={handleChange}
-          error={errors.email}
-          autoComplete="username"
-        />
-        <Input
-          label="Password"
+          label="New password"
           name="password"
           type="password"
-          placeholder="Enter your password"
+          placeholder="At least 8 characters"
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
-          autoComplete="current-password"
+          autoComplete="new-password"
         />
-
-        <div className="text-right">
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium text-accent hover:underline"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        <Input
+          label="Confirm password"
+          name="confirmPassword"
+          type="password"
+          placeholder="Re-enter your password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          error={errors.confirmPassword}
+          autoComplete="new-password"
+        />
 
         {submitError && (
           <p className="text-sm text-danger">{submitError}</p>
         )}
 
         <Button type="submit" disabled={loading} className="mt-2">
-          {loading ? "Logging in..." : "Log in"}
+          {loading ? "Updating..." : "Update password"}
         </Button>
-
-        <Divider />
-
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-glass bg-white px-5 py-2.5 text-sm font-medium text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-        >
-          <GoogleIcon />
-          Sign in with Google
-        </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-text-secondary">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-accent hover:underline">
-          Sign up
+        Link expired?{" "}
+        <Link href="/forgot-password" className="font-medium text-accent hover:underline">
+          Request a new one
         </Link>
       </p>
     </Card>

@@ -8,6 +8,8 @@ import { registerSchema } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { GoogleIcon } from "@/components/ui/google-icon";
+import { Divider } from "@/components/ui/divider";
 
 import type { RegisterInput } from "@/lib/validations/auth";
 
@@ -75,6 +77,19 @@ export default function RegisterPage() {
     });
     setEmailSent(true);
     setLoading(false);
+  }
+
+  async function handleGoogleSignUp(): Promise<void> {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) {
+      setSubmitError(error.message);
+    }
   }
 
   if (emailSent) {
@@ -205,6 +220,17 @@ export default function RegisterPage() {
         <Button type="submit" disabled={loading} className="mt-2">
           {loading ? "Creating account..." : "Sign up"}
         </Button>
+
+        <Divider />
+
+        <button
+          type="button"
+          onClick={handleGoogleSignUp}
+          className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-glass bg-white px-5 py-2.5 text-sm font-medium text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <GoogleIcon />
+          Sign up with Google
+        </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-text-secondary">
