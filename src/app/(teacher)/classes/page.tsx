@@ -3,8 +3,9 @@ import Link from "next/link";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUser } from "@/lib/auth";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ClassStoreHydrator } from "@/components/hydrators/class-store-hydrator";
+import { ClassList } from "./class-list";
 
 export default async function ClassesPage() {
   const { user, role } = await getAuthenticatedUser();
@@ -22,7 +23,7 @@ export default async function ClassesPage() {
 
   // Get member counts in parallel
   const classIds = (classes ?? []).map((c) => c.id);
-  const memberCounts = new Map<string, number>();
+  const memberCounts: Record<string, number> = {};
 
   if (classIds.length > 0) {
     const results = await Promise.all(
@@ -35,12 +36,13 @@ export default async function ClassesPage() {
       )
     );
     for (const [id, count] of results) {
-      memberCounts.set(id, count);
+      memberCounts[id] = count;
     }
   }
 
   return (
     <div>
+      <ClassStoreHydrator classes={classes ?? []} memberCounts={memberCounts} />
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-heading text-2xl font-bold text-text-primary">
@@ -55,31 +57,7 @@ export default async function ClassesPage() {
         </Link>
       </div>
 
-      {!classes || classes.length === 0 ? (
-        <Card className="mt-6">
-          <p className="text-center text-text-secondary">
-            No classes yet. Create one to get started.
-          </p>
-        </Card>
-      ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {classes.map((cls) => (
-            <Link key={cls.id} href={`/classes/${cls.id}`}>
-              <Card hover>
-                <h3 className="font-heading text-lg font-bold text-text-primary">
-                  {cls.name}
-                </h3>
-                <div className="mt-2 flex items-center gap-4 text-sm text-text-secondary">
-                  <span>{memberCounts.get(cls.id) ?? 0} students</span>
-                  <span className="rounded-lg glass px-2 py-0.5 font-mono text-xs">
-                    {cls.join_code}
-                  </span>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
+      <ClassList />
     </div>
   );
 }
