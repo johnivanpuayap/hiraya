@@ -6,16 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { updateProfile } from "./actions";
+import { useProfileStore } from "@/stores/profile-store";
 
 export function ProfileForm() {
+  const { profile, hydrate, updateProfile } = useProfileStore();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -26,36 +25,39 @@ export function ProfileForm() {
 
       if (user) {
         setEmail(user.email ?? "");
-        const { data: profile } = await supabase
+        const { data: profileData } = await supabase
           .from("profiles")
           .select("first_name, last_name")
           .eq("id", user.id)
           .single();
 
-        if (profile) {
-          setFirstName(profile.first_name);
-          setLastName(profile.last_name);
+        if (profileData) {
+          setFirstName(profileData.first_name);
+          setLastName(profileData.last_name);
+          hydrate({
+            firstName: profileData.first_name,
+            lastName: profileData.last_name,
+            email: user.email ?? "",
+          });
         }
       }
       setLoading(false);
     }
     load();
-  }, []);
+  }, [hydrate]);
+
+  // Sync local state with store on rollback
+  useEffect(() => {
+    if (profile) {
+      setFirstName(profile.firstName);
+      setLastName(profile.lastName);
+    }
+  }, [profile]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
-    setError(null);
-    setSuccess(false);
-
-    const result = await updateProfile({ firstName, lastName });
-
-    if (result.error) {
-      setError(result.error);
-    } else {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    }
+    await updateProfile({ firstName, lastName });
     setSaving(false);
   }
 
@@ -89,11 +91,6 @@ export function ProfileForm() {
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
-
-          {error && <p className="text-sm text-danger">{error}</p>}
-          {success && (
-            <p className="text-sm text-success">Profile updated!</p>
-          )}
 
           <Button type="submit" disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
