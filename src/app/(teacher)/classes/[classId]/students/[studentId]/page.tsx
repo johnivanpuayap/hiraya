@@ -65,39 +65,40 @@ export default async function StudentDetailPage({
 
   if (role !== "teacher") redirect("/dashboard");
 
-  // Verify teacher owns this class
-  const { data: classData } = await supabase
-    .from("classes")
-    .select("name, teacher_id")
-    .eq("id", classId)
-    .single();
-
-  if (!classData || classData.teacher_id !== user.id) notFound();
-
   const admin = createAdminClient();
 
-  // Get student profile
-  const { data: profile } = await admin
-    .from("profiles")
-    .select("display_name")
-    .eq("id", studentId)
-    .single();
+  // Fetch class ownership check, student profile, and all student data in parallel
+  const [
+    { data: classData },
+    { data: profile },
+    abilitiesResult,
+    categoriesResult,
+    streakResult,
+    sessionsResult,
+  ] = await Promise.all([
+    supabase
+      .from("classes")
+      .select("name, teacher_id")
+      .eq("id", classId)
+      .single(),
+    admin
+      .from("profiles")
+      .select("display_name")
+      .eq("id", studentId)
+      .single(),
+    admin.from("student_ability").select("*").eq("student_id", studentId),
+    admin.from("categories").select("id, display_name, exam_weight"),
+    admin.from("streaks").select("*").eq("student_id", studentId).single(),
+    admin
+      .from("sessions")
+      .select("correct_count, question_count, started_at, mode, completed_at")
+      .eq("student_id", studentId)
+      .not("completed_at", "is", null)
+      .order("started_at", { ascending: false }),
+  ]);
 
+  if (!classData || classData.teacher_id !== user.id) notFound();
   if (!profile) notFound();
-
-  // Get student data
-  const [abilitiesResult, categoriesResult, streakResult, sessionsResult] =
-    await Promise.all([
-      admin.from("student_ability").select("*").eq("student_id", studentId),
-      admin.from("categories").select("id, display_name, exam_weight"),
-      admin.from("streaks").select("*").eq("student_id", studentId).single(),
-      admin
-        .from("sessions")
-        .select("correct_count, question_count, started_at, mode, completed_at")
-        .eq("student_id", studentId)
-        .not("completed_at", "is", null)
-        .order("started_at", { ascending: false }),
-    ]);
 
   const abilities = abilitiesResult.data ?? [];
   const categories = categoriesResult.data ?? [];

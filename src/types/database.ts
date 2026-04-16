@@ -182,6 +182,7 @@ export type Database = {
           last_name: string
           role: string
           updated_at: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -192,6 +193,7 @@ export type Database = {
           last_name: string
           role: string
           updated_at?: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -202,6 +204,7 @@ export type Database = {
           last_name?: string
           role?: string
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -495,6 +498,8 @@ export type Database = {
     Functions: {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       is_teacher_of: { Args: { target_student_id: string }; Returns: boolean }
+      get_email_by_username: { Args: { lookup_username: string }; Returns: string }
+      is_class_teacher: { Args: { p_class_id: string; p_user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

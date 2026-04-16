@@ -21,7 +21,7 @@ export async function assignRole(role: "student" | "teacher"): Promise<never> {
 
   // Build profile update — also populate names from OAuth metadata if missing
   const meta = user.user_metadata;
-  const profileUpdate: Record<string, string> = { role };
+  const profileUpdate: { role: string; first_name?: string; last_name?: string } = { role };
 
   const { data: currentProfile } = await supabase
     .from("profiles")

@@ -15,20 +15,25 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
   if (!user) redirect("/login");
   if (!role) redirect("/login");
 
-  const { data: profile } = await supabase
+  const profilePromise = supabase
     .from("profiles")
     .select("display_name, avatar_url")
     .eq("id", user.id)
     .single();
 
-  let hasClasses = true;
-  if (role === "student") {
-    const { count } = await supabase
-      .from("class_members")
-      .select("id", { count: "exact", head: true })
-      .eq("student_id", user.id);
-    hasClasses = (count ?? 0) > 0;
-  }
+  const classCountPromise = role === "student"
+    ? supabase
+        .from("class_members")
+        .select("id", { count: "exact", head: true })
+        .eq("student_id", user.id)
+    : Promise.resolve({ count: 1 });
+
+  const [{ data: profile }, { count }] = await Promise.all([
+    profilePromise,
+    classCountPromise,
+  ]);
+
+  const hasClasses = role === "teacher" || (count ?? 0) > 0;
 
   return (
     <div className="flex h-screen bg-background">

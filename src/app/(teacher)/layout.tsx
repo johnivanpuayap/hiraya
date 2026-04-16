@@ -1,9 +1,12 @@
 import { redirect } from "next/navigation";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 import { logout } from "@/app/(auth)/actions";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+
+export const dynamic = "force-dynamic";
 
 interface TeacherLayoutProps {
   children: React.ReactNode;
@@ -12,8 +15,13 @@ interface TeacherLayoutProps {
 export default async function TeacherLayout({ children }: TeacherLayoutProps) {
   const { user, role, supabase } = await getAuthenticatedUser();
 
+  logger.debug("teacher-layout", "auth check", { userId: user?.id, role });
+
   if (!user) redirect("/login");
-  if (role !== "teacher") redirect("/dashboard");
+  if (role !== "teacher") {
+    logger.warn("teacher-layout", "non-teacher in teacher layout, redirecting", { role, userId: user.id });
+    redirect("/dashboard");
+  }
 
   const { data: profile } = await supabase
     .from("profiles")

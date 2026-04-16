@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 import type { Database } from "@/types/database";
 
@@ -49,8 +50,12 @@ export const getAuthenticatedUser = cache(async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return { user: null, role: undefined, supabase };
+  if (!user) {
+    logger.debug("auth", "no authenticated user");
+    return { user: null, role: undefined, supabase };
+  }
 
   const role = await getUserRoleWithFallback(user, supabase);
+  logger.debug("auth", "authenticated user", { userId: user.id, email: user.email, role });
   return { user, role, supabase };
 });

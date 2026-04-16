@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -19,62 +20,70 @@ export default async function ClassDetailPage({
   const { classId } = await params;
   const { user, role, supabase } = await getAuthenticatedUser();
 
+  logger.debug("class-detail", "auth check", { userId: user?.id, role, classId });
+
   if (!user) redirect("/login");
 
-  if (role !== "teacher") redirect("/dashboard");
+  if (role !== "teacher") {
+    logger.warn("class-detail", "non-teacher accessing class page, redirecting", { role, userId: user.id });
+    redirect("/dashboard");
+  }
 
   // Get class info
-  const { data: classData } = await supabase
+  const { data: classData, error: classError } = await supabase
     .from("classes")
     .select("*")
     .eq("id", classId)
     .eq("teacher_id", user.id)
     .single();
 
+  logger.debug("class-detail", "class query result", {
+    classId,
+    teacherId: user.id,
+    found: !!classData,
+    error: classError?.message,
+  });
+
   if (!classData) notFound();
 
   const admin = createAdminClient();
 
-  // Get members with profile info
-  const { data: members } = await admin
-    .from("class_members")
-    .select("student_id, joined_at")
-    .eq("class_id", classId);
+  // Phase 1: fetch members + categories in parallel (no dependencies)
+  const [{ data: members }, { data: categories }] = await Promise.all([
+    admin
+      .from("class_members")
+      .select("student_id, joined_at")
+      .eq("class_id", classId),
+    admin
+      .from("categories")
+      .select("id, display_name, exam_weight"),
+  ]);
 
   const studentIds = (members ?? []).map((m) => m.student_id);
-  const { data: profiles } =
-    studentIds.length > 0
-      ? await admin
-          .from("profiles")
-          .select("id, display_name")
-          .in("id", studentIds)
-      : { data: [] as Array<{ id: string; display_name: string | null }> };
+  const allCategories = categories ?? [];
+  const safeStudentIds = studentIds.length > 0 ? studentIds : ["__none__"];
+
+  // Phase 2: fetch profiles, abilities, sessions in parallel (depend on studentIds)
+  const [{ data: profiles }, { data: allAbilities }, { data: allSessions }] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("id, display_name")
+      .in("id", safeStudentIds),
+    admin
+      .from("student_ability")
+      .select("student_id, category_id, theta, questions_seen, correct_count")
+      .in("student_id", safeStudentIds),
+    admin
+      .from("sessions")
+      .select("student_id, correct_count, question_count, completed_at")
+      .in("student_id", safeStudentIds)
+      .not("completed_at", "is", null)
+      .order("completed_at", { ascending: false }),
+  ]);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.id, p])
   );
-
-  // Get all categories for readiness computation
-  const { data: categories } = await admin
-    .from("categories")
-    .select("id, display_name, exam_weight");
-
-  const allCategories = categories ?? [];
-
-  // Get student_ability data for all students in the class
-  const { data: allAbilities } =
-    studentIds.length > 0
-      ? await admin
-          .from("student_ability")
-          .select("student_id, category_id, theta, questions_seen, correct_count")
-          .in("student_id", studentIds)
-      : { data: [] as Array<{
-          student_id: string;
-          category_id: string;
-          theta: number;
-          questions_seen: number;
-          correct_count: number;
-        }> };
 
   const abilityRows = allAbilities ?? [];
 
@@ -129,23 +138,7 @@ export default async function ClassDetailPage({
   let scoreSum = 0;
   let studentsWithSessions = 0;
 
-  // Batch-fetch all completed sessions for all students in the class
-  const { data: allSessions } =
-    studentIds.length > 0
-      ? await admin
-          .from("sessions")
-          .select("student_id, correct_count, question_count, completed_at")
-          .in("student_id", studentIds)
-          .not("completed_at", "is", null)
-          .order("completed_at", { ascending: false })
-      : { data: [] as Array<{
-          student_id: string;
-          correct_count: number;
-          question_count: number;
-          completed_at: string;
-        }> };
-
-  // Group sessions by student
+  // Group sessions by student (allSessions already fetched in parallel above)
   const sessionsByStudent = new Map<
     string,
     Array<{ correct_count: number; question_count: number; completed_at: string | null }>
