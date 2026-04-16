@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { createAssignment, getAssignmentFormData } from "../actions";
+import { getAssignmentFormData } from "../actions";
+import { useAssignmentStore } from "@/stores/assignment-store";
 
 const QUESTION_COUNTS = [10, 20, 30, 50] as const;
 
@@ -27,7 +28,6 @@ export default function NewAssignmentPage() {
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [classId, setClassId] = useState("");
   const [title, setTitle] = useState("");
@@ -60,24 +60,24 @@ export default function NewAssignmentPage() {
     if (!classId || !title.trim()) return;
 
     setSubmitting(true);
-    setError(null);
 
-    const result = await createAssignment({
+    const { addAssignment } = useAssignmentStore.getState();
+
+    const assignmentId = await addAssignment({
       classId,
       title,
       mode,
       categoryIds: selectedCategories,
       questionCount,
-      timeLimitMinutes: timeLimitMinutes ? parseInt(timeLimitMinutes) : null,
+      timeLimitMinutes: mode === "exam" ? (timeLimitMinutes ? parseInt(timeLimitMinutes) : null) : null,
       deadline: deadline || null,
       maxAttempts,
     });
 
-    if (result.error) {
-      setError(result.error);
-      setSubmitting(false);
-    } else {
+    if (assignmentId) {
       router.push("/assignments");
+    } else {
+      setSubmitting(false);
     }
   }
 
@@ -213,8 +213,6 @@ export default function NewAssignmentPage() {
             />
           </div>
         </Card>
-
-        {error && <p className="text-sm text-danger">{error}</p>}
 
         <Button
           type="submit"
