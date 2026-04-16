@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { createClass } from "../actions";
+import { useClassStore } from "@/stores/class-store";
 
 export default function NewClassPage() {
   const router = useRouter();
+  const addClass = useClassStore((s) => s.addClass);
   const [name, setName] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -19,15 +19,13 @@ export default function NewClassPage() {
     if (!name.trim()) return;
 
     setLoading(true);
-    setError(null);
 
-    const result = await createClass({ name });
+    const classId = await addClass(name);
 
-    if (result.error) {
-      setError(result.error);
+    if (classId) {
+      router.push(`/classes/${classId}`);
+    } else {
       setLoading(false);
-    } else if (result.classId) {
-      router.push(`/classes/${result.classId}`);
     }
   }
 
@@ -48,11 +46,7 @@ export default function NewClassPage() {
               name="name"
               placeholder="e.g. FE Review — Section A"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setError(null);
-              }}
-              error={error ?? undefined}
+              onChange={(e) => setName(e.target.value)}
             />
             <Button type="submit" disabled={loading || !name.trim()}>
               {loading ? "Creating..." : "Create Class"}
