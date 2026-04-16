@@ -47,8 +47,25 @@ export default function LoginPage() {
 
     setLoading(true);
     const supabase = createClient();
+
+    let email = result.data.email;
+
+    // If input doesn't look like an email, resolve username to email
+    if (!email.includes("@")) {
+      const { data: resolvedEmail, error: lookupError } = await supabase
+        .rpc("get_email_by_username", { lookup_username: email });
+
+      if (lookupError || !resolvedEmail) {
+        setSubmitError("Invalid username or password");
+        setLoading(false);
+        return;
+      }
+
+      email = resolvedEmail;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
-      email: result.data.email,
+      email,
       password: result.data.password,
     });
 
