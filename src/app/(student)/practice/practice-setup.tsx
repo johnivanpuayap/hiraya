@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { createSession } from "./actions";
+import { useSessionStore } from "@/stores/session-store";
 
 interface Category {
   id: string;
@@ -25,6 +25,7 @@ const TIME_PRESETS = [
 
 export function PracticeSetup({ categories }: PracticeSetupProps) {
   const router = useRouter();
+  const createSession = useSessionStore((s) => s.createSession);
   const [mode, setMode] = useState<"study" | "exam">("study");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionCount, setQuestionCount] = useState<number>(10);
@@ -39,15 +40,15 @@ export function PracticeSetup({ categories }: PracticeSetupProps) {
 
   async function handleStart() {
     setLoading(true);
-    try {
-      const sessionId = await createSession({
-        mode,
-        categoryIds: selectedCategories,
-        questionCount,
-        timeLimitMinutes: mode === "exam" ? timeLimitMinutes : null,
-      });
+    const sessionId = await createSession({
+      mode,
+      categoryIds: selectedCategories,
+      questionCount,
+      timeLimitMinutes: mode === "exam" ? timeLimitMinutes : null,
+    });
+    if (sessionId) {
       router.push(`/practice/${sessionId}`);
-    } catch {
+    } else {
       setLoading(false);
     }
   }
