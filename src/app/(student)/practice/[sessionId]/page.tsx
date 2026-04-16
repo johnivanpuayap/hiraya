@@ -8,7 +8,8 @@ import { Timer } from "@/components/quiz/timer";
 import { ProgressBar } from "@/components/quiz/progress-bar";
 import { AnswerFeedback } from "@/components/quiz/answer-feedback";
 import { QuizNav } from "@/components/quiz/quiz-nav";
-import { fetchNextQuestion, submitAnswer, completeSession } from "../actions";
+import { fetchNextQuestion } from "../actions";
+import { useSessionStore } from "@/stores/session-store";
 
 import type { SelectedQuestion } from "@/lib/adaptive/engine";
 
@@ -21,6 +22,8 @@ interface SessionPageProps {
 export default function SessionPage({ params }: SessionPageProps) {
   const { sessionId } = use(params);
   const router = useRouter();
+  const storeSubmitAnswer = useSessionStore((s) => s.submitAnswer);
+  const storeCompleteSession = useSessionStore((s) => s.completeSession);
 
   const [question, setQuestion] = useState<SelectedQuestion | null>(null);
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -75,9 +78,9 @@ export default function SessionPage({ params }: SessionPageProps) {
   }
 
   const handleTimeUp = useCallback(async () => {
-    await completeSession(sessionId);
+    await storeCompleteSession(sessionId);
     router.replace(`/practice/${sessionId}/results`);
-  }, [sessionId, router]);
+  }, [sessionId, router, storeCompleteSession]);
 
   async function handleSelectAnswer(answer: Answer) {
     if (submitting || feedback) return;
@@ -89,7 +92,7 @@ export default function SessionPage({ params }: SessionPageProps) {
       setSubmitting(true);
       const timeSpentMs = Date.now() - answerStartTime;
 
-      const result = await submitAnswer({
+      const result = await storeSubmitAnswer({
         sessionId,
         questionId: question!.id,
         selectedAnswer: answer,
@@ -107,7 +110,7 @@ export default function SessionPage({ params }: SessionPageProps) {
       setSubmitting(true);
       const timeSpentMs = Date.now() - answerStartTime;
 
-      await submitAnswer({
+      await storeSubmitAnswer({
         sessionId,
         questionId: question.id,
         selectedAnswer,
@@ -125,9 +128,9 @@ export default function SessionPage({ params }: SessionPageProps) {
     if (!result) {
       // No more questions
       if (mode === "exam") {
-        await completeSession(sessionId);
+        await storeCompleteSession(sessionId);
       } else {
-        await completeSession(sessionId);
+        await storeCompleteSession(sessionId);
       }
       router.replace(`/practice/${sessionId}/results`);
       return;
@@ -141,7 +144,7 @@ export default function SessionPage({ params }: SessionPageProps) {
   }
 
   async function handleQuit() {
-    await completeSession(sessionId);
+    await storeCompleteSession(sessionId);
     router.replace(`/practice/${sessionId}/results`);
   }
 
@@ -149,14 +152,14 @@ export default function SessionPage({ params }: SessionPageProps) {
     // Submit the current answer if selected
     if (selectedAnswer && question) {
       const timeSpentMs = Date.now() - answerStartTime;
-      await submitAnswer({
+      await storeSubmitAnswer({
         sessionId,
         questionId: question.id,
         selectedAnswer,
         timeSpentMs,
       });
     }
-    await completeSession(sessionId);
+    await storeCompleteSession(sessionId);
     router.replace(`/practice/${sessionId}/results`);
   }
 
