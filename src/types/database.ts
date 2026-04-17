@@ -491,6 +491,129 @@ export type Database = {
           },
         ]
       }
+      lessons: {
+        Row: {
+          id: string
+          category_id: string
+          slug: string
+          title: string
+          order_index: number
+          estimated_minutes: number | null
+          content_hash: string
+          quiz_hash: string
+          deleted_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          category_id: string
+          slug: string
+          title: string
+          order_index: number
+          estimated_minutes?: number | null
+          content_hash: string
+          quiz_hash: string
+          deleted_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          category_id?: string
+          slug?: string
+          title?: string
+          order_index?: number
+          estimated_minutes?: number | null
+          content_hash?: string
+          quiz_hash?: string
+          deleted_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lesson_reads: {
+        Row: {
+          user_id: string
+          lesson_id: string
+          read_at: string
+        }
+        Insert: {
+          user_id: string
+          lesson_id: string
+          read_at?: string
+        }
+        Update: {
+          user_id?: string
+          lesson_id?: string
+          read_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_reads_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lesson_quiz_attempts: {
+        Row: {
+          id: string
+          user_id: string
+          lesson_id: string
+          correct_count: number
+          total_count: number
+          passed: boolean
+          answers: Json
+          content_hash_at_attempt: string
+          quiz_hash_at_attempt: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          lesson_id: string
+          correct_count: number
+          total_count: number
+          passed: boolean
+          answers: Json
+          content_hash_at_attempt: string
+          quiz_hash_at_attempt: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          lesson_id?: string
+          correct_count?: number
+          total_count?: number
+          passed?: boolean
+          answers?: Json
+          content_hash_at_attempt?: string
+          quiz_hash_at_attempt?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_quiz_attempts_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -500,6 +623,8 @@ export type Database = {
       is_teacher_of: { Args: { target_student_id: string }; Returns: boolean }
       get_email_by_username: { Args: { lookup_username: string }; Returns: string }
       is_class_teacher: { Args: { p_class_id: string; p_user_id: string }; Returns: boolean }
+      acquire_sync_lessons_lock: { Args: Record<string, never>; Returns: undefined }
+      release_sync_lessons_lock: { Args: Record<string, never>; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
