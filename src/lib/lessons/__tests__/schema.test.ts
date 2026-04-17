@@ -134,4 +134,108 @@ describe("lessonFrontmatterSchema", () => {
       })
     ).toThrow();
   });
+
+  it("rejects unknown top-level keys", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({ ...validFrontmatter, categorySlug: "oops" })
+    ).toThrow();
+  });
+
+  it("rejects unknown keys on quiz questions", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({
+        ...validFrontmatter,
+        quiz: [
+          {
+            prompt: "x",
+            options: [{ text: "a" }, { text: "b", correct: true }],
+            explanation: "e",
+            hint: "unknown",
+          },
+        ],
+      })
+    ).toThrow();
+  });
+
+  it("rejects unknown keys on quiz options", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({
+        ...validFrontmatter,
+        quiz: [
+          {
+            prompt: "x",
+            options: [
+              { text: "a", weight: 1 },
+              { text: "b", correct: true },
+            ],
+            explanation: "e",
+          },
+        ],
+      })
+    ).toThrow();
+  });
+
+  it("treats correct: false as not correct", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({
+        ...validFrontmatter,
+        quiz: [
+          {
+            prompt: "x",
+            options: [
+              { text: "a", correct: false },
+              { text: "b", correct: true },
+            ],
+            explanation: "e",
+          },
+        ],
+      })
+    ).not.toThrow();
+  });
+
+  it("accepts order: 0", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({ ...validFrontmatter, order: 0 })
+    ).not.toThrow();
+  });
+
+  it("rejects negative order", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({ ...validFrontmatter, order: -1 })
+    ).toThrow();
+  });
+
+  it("rejects non-integer order", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({ ...validFrontmatter, order: 1.5 })
+    ).toThrow();
+  });
+
+  it("rejects non-integer estimated_minutes", () => {
+    expect(() =>
+      lessonFrontmatterSchema.parse({ ...validFrontmatter, estimated_minutes: 12.3 })
+    ).toThrow();
+  });
+
+  it("includes the found-count in the 'exactly one correct' error", () => {
+    const result = lessonFrontmatterSchema.safeParse({
+      ...validFrontmatter,
+      quiz: [
+        {
+          prompt: "x",
+          options: [
+            { text: "a", correct: true },
+            { text: "b", correct: true },
+            { text: "c", correct: true },
+          ],
+          explanation: "e",
+        },
+      ],
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const message = result.error.issues.map((i) => i.message).join(" ");
+      expect(message).toContain("found 3");
+    }
+  });
 });
