@@ -1,5 +1,8 @@
 import path from "node:path";
 
+import { createAdminClient } from "@/lib/supabase/admin";
+
+import { createLessonCache, shouldBypassCache } from "./cache";
 import { parseLessonFile } from "./parse";
 
 export interface PublicQuizOption {
@@ -25,10 +28,17 @@ export interface PublicLesson {
 
 const DEFAULT_ROOT = path.join(process.cwd(), "content", "lessons");
 
+const cache = createLessonCache<PublicLesson>({ bypass: shouldBypassCache() });
+
 export async function getLessonForReader(
   slug: string,
   rootDir: string = DEFAULT_ROOT,
 ): Promise<PublicLesson> {
+  const currentHash = await fetchContentHashFromDB(slug);
+  return cache.getOrLoad(slug, currentHash, () => loadFromDisk(slug, rootDir));
+}
+
+async function loadFromDisk(slug: string, rootDir: string): Promise<PublicLesson> {
   const absoluteFilePath = path.join(rootDir, `${slug}.md`);
   const parsed = await parseLessonFile(absoluteFilePath, rootDir);
 
@@ -47,3 +57,20 @@ export async function getLessonForReader(
     quizHash: parsed.quizHash,
   };
 }
+
+async function fetchContentHashFromDB(slug: string): Promise<string> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("lessons")
+    .select("content_hash")
+    .eq("slug", slug)
+    .is("deleted_at", null)
+    .single();
+
+  if (error || !data) {
+    throw new Error(`Lesson not found in DB: ${slug}`);
+  }
+  return data.content_hash;
+}
+
+export { loadFromDisk as _loadFromDiskForTest };

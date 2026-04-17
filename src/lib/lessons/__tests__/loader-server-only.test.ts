@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import path from "node:path";
-import { getLessonForGrading } from "../loader-server-only";
+import { _loadFromDiskForTest } from "../loader-server-only";
 
 const FIXTURES = path.join(__dirname, "fixtures");
 
-describe("getLessonForGrading", () => {
+describe("loader-server-only loadFromDisk", () => {
   it("returns prompts, options, correct flags, and explanations", async () => {
-    const lesson = await getLessonForGrading("valid-lesson", FIXTURES);
+    const lesson = await _loadFromDiskForTest("valid-lesson", FIXTURES);
     expect(lesson.slug).toBe("valid-lesson");
     expect(lesson.quiz).toHaveLength(1);
 
@@ -21,7 +21,7 @@ describe("getLessonForGrading", () => {
   });
 
   it("includes content and quiz hashes", async () => {
-    const lesson = await getLessonForGrading("valid-lesson", FIXTURES);
+    const lesson = await _loadFromDiskForTest("valid-lesson", FIXTURES);
     expect(lesson.contentHash).toMatch(/^[0-9a-f]{64}$/);
     expect(lesson.quizHash).toMatch(/^[0-9a-f]{64}$/);
   });
