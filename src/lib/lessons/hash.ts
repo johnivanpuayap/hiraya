@@ -10,7 +10,7 @@ export function computeContentHash(
   frontmatter: LessonFrontmatter,
   body: string,
 ): string {
-  return sha256(canonicalize(frontmatter) + "\n" + body);
+  return sha256(canonicalize(frontmatter) + "\0" + body);
 }
 
 /**

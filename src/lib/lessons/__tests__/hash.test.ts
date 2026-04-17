@@ -94,4 +94,43 @@ describe("computeQuizHash", () => {
     ]);
     expect(a).not.toBe(b);
   });
+
+  it("treats missing correct flag as equivalent to correct: false", () => {
+    const withMissing = computeQuizHash([
+      {
+        prompt: "p",
+        options: [{ text: "a" }, { text: "b", correct: true }],
+        explanation: "",
+      },
+    ]);
+    const withExplicitFalse = computeQuizHash([
+      {
+        prompt: "p",
+        options: [
+          { text: "a", correct: false },
+          { text: "b", correct: true },
+        ],
+        explanation: "",
+      },
+    ]);
+    expect(withMissing).toBe(withExplicitFalse);
+  });
+
+  it("is insensitive to object-key order in the input", () => {
+    const a = computeQuizHash([
+      {
+        prompt: "p",
+        options: [{ text: "a" }, { text: "b", correct: true }],
+        explanation: "",
+      },
+    ]);
+    const b = computeQuizHash([
+      {
+        explanation: "",
+        options: [{ text: "a" }, { correct: true, text: "b" }],
+        prompt: "p",
+      },
+    ]);
+    expect(a).toBe(b);
+  });
 });
