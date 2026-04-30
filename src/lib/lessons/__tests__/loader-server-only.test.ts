@@ -26,7 +26,7 @@ describe("loader-server-only loadFromDisk", () => {
 
     const q = lesson.quiz[0];
     expect(q.prompt).toBe("What is O(n^2)?");
-    expect(q.explanation).toBe("Quadratic grows with the square of n.");
+    expect(q.explanation).toBe("Quadratic grows with the square of n. EXPLANATION_LEAK_CANARY");
     expect(q.correctIndex).toBe(1);
     expect(q.options).toEqual([
       { text: "Linear" },

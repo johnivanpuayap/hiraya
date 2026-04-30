@@ -46,6 +46,12 @@ describe("loader-public loadFromDisk", () => {
     }
   });
 
+  it("does not leak explanation text in the JSON-serialized payload", async () => {
+    const lesson = await _loadFromDiskForTest("valid-lesson", FIXTURES);
+    const serialized = JSON.stringify(lesson);
+    expect(serialized).not.toContain("EXPLANATION_LEAK_CANARY");
+  });
+
   it("includes content and quiz hashes", async () => {
     const lesson = await _loadFromDiskForTest("valid-lesson", FIXTURES);
     expect(lesson.contentHash).toMatch(/^[0-9a-f]{64}$/);

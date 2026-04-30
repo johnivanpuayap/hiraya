@@ -9,7 +9,7 @@ quiz:
       - text: "Linear"
       - text: "Quadratic"
         correct: true
-    explanation: "Quadratic grows with the square of n."
+    explanation: "Quadratic grows with the square of n. EXPLANATION_LEAK_CANARY"
 ---
 
 # Sorting Algorithms
