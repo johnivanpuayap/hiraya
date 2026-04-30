@@ -31,15 +31,17 @@ export function MarkAsReadButton({
       return;
     }
 
-    addToast({ type: "success", message: "Lesson marked as read" });
+    addToast({ type: "success", message: "Saved to your progress" });
     router.refresh();
   }
 
   if (alreadyRead) {
     return (
-      <span className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-sm font-semibold text-success">
-        ✓ Marked as read
-      </span>
+      <div aria-live="polite">
+        <span className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-sm font-semibold text-success">
+          ✓ Marked as read
+        </span>
+      </div>
     );
   }
 

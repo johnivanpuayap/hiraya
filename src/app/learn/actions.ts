@@ -25,7 +25,7 @@ export async function markLessonRead(
 
   if (error) {
     console.error("[learn] mark read failed", error);
-    return { error: "Failed to mark as read." };
+    return { error: "Couldn't save that — try again?" };
   }
 
   console.info("[learn] marked read", { lessonId, userId: user.id });
