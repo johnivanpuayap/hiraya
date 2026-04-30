@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import type { Database } from "@/types/database";
+
 import type { ParsedLesson } from "./parse";
 
 export interface SyncOptions {
@@ -22,7 +24,7 @@ interface ExistingLessonRow {
 }
 
 export async function applyLessonSync(
-  admin: SupabaseClient,
+  admin: SupabaseClient<Database>,
   lessons: ParsedLesson[],
   options: SyncOptions,
 ): Promise<SyncSummary> {
@@ -60,7 +62,7 @@ export async function applyLessonSync(
     throw new Error(`Failed to fetch existing lessons: ${existingError.message}`);
   }
   const existingBySlug = new Map<string, ExistingLessonRow>();
-  for (const row of (existingRows ?? []) as ExistingLessonRow[]) {
+  for (const row of existingRows ?? []) {
     existingBySlug.set(row.slug, row);
   }
 
