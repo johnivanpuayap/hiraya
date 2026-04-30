@@ -124,13 +124,22 @@ export function LessonQuiz({
           submitted && result ? result.explanations[questionIndex] : undefined;
         const correctIndex =
           submitted && result ? result.correctIndices[questionIndex] : undefined;
+        const promptId = `question-${questionIndex}-prompt`;
 
         return (
           <Card key={questionIndex}>
-            <h3 className="font-heading text-lg text-text-primary mb-3">
+            <h3
+              id={promptId}
+              className="font-heading text-lg text-text-primary mb-3"
+            >
               {questionIndex + 1}. {question.prompt}
             </h3>
-            <div className="flex flex-col gap-2">
+            {/* Future polish: wire arrow-key navigation across the radiogroup. */}
+            <div
+              role="radiogroup"
+              aria-labelledby={promptId}
+              className="flex flex-col gap-2"
+            >
               {question.options.map((option, optionIndex) => {
                 const isSelected = selected === optionIndex;
                 const isCorrectAnswer =
@@ -163,6 +172,8 @@ export function LessonQuiz({
                   <button
                     key={optionIndex}
                     type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     onClick={() => handleSelect(questionIndex, optionIndex)}
                     disabled={submitted}
                     className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${stateClasses} ${
