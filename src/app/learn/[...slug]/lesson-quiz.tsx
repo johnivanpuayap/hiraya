@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { MarkdownBody } from "@/components/markdown/markdown-body";
 import { useToastStore } from "@/stores/toast-store";
 
 import { submitQuizAttempt } from "@/app/learn/actions";
@@ -187,8 +188,8 @@ export function LessonQuiz({
             </div>
 
             {submitted && explanation ? (
-              <div className="mt-4 border-l-4 border-accent/40 bg-[rgba(199,123,26,0.06)] pl-4 pr-4 py-2 italic text-text-secondary">
-                {explanation}
+              <div className="mt-4 border-l-4 border-accent/40 bg-[rgba(199,123,26,0.06)] pl-4 pr-4 py-2 text-text-secondary">
+                <MarkdownBody className="text-sm">{explanation}</MarkdownBody>
               </div>
             ) : null}
           </Card>

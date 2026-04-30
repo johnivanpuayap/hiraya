@@ -80,7 +80,10 @@ export function MarkdownBody({
             </code>
           ),
           pre: ({ children: nodes }) => (
-            <pre className="glass rounded-2xl p-4 my-5 overflow-x-auto font-mono text-sm text-text-primary shadow-warm">
+            <pre
+              tabIndex={0}
+              className="glass rounded-2xl p-4 my-5 overflow-x-auto font-mono text-sm text-text-primary shadow-warm"
+            >
               {nodes}
             </pre>
           ),
@@ -91,7 +94,10 @@ export function MarkdownBody({
           ),
           hr: () => <hr className="my-8 border-0 border-t border-glass" />,
           table: ({ children: nodes }) => (
-            <div className="my-5 overflow-x-auto rounded-2xl border border-glass">
+            <div
+              tabIndex={0}
+              className="my-5 overflow-x-auto rounded-2xl border border-glass"
+            >
               <table className="w-full border-collapse text-sm text-text-primary">
                 {nodes}
               </table>
