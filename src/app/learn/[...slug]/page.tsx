@@ -8,6 +8,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Card } from "@/components/ui/card";
 import { MarkdownBody } from "@/components/markdown/markdown-body";
 
+import { LessonQuiz } from "./lesson-quiz";
 import { MarkAsReadButton } from "./mark-as-read-button";
 
 interface LessonReaderPageProps {
@@ -98,7 +99,7 @@ export default async function LessonReaderPage({
           <h2 className="mb-4 font-heading text-2xl font-bold text-text-primary">
             Check your understanding
           </h2>
-          {/* TODO: quiz */}
+          <LessonQuiz lessonSlug={slug} questions={lesson.quiz} />
         </section>
       ) : null}
     </div>
