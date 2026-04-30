@@ -1,17 +1,18 @@
 import path from "node:path";
 
-import { createClient } from "@supabase/supabase-js";
 import { Client } from "pg";
 
 import { applyLessonSync } from "../src/lib/lessons/sync";
 import { walkLessons } from "../src/lib/lessons/walk";
+import { createAdminClient } from "../src/lib/supabase/admin";
 
 async function main(): Promise<void> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) {
+  let admin: ReturnType<typeof createAdminClient>;
+  try {
+    admin = createAdminClient();
+  } catch (err) {
     console.error(
-      "[sync-lessons] Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in env.",
+      `[sync-lessons] ${err instanceof Error ? err.message : String(err)}`,
     );
     process.exit(1);
   }
@@ -32,10 +33,6 @@ async function main(): Promise<void> {
   console.info(`[sync-lessons] Walking ${rootDir}`);
   const lessons = await walkLessons(rootDir);
   console.info(`[sync-lessons] Found ${lessons.length} lesson(s)`);
-
-  const admin = createClient(url, serviceKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
 
   const lockClient = new Client({ connectionString: dbUrl });
   await lockClient.connect();
