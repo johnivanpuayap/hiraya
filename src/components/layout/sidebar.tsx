@@ -14,6 +14,7 @@ interface SidebarProps {
 const studentWithClassLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/practice", label: "Practice", icon: "📝" },
+  { href: "/learn", label: "Learn", icon: "📖" },
   { href: "/assignments", label: "Assignments", icon: "📋" },
   { href: "/profile", label: "Profile", icon: "👤" },
 ];
@@ -21,6 +22,7 @@ const studentWithClassLinks = [
 const studentNoClassLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/practice", label: "Practice", icon: "📝" },
+  { href: "/learn", label: "Learn", icon: "📖" },
   { href: "/classes/join", label: "Join Class", icon: "🏫" },
   { href: "/profile", label: "Profile", icon: "👤" },
 ];
