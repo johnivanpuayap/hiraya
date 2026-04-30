@@ -85,7 +85,19 @@ export default async function LearnPage(): Promise<React.JSX.Element> {
 
       {groups.length === 0 ? (
         <Card>
-          <p className="text-sm text-text-muted">No lessons available yet.</p>
+          <h3 className="font-heading text-text-primary">
+            No lessons brewing yet.
+          </h3>
+          <p className="mt-1 text-text-secondary">
+            Check back soon — or hop into{" "}
+            <Link
+              href="/practice"
+              className="text-accent underline underline-offset-2 hover:opacity-80"
+            >
+              Practice
+            </Link>{" "}
+            to keep your streak warm.
+          </p>
         </Card>
       ) : (
         <div className="space-y-8">
