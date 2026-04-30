@@ -22,6 +22,7 @@ interface QuizResult {
   totalCount: number;
   passed: boolean;
   explanations: string[];
+  correctIndices: number[];
 }
 
 interface LessonQuizProps {
@@ -79,6 +80,7 @@ export function LessonQuiz({
       totalCount: response.totalCount,
       passed: response.passed,
       explanations: response.explanations,
+      correctIndices: response.correctIndices,
     });
     setSubmitted(true);
     addToast({ type: "success", message: "Quiz submitted" });
@@ -120,6 +122,8 @@ export function LessonQuiz({
         const selected = answers[questionIndex];
         const explanation =
           submitted && result ? result.explanations[questionIndex] : undefined;
+        const correctIndex =
+          submitted && result ? result.correctIndices[questionIndex] : undefined;
 
         return (
           <Card key={questionIndex}>
@@ -129,17 +133,41 @@ export function LessonQuiz({
             <div className="flex flex-col gap-2">
               {question.options.map((option, optionIndex) => {
                 const isSelected = selected === optionIndex;
+                const isCorrectAnswer =
+                  submitted && correctIndex === optionIndex;
+                const isUserCorrect =
+                  submitted && isSelected && isCorrectAnswer;
+                const isUserWrong =
+                  submitted && isSelected && !isCorrectAnswer;
+                const isUnpickedCorrect =
+                  submitted && !isSelected && isCorrectAnswer;
+
+                let stateClasses: string;
+                if (isUserCorrect) {
+                  stateClasses =
+                    "border-success bg-[rgba(90,142,76,0.08)] text-text-primary";
+                } else if (isUserWrong) {
+                  stateClasses =
+                    "border-danger bg-[rgba(191,74,45,0.08)] text-text-primary";
+                } else if (isUnpickedCorrect) {
+                  stateClasses =
+                    "border-success bg-[rgba(90,142,76,0.08)] text-text-primary";
+                } else if (isSelected) {
+                  stateClasses = "border-accent bg-accent/10 text-accent";
+                } else {
+                  stateClasses =
+                    "border-surface text-text-secondary hover:border-accent/30";
+                }
+
                 return (
                   <button
                     key={optionIndex}
                     type="button"
                     onClick={() => handleSelect(questionIndex, optionIndex)}
                     disabled={submitted}
-                    className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${
-                      isSelected
-                        ? "border-accent bg-accent/10 text-accent"
-                        : "border-surface text-text-secondary hover:border-accent/30"
-                    } ${submitted ? "cursor-not-allowed" : ""}`}
+                    className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${stateClasses} ${
+                      submitted ? "cursor-not-allowed" : ""
+                    }`}
                   >
                     {option.text}
                   </button>

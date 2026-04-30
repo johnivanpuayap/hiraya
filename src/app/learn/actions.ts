@@ -42,6 +42,7 @@ interface SubmitQuizResult {
   totalCount: number;
   passed: boolean;
   explanations: string[];
+  correctIndices: number[];
   error?: string;
 }
 
@@ -65,6 +66,7 @@ export async function submitQuizAttempt(
       totalCount: 0,
       passed: false,
       explanations: [],
+      correctIndices: [],
       error: "Lesson not found.",
     };
   }
@@ -82,6 +84,7 @@ export async function submitQuizAttempt(
       totalCount,
       passed: false,
       explanations: [],
+      correctIndices: [],
       error: "Invalid answer submission.",
     };
   }
@@ -104,6 +107,7 @@ export async function submitQuizAttempt(
         totalCount: 0,
         passed: false,
         explanations: [],
+        correctIndices: [],
         error: "That submission didn't go through. Try resubmitting.",
       };
     }
@@ -128,6 +132,7 @@ export async function submitQuizAttempt(
       totalCount,
       passed: false,
       explanations: [],
+      correctIndices: [],
       error: "Lesson not found.",
     };
   }
@@ -140,6 +145,7 @@ export async function submitQuizAttempt(
 
   const passed = correctCount === totalCount;
   const explanations = gradingLesson.quiz.map((q) => q.explanation);
+  const correctIndices = gradingLesson.quiz.map((q) => q.correctIndex);
 
   const { error: insertError } = await admin
     .from("lesson_quiz_attempts")
@@ -165,6 +171,7 @@ export async function submitQuizAttempt(
       totalCount,
       passed,
       explanations,
+      correctIndices,
       error: "Failed to record quiz attempt.",
     };
   }
@@ -177,5 +184,5 @@ export async function submitQuizAttempt(
     passed,
   });
 
-  return { correctCount, totalCount, passed, explanations };
+  return { correctCount, totalCount, passed, explanations, correctIndices };
 }
