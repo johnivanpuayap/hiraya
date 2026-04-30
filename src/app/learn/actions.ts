@@ -86,6 +86,29 @@ export async function submitQuizAttempt(
     };
   }
 
+  for (let i = 0; i < input.answers.length; i++) {
+    const answer = input.answers[i];
+    const optionsLength = gradingLesson.quiz[i].options.length;
+    if (
+      !Number.isInteger(answer) ||
+      answer < 0 ||
+      answer >= optionsLength
+    ) {
+      console.warn("[learn] invalid quiz answer", {
+        lessonSlug: input.lessonSlug,
+        answers: input.answers,
+        userId: user.id,
+      });
+      return {
+        correctCount: 0,
+        totalCount: 0,
+        passed: false,
+        explanations: [],
+        error: "That submission didn't go through. Try resubmitting.",
+      };
+    }
+  }
+
   const admin = createAdminClient();
 
   const { data: lessonRow, error: lessonLookupError } = await admin
