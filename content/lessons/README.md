@@ -15,7 +15,12 @@ content/lessons/
 
 - `<category-slug>` must match a row's `name` in the `categories` table.
 - The filename prefix (`01-`, `02-`, ...) controls display order.
-- Slug (filename minus `.md`) is globally unique across categories.
+- The lesson **slug** is the path relative to `content/lessons/` minus the
+  trailing `.md`, with forward slashes (e.g.
+  `development-technology/01-software-development-lifecycle`). Slugs are
+  globally unique by construction — uniqueness comes from the path, not from
+  the bare filename, so two categories may have a file named `01-intro.md`
+  without conflict.
 
 ## Frontmatter template
 
