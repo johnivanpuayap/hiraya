@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
+
 import path from "node:path";
+
 import { walkLessons } from "../walk";
 
 const TREE = path.join(__dirname, "fixtures", "tree");

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+
 import { computeContentHash, computeQuizHash } from "../hash";
 import type { LessonFrontmatter } from "../schema";
 

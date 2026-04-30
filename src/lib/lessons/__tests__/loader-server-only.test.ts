@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
+
 import path from "node:path";
+
 import { _loadFromDiskForTest, getLessonForGrading } from "../loader-server-only";
 
 const FIXTURES = path.join(__dirname, "fixtures");
