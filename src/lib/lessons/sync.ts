@@ -143,22 +143,3 @@ export async function applyLessonSync(
 
   return summary;
 }
-
-export async function applyLessonSyncWithLock(
-  admin: SupabaseClient,
-  lessons: ParsedLesson[],
-  options: SyncOptions,
-): Promise<SyncSummary> {
-  const { error: lockError } = await admin.rpc("acquire_sync_lessons_lock");
-  if (lockError) {
-    throw new Error(`Failed to acquire sync lock: ${lockError.message}`);
-  }
-  try {
-    return await applyLessonSync(admin, lessons, options);
-  } finally {
-    const { error: unlockError } = await admin.rpc("release_sync_lessons_lock");
-    if (unlockError) {
-      console.error(`[sync-lessons] Failed to release lock: ${unlockError.message}`);
-    }
-  }
-}
