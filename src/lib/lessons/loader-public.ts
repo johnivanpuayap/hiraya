@@ -33,8 +33,11 @@ const cache = createLessonCache<PublicLesson>({ bypass: shouldBypassCache() });
 export async function getLessonForReader(
   slug: string,
   rootDir: string = DEFAULT_ROOT,
-): Promise<PublicLesson> {
+): Promise<PublicLesson | null> {
   const currentHash = await fetchContentHashFromDB(slug);
+  if (currentHash === null) {
+    return null;
+  }
   return cache.getOrLoad(slug, currentHash, () => loadFromDisk(slug, rootDir));
 }
 
@@ -58,17 +61,17 @@ async function loadFromDisk(slug: string, rootDir: string): Promise<PublicLesson
   };
 }
 
-async function fetchContentHashFromDB(slug: string): Promise<string> {
+async function fetchContentHashFromDB(slug: string): Promise<string | null> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("lessons")
     .select("content_hash")
     .eq("slug", slug)
     .is("deleted_at", null)
-    .single();
+    .maybeSingle();
 
   if (error || !data) {
-    throw new Error(`Lesson not found in DB: ${slug}`);
+    return null;
   }
   return data.content_hash;
 }

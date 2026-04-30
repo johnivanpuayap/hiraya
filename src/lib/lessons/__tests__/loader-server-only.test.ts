@@ -1,8 +1,22 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import path from "node:path";
-import { _loadFromDiskForTest } from "../loader-server-only";
+import { _loadFromDiskForTest, getLessonForGrading } from "../loader-server-only";
 
 const FIXTURES = path.join(__dirname, "fixtures");
+
+vi.mock("@/lib/supabase/admin", () => ({
+  createAdminClient: () => ({
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          is: () => ({
+            maybeSingle: async () => ({ data: null, error: null }),
+          }),
+        }),
+      }),
+    }),
+  }),
+}));
 
 describe("loader-server-only loadFromDisk", () => {
   it("returns prompts, options, correct flags, and explanations", async () => {
@@ -24,5 +38,12 @@ describe("loader-server-only loadFromDisk", () => {
     const lesson = await _loadFromDiskForTest("valid-lesson", FIXTURES);
     expect(lesson.contentHash).toMatch(/^[0-9a-f]{64}$/);
     expect(lesson.quizHash).toMatch(/^[0-9a-f]{64}$/);
+  });
+});
+
+describe("loader-server-only getLessonForGrading", () => {
+  it("returns null when the lesson is not in the database", async () => {
+    const lesson = await getLessonForGrading("does-not-exist", FIXTURES);
+    expect(lesson).toBeNull();
   });
 });
