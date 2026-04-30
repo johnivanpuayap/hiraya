@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  outputFileTracingIncludes: {
+    "/learn/**": ["./content/lessons/**/*.md"],
+  },
 };
 
 export default nextConfig;
