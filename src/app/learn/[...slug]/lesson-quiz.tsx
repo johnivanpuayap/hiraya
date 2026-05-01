@@ -149,7 +149,7 @@ export function LessonQuiz({
   return (
     <div className="flex flex-col gap-4">
       {submitted && result ? (
-        <Card>
+        <Card aria-live="polite">
           <div className="flex items-center justify-between gap-3">
             <div>
               <h3
