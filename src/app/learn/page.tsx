@@ -161,17 +161,26 @@ export default async function LearnPage(): Promise<React.JSX.Element> {
                           </div>
                           <div className="flex shrink-0 items-center gap-2">
                             {isRead ? (
-                              <span className="rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-semibold text-success">
+                              <span
+                                aria-label="Lesson read"
+                                className="rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-semibold text-success"
+                              >
                                 ✓ Read
                               </span>
                             ) : null}
                             {quizBest ? (
                               quizBest.passed ? (
-                                <span className="rounded-full bg-success/15 px-2.5 py-0.5 text-xs font-semibold text-success">
-                                  {quizBest.bestScorePct}% ✓
+                                <span
+                                  aria-label={`Best quiz score ${quizBest.bestScorePct}%, passed`}
+                                  className="rounded-full bg-success px-2.5 py-0.5 text-xs font-semibold text-white"
+                                >
+                                  {quizBest.bestScorePct}%
                                 </span>
                               ) : (
-                                <span className="rounded-full bg-[rgba(199,123,26,0.1)] px-2.5 py-0.5 text-xs font-semibold text-primary">
+                                <span
+                                  aria-label={`Best quiz score ${quizBest.bestScorePct}%`}
+                                  className="rounded-full bg-[rgba(199,123,26,0.1)] px-2.5 py-0.5 text-xs font-semibold text-primary"
+                                >
                                   {quizBest.bestScorePct}%
                                 </span>
                               )
