@@ -221,6 +221,9 @@ export function LessonQuiz({
                     "border-surface text-text-secondary hover:border-accent/30";
                 }
 
+                const isTabStop =
+                  isSelected || (selected === null && optionIndex === 0);
+
                 return (
                   <button
                     key={optionIndex}
@@ -235,6 +238,7 @@ export function LessonQuiz({
                     type="button"
                     role="radio"
                     aria-checked={isSelected}
+                    tabIndex={isTabStop ? 0 : -1}
                     onClick={() => handleSelect(questionIndex, optionIndex)}
                     onKeyDown={(event) =>
                       handleOptionKeyDown(
@@ -245,7 +249,7 @@ export function LessonQuiz({
                       )
                     }
                     disabled={submitted}
-                    className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${stateClasses} ${
+                    className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${stateClasses} ${
                       submitted ? "cursor-not-allowed" : ""
                     }`}
                   >
