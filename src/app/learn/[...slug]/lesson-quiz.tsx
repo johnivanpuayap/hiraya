@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -35,6 +35,9 @@ export function LessonQuiz({
   lessonSlug,
   questions,
 }: LessonQuizProps): React.JSX.Element {
+  const optionRefs = useRef<Map<number, (HTMLButtonElement | null)[]>>(
+    new Map()
+  );
   const addToast = useToastStore((s) => s.addToast);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     Array(questions.length).fill(null)
@@ -45,6 +48,31 @@ export function LessonQuiz({
 
   const allAnswered = answers.every((a) => a !== null);
 
+  function setOptionRef(
+    questionIndex: number,
+    optionIndex: number,
+    optionsLength: number,
+    el: HTMLButtonElement | null
+  ): void {
+    let row = optionRefs.current.get(questionIndex);
+    if (!row) {
+      row = new Array<HTMLButtonElement | null>(optionsLength).fill(null);
+      optionRefs.current.set(questionIndex, row);
+    }
+    row[optionIndex] = el;
+  }
+
+  function focusAndSelect(questionIndex: number, optionIndex: number): void {
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[questionIndex] = optionIndex;
+      return next;
+    });
+    const row = optionRefs.current.get(questionIndex);
+    const target = row ? row[optionIndex] : null;
+    if (target) target.focus();
+  }
+
   function handleSelect(questionIndex: number, optionIndex: number): void {
     if (submitted) return;
     setAnswers((prev) => {
@@ -52,6 +80,31 @@ export function LessonQuiz({
       next[questionIndex] = optionIndex;
       return next;
     });
+  }
+
+  function handleOptionKeyDown(
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    questionIndex: number,
+    optionIndex: number,
+    optionsLength: number
+  ): void {
+    if (submitted) return;
+
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      nextIndex = (optionIndex + 1) % optionsLength;
+    } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      nextIndex = (optionIndex - 1 + optionsLength) % optionsLength;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = optionsLength - 1;
+    }
+
+    if (nextIndex === null) return;
+
+    event.preventDefault();
+    focusAndSelect(questionIndex, nextIndex);
   }
 
   async function handleSubmit(): Promise<void> {
@@ -135,7 +188,6 @@ export function LessonQuiz({
             >
               {questionIndex + 1}. {question.prompt}
             </h3>
-            {/* Future polish: wire arrow-key navigation across the radiogroup. */}
             <div
               role="radiogroup"
               aria-labelledby={promptId}
@@ -172,10 +224,26 @@ export function LessonQuiz({
                 return (
                   <button
                     key={optionIndex}
+                    ref={(el) =>
+                      setOptionRef(
+                        questionIndex,
+                        optionIndex,
+                        question.options.length,
+                        el
+                      )
+                    }
                     type="button"
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => handleSelect(questionIndex, optionIndex)}
+                    onKeyDown={(event) =>
+                      handleOptionKeyDown(
+                        event,
+                        questionIndex,
+                        optionIndex,
+                        question.options.length
+                      )
+                    }
                     disabled={submitted}
                     className={`w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${stateClasses} ${
                       submitted ? "cursor-not-allowed" : ""
