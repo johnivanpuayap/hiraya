@@ -39,27 +39,32 @@ export default async function LearnPage(): Promise<React.JSX.Element> {
 
   const admin = createAdminClient();
 
-  const [lessonsResult, categoriesResult, readsResult, quizAttemptsResult] =
-    await Promise.all([
-      admin
-        .from("lessons")
-        .select("id, category_id, slug, title, order_index, estimated_minutes")
-        .is("deleted_at", null)
-        .order("category_id", { ascending: true })
-        .order("order_index", { ascending: true }),
-      admin.from("categories").select("id, name, display_name"),
-      admin.from("lesson_reads").select("lesson_id").eq("user_id", user.id),
-      admin
-        .from("lesson_quiz_attempts")
-        .select("lesson_id, correct_count, total_count, passed")
-        .eq("user_id", user.id),
-    ]);
+  const [lessonsResult, categoriesResult, readsResult] = await Promise.all([
+    admin
+      .from("lessons")
+      .select("id, category_id, slug, title, order_index, estimated_minutes")
+      .is("deleted_at", null)
+      .order("category_id", { ascending: true })
+      .order("order_index", { ascending: true }),
+    admin.from("categories").select("id, name, display_name"),
+    admin.from("lesson_reads").select("lesson_id").eq("user_id", user.id),
+  ]);
 
   const lessons = lessonsResult.data ?? [];
   const categories = categoriesResult.data ?? [];
   const reads = readsResult.data ?? [];
-  const quizAttempts = quizAttemptsResult.data ?? [];
   const readLessonIds = new Set(reads.map((r) => r.lesson_id));
+
+  const lessonIds = lessons.map((l) => l.id);
+  const quizAttemptsResult =
+    lessonIds.length > 0
+      ? await admin
+          .from("lesson_quiz_attempts")
+          .select("lesson_id, correct_count, total_count, passed")
+          .eq("user_id", user.id)
+          .in("lesson_id", lessonIds)
+      : { data: [] };
+  const quizAttempts = quizAttemptsResult.data ?? [];
 
   const bestQuizByLessonId = new Map<string, QuizBest>();
   for (const attempt of quizAttempts) {
