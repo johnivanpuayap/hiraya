@@ -81,10 +81,10 @@ export default async function LessonReaderPage({
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <h2 className="font-heading text-lg font-bold text-text-primary">
-              Done reading?
+              Finished this one?
             </h2>
             <p className="mt-1 text-sm text-text-secondary">
-              Mark this lesson as read to track your progress.
+              Tick it off — we&apos;ll keep your progress glowing.
             </p>
           </div>
           <MarkAsReadButton

@@ -162,7 +162,7 @@ export function LessonQuiz({
               <p className="mt-1 text-sm text-text-secondary">
                 {result.passed
                   ? "Nice work — you got them all!"
-                  : "Review the explanations below and try again."}
+                  : "Almost — review the notes below and give it another go."}
               </p>
             </div>
             <Button variant="secondary" onClick={handleReset}>
