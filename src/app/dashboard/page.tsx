@@ -11,6 +11,7 @@ import { ReadinessGauge } from "@/components/dashboard/readiness-gauge";
 import { StreakDisplay } from "@/components/dashboard/streak-display";
 import { WeakTopics } from "@/components/dashboard/weak-topics";
 import { TrendGraph } from "@/components/dashboard/trend-graph";
+import { LessonsProgress } from "@/components/dashboard/lessons-progress";
 
 /* ─── SVG Icons (Lucide-style, consistent 20×20 / stroke 2) ─── */
 
@@ -86,29 +87,52 @@ async function StudentDashboard({ userId }: { userId: string }) {
 
   const sessionIds = (studentSessions ?? []).map((s) => s.id);
 
-  const [abilitiesResult, categoriesResult, streakResult, sessionsResult, responsesCount] =
-    await Promise.all([
-      admin.from("student_ability").select("*").eq("student_id", userId),
-      admin.from("categories").select("id, display_name, exam_weight"),
-      admin.from("streaks").select("*").eq("student_id", userId).single(),
-      admin
-        .from("sessions")
-        .select("correct_count, question_count, started_at, completed_at")
-        .eq("student_id", userId)
-        .not("completed_at", "is", null)
-        .order("started_at", { ascending: false })
-        .limit(20),
-      admin
-        .from("responses")
-        .select("id", { count: "exact", head: true })
-        .in("session_id", sessionIds.length > 0 ? sessionIds : ["__none__"]),
-    ]);
+  const [
+    abilitiesResult,
+    categoriesResult,
+    streakResult,
+    sessionsResult,
+    responsesCount,
+    lessonsResult,
+    lessonReadsResult,
+  ] = await Promise.all([
+    admin.from("student_ability").select("*").eq("student_id", userId),
+    admin.from("categories").select("id, display_name, exam_weight"),
+    admin.from("streaks").select("*").eq("student_id", userId).single(),
+    admin
+      .from("sessions")
+      .select("correct_count, question_count, started_at, completed_at")
+      .eq("student_id", userId)
+      .not("completed_at", "is", null)
+      .order("started_at", { ascending: false })
+      .limit(20),
+    admin
+      .from("responses")
+      .select("id", { count: "exact", head: true })
+      .in("session_id", sessionIds.length > 0 ? sessionIds : ["__none__"]),
+    admin
+      .from("lessons")
+      .select("id, slug, title, category_id, order_index")
+      .is("deleted_at", null)
+      .order("category_id", { ascending: true })
+      .order("order_index", { ascending: true }),
+    admin.from("lesson_reads").select("lesson_id").eq("user_id", userId),
+  ]);
 
   const abilities = abilitiesResult.data ?? [];
   const categories = categoriesResult.data ?? [];
   const streak = streakResult.data;
   const sessions = sessionsResult.data ?? [];
   const totalAnswered = responsesCount.count ?? 0;
+  const lessons = lessonsResult.data ?? [];
+  const lessonReads = lessonReadsResult.data ?? [];
+
+  const totalLessons = lessons.length;
+  const lessonsRead = lessonReads.length;
+  const readLessonIds = new Set(lessonReads.map((r) => r.lesson_id));
+  const nextLesson = lessons.find((l) => !readLessonIds.has(l.id)) ?? null;
+  const nextLessonHref = nextLesson ? `/learn/${nextLesson.slug}` : null;
+  const nextLessonTitle = nextLesson ? nextLesson.title : null;
 
   const categoryAbilities = categories.map((cat) => {
     const ability = abilities.find((a) => a.category_id === cat.id);
@@ -147,6 +171,16 @@ async function StudentDashboard({ userId }: { userId: string }) {
         <p className="mt-1 text-sm text-text-secondary">
           Track your progress and keep improving.
         </p>
+      </div>
+
+      {/* Reading progress */}
+      <div className="mb-6">
+        <LessonsProgress
+          lessonsRead={lessonsRead}
+          totalLessons={totalLessons}
+          nextLessonHref={nextLessonHref}
+          nextLessonTitle={nextLessonTitle}
+        />
       </div>
 
       {/* Top row: Readiness hero + Stats */}

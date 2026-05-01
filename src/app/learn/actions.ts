@@ -67,7 +67,7 @@ export async function submitQuizAttempt(
       passed: false,
       explanations: [],
       correctIndices: [],
-      error: "Lesson not found.",
+      error: "This lesson moved or was removed.",
     };
   }
 
@@ -133,7 +133,7 @@ export async function submitQuizAttempt(
       passed: false,
       explanations: [],
       correctIndices: [],
-      error: "Lesson not found.",
+      error: "This lesson moved or was removed.",
     };
   }
 
@@ -172,7 +172,8 @@ export async function submitQuizAttempt(
       passed,
       explanations,
       correctIndices,
-      error: "Failed to record quiz attempt.",
+      error:
+        "We graded your quiz but couldn't save the attempt — your progress may not show.",
     };
   }
 
