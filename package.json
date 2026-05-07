@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "sync-lessons": "tsx scripts/sync-lessons.ts",
-    "migrate": "tsx scripts/migrate.ts"
+    "migrate": "tsx scripts/migrate.ts",
+    "migrate-question-images": "tsx scripts/migrate-question-images.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
