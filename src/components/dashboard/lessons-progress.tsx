@@ -9,6 +9,31 @@ interface LessonsProgressProps {
   nextLessonTitle: string | null;
 }
 
+function IconBook(): React.JSX.Element {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#C77B1A"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  );
+}
+
+function progressBarClass(percent: number, isComplete: boolean): string {
+  if (isComplete) return "bg-success";
+  if (percent >= 75) return "bg-gradient-to-r from-primary to-success";
+  return "bg-primary-gradient";
+}
+
 export function LessonsProgress({
   lessonsRead,
   totalLessons,
@@ -20,15 +45,21 @@ export function LessonsProgress({
     ? Math.min(100, Math.round((lessonsRead / totalLessons) * 100))
     : 0;
   const isComplete = hasLessons && lessonsRead >= totalLessons;
-  const barColor = isComplete ? "bg-success" : "bg-primary-gradient";
+  const isEmpty = hasLessons && lessonsRead === 0;
+  const barColor = progressBarClass(percent, isComplete);
 
   return (
-    <Card>
-      <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">
-        Reading Progress
-      </p>
+    <Card className="flex h-full flex-col">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+          <IconBook />
+        </div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">
+          Reading Progress
+        </p>
+      </div>
 
-      <div className="mt-2 flex items-baseline gap-2">
+      <div className="mt-3 flex items-baseline gap-2">
         <span className="font-heading text-3xl text-text-primary">
           {lessonsRead}
         </span>
@@ -38,7 +69,7 @@ export function LessonsProgress({
 
       {hasLessons ? (
         <div
-          className="mt-4 h-2 w-full rounded-full bg-[rgba(199,123,26,0.1)]"
+          className="mt-4 h-2 w-full rounded-full bg-primary/10"
           role="progressbar"
           aria-valuenow={percent}
           aria-valuemin={0}
@@ -56,8 +87,21 @@ export function LessonsProgress({
         </p>
       )}
 
-      <div className="mt-4">
-        {nextLessonHref && nextLessonTitle ? (
+      {isComplete ? (
+        <p className="mt-3 text-sm text-success">
+          You&apos;ve read every lesson — great work.
+        </p>
+      ) : null}
+
+      <div className="mt-auto pt-4">
+        {isEmpty ? (
+          <Link
+            href={nextLessonHref ?? "/learn"}
+            className="text-xs font-medium text-accent transition-colors hover:text-primary"
+          >
+            Start your first lesson &rarr;
+          </Link>
+        ) : nextLessonHref && nextLessonTitle ? (
           <Link
             href={nextLessonHref}
             className="text-xs font-medium text-accent transition-colors hover:text-primary"

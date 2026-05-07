@@ -25,11 +25,11 @@
 - [x] Tone/copy pass on lesson actions, reader, and 404
 
 ### Deferred polish
-- [ ] LessonsProgress dashboard placement — currently full-width above the readiness gauge; consider compact 4-col tile alongside existing widgets
-- [ ] LessonsProgress: leading book/lesson icon for parity with other dashboard widgets
-- [ ] LessonsProgress: warmer 0%/100% states (empty CTA, completion celebration line)
-- [ ] LessonsProgress: partial-progress threshold tone (e.g., 75% earns a different bar tint)
-- [ ] Promote score pill arbitrary-value bg literals to a `bg-primary/10` token
+- [x] LessonsProgress dashboard placement — moved into upper row as 4-col tile alongside readiness + stats
+- [x] LessonsProgress: leading book icon in `bg-primary/10` square, matching StatCard/StreakDisplay pattern
+- [x] LessonsProgress: warmer 0%/100% states ("Start your first lesson →" CTA at 0%; "You've read every lesson — great work." line at 100%)
+- [x] LessonsProgress: partial-progress threshold tone (`bg-gradient-to-r from-primary to-success` at 75–99%)
+- [x] Promote score pill arbitrary-value bg literals to `bg-primary/10` token (dashboard recent-activity pill, lessons-list best-quiz-score pill)
 
 ## Phase 4: Mobile App
 - [ ] Decide: React Native vs Native (Swift + Kotlin) vs PWA

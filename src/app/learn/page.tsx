@@ -179,7 +179,7 @@ export default async function LearnPage(): Promise<React.JSX.Element> {
                               ) : (
                                 <span
                                   aria-label={`Best quiz score ${quizBest.bestScorePct}%`}
-                                  className="rounded-full bg-[rgba(199,123,26,0.1)] px-2.5 py-0.5 text-xs font-semibold text-primary"
+                                  className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"
                                 >
                                   {quizBest.bestScorePct}%
                                 </span>

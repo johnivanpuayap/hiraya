@@ -173,17 +173,7 @@ async function StudentDashboard({ userId }: { userId: string }) {
         </p>
       </div>
 
-      {/* Reading progress */}
-      <div className="mb-6">
-        <LessonsProgress
-          lessonsRead={lessonsRead}
-          totalLessons={totalLessons}
-          nextLessonHref={nextLessonHref}
-          nextLessonTitle={nextLessonTitle}
-        />
-      </div>
-
-      {/* Top row: Readiness hero + Stats */}
+      {/* Top row: Readiness hero + Stats + Reading progress */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Readiness Gauge — hero card */}
         <Card className="lg:col-span-4" padding="lg">
@@ -193,7 +183,7 @@ async function StudentDashboard({ userId }: { userId: string }) {
         </Card>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-4 lg:col-span-8">
+        <div className="grid grid-cols-2 gap-4 lg:col-span-4">
           <StatCard
             label="Questions Answered"
             value={totalAnswered}
@@ -215,6 +205,16 @@ async function StudentDashboard({ userId }: { userId: string }) {
               longestStreak={streak?.longest_streak ?? 0}
             />
           </div>
+        </div>
+
+        {/* Reading progress */}
+        <div className="lg:col-span-4">
+          <LessonsProgress
+            lessonsRead={lessonsRead}
+            totalLessons={totalLessons}
+            nextLessonHref={nextLessonHref}
+            nextLessonTitle={nextLessonTitle}
+          />
         </div>
       </div>
 
@@ -534,7 +534,7 @@ async function TeacherDashboard({ userId }: { userId: string }) {
                       activity.score >= 70
                         ? "bg-success/10 text-success"
                         : activity.score >= 50
-                          ? "bg-[rgba(199,123,26,0.1)] text-primary"
+                          ? "bg-primary/10 text-primary"
                           : "bg-danger/10 text-danger"
                     }`}
                   >
