@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "sync-lessons": "tsx scripts/sync-lessons.ts",
     "migrate": "tsx scripts/migrate.ts",
-    "migrate-question-images": "tsx scripts/migrate-question-images.ts"
+    "migrate-question-images": "tsx scripts/migrate-question-images.ts",
+    "seed-test-users": "tsx scripts/seed-test-users.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
