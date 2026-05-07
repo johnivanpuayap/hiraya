@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToastStore } from "@/stores/toast-store";
 
-import { markLessonRead } from "@/app/learn/actions";
+import { markLessonRead } from "../actions";
 
 interface MarkAsReadButtonProps {
   lessonId: string;
