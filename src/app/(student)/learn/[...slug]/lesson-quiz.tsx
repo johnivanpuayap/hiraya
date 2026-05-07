@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { MarkdownBody } from "@/components/markdown/markdown-body";
 import { useToastStore } from "@/stores/toast-store";
 
-import { submitQuizAttempt } from "@/app/learn/actions";
+import { submitQuizAttempt } from "../actions";
 
 interface QuizOption {
   text: string;
